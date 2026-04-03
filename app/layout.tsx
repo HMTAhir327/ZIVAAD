@@ -22,35 +22,31 @@ const bodyFont = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://zivaad.vercel.app'),
+  metadataBase: new URL('https://zivaad.com'),
   title: {
     default: 'ZIVAAD | Minimal Luxury Jewelry',
     template: '%s | ZIVAAD'
   },
-  description:
-    'Luxury-inspired minimal jewelry ecommerce experience with WhatsApp checkout. Rings, earrings, and necklaces crafted for everyday elegance.',
+  description: 'Sculpted essentials with clean lines and a timeless point of view.',
   openGraph: {
     title: 'ZIVAAD | Minimal Luxury Jewelry',
-    description:
-      'Luxury-inspired minimal jewelry ecommerce experience with WhatsApp checkout. Rings, earrings, and necklaces crafted for everyday elegance.',
+    description: 'Luxury-inspired minimal jewelry experience.',
     type: 'website',
     locale: 'en_PK',
-    url: 'https://zivaad.vercel.app',
+    url: 'https://zivaad.com/',
     siteName: 'ZIVAAD',
     images: [
       {
-        url: 'https://res.cloudinary.com/demo/image/upload/f_auto,q_auto,w_1200/v1690000000/samples/ecommerce/accessories-bag.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'ZIVAAD luxury jewelry'
+        url: 'https://res.cloudinary.com/dyb3292pp/image/upload/q_auto/f_auto/v1775200846/zivaad_sm_logo_o8hykt.jpg',
+        alt: 'ZIVAAD | Minimal Luxury Jewelry'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ZIVAAD | Minimal Luxury Jewelry',
-    description:
-      'Luxury-inspired minimal jewelry ecommerce experience with WhatsApp checkout. Rings, earrings, and necklaces crafted for everyday elegance.'
+    description: 'Luxury-inspired minimal jewelry experience.',
+    images: ['https://res.cloudinary.com/dyb3292pp/image/upload/q_auto/f_auto/v1775200846/zivaad_sm_logo_o8hykt.jpg']
   }
 };
 
