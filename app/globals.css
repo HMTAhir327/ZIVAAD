@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --zivaad-bg: #ffffff;
+  --zivaad-text: #1a1a1a;
+  --zivaad-muted: #6f6f6f;
+  --zivaad-line: #e8e8e8;
+}
+
+* {
+  border-color: var(--zivaad-line);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body), sans-serif;
+  background-color: var(--zivaad-bg);
+  color: var(--zivaad-text);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), serif;
+  letter-spacing: 0.025em;
+  font-weight: 500;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(17, 17, 17, 0.22);
+}
+
+::-webkit-scrollbar-track {
+  background: #f7f7f7;
+}
+
+@keyframes zivaad-review-marquee-forward {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes zivaad-review-marquee-reverse {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.zivaad-review-track {
+  will-change: transform;
+}
+
+.zivaad-review-track-forward {
+  animation: zivaad-review-marquee-forward 44s linear infinite;
+}
+
+.zivaad-review-track-reverse {
+  animation: zivaad-review-marquee-reverse 48s linear infinite;
+}
+
+.zivaad-review-marquee:hover .zivaad-review-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zivaad-review-track-forward,
+  .zivaad-review-track-reverse {
+    animation: none;
+  }
+}

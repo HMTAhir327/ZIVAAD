@@ -1,0 +1,1208 @@
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { saveProductsAction } from '@/app/admin/actions';
+import { RichTextEditor } from '@/components/rich-text-editor';
+import { normalizeProductOptionDefinitions, normalizeProductVariantDefinitions } from '@/lib/product-variants';
+import { normalizeDescriptionForEditor } from '@/lib/rich-text';
+import type { Product, ProductCategory, ProductOption, ProductVariant } from '@/lib/types';
+
+const fallbackImage =
+  'https://res.cloudinary.com/demo/image/upload/v1690000000/samples/ecommerce/accessories-bag.jpg';
+
+const DEFAULT_OPTION_NAMES = ['Color', 'Size', 'Material', 'Length', 'Finish'];
+const DEFAULT_COLOR_SWATCHES: Record<string, string> = {
+  black: '#111111',
+  white: '#f5f5f4',
+  gold: '#c9a24a',
+  silver: '#bfc3c9',
+  'rose gold': '#b9897d',
+  rose: '#b76e79',
+  red: '#b91c1c',
+  green: '#166534',
+  blue: '#1d4ed8',
+  pink: '#e879a6'
+};
+
+function normalizeCategoryTerm(value: string): ProductCategory {
+  return value.trim().toLowerCase();
+}
+
+function normalizeBadgeTerm(value: string): string {
+  return value.trim().toUpperCase();
+}
+
+function uniqueValues(values: string[]): string[] {
+  return Array.from(new Set(values.filter(Boolean)));
+}
+
+function parseOptionValues(value: string): string[] {
+  return value
+    .split(/,|\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseGalleryUrls(value: string): string[] {
+  return uniqueValues(
+    value
+      .split(/(?:\r?\n)+|,\s*(?=https?:\/\/)/i)
+      .map((item) => item.trim())
+      .filter(Boolean)
+  );
+}
+
+function formatOptionValues(option: ProductOption): string {
+  return option.values.join(', ');
+}
+
+function createVariantId(): string {
+  return `variant-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+}
+
+function countOptionCombinations(options: ProductOption[]): number {
+  if (options.length === 0) {
+    return 0;
+  }
+
+  return options.reduce((count, option) => count * Math.max(1, option.values.length), 1);
+}
+
+function buildVariantCombinations(options: ProductOption[]): Array<Record<string, string>> {
+  if (options.length === 0) {
+    return [];
+  }
+
+  const combinations: Array<Record<string, string>> = [];
+
+  function walk(index: number, current: Record<string, string>) {
+    if (index >= options.length) {
+      combinations.push({ ...current });
+      return;
+    }
+
+    const option = options[index];
+    option.values.forEach((value) => {
+      current[option.name] = value;
+      walk(index + 1, current);
+    });
+  }
+
+  walk(0, {});
+  return combinations;
+}
+
+function buildVariantSignature(options: ProductOption[], optionValues: Record<string, string>): string {
+  return options
+    .map((option) => `${option.name.toLowerCase()}=${(optionValues[option.name] || '').trim().toLowerCase()}`)
+    .join('|');
+}
+
+function buildVariantLabel(options: ProductOption[], optionValues: Record<string, string>): string {
+  return options
+    .map((option) => optionValues[option.name])
+    .filter(Boolean)
+    .join(' / ');
+}
+
+function isColorOption(optionName: string): boolean {
+  const key = optionName.trim().toLowerCase();
+  return key === 'color' || key === 'colour' || key.includes('color') || key.includes('colour');
+}
+
+function normalizeHex(value: string): string | undefined {
+  const trimmed = value.trim().toLowerCase();
+  if (/^#([0-9a-f]{6})$/i.test(trimmed)) {
+    return trimmed;
+  }
+
+  if (/^#([0-9a-f]{3})$/i.test(trimmed)) {
+    const expanded = trimmed
+      .slice(1)
+      .split('')
+      .map((char) => `${char}${char}`)
+      .join('');
+    return `#${expanded}`;
+  }
+
+  return undefined;
+}
+
+function getFallbackSwatch(value: string): string {
+  const normalized = value.trim().toLowerCase();
+  if (normalizeHex(normalized)) {
+    return normalizeHex(normalized) as string;
+  }
+  return DEFAULT_COLOR_SWATCHES[normalized] || '#d6d3d1';
+}
+
+function normalizeOptionSwatches(
+  swatches: Product['option_swatches'] | undefined,
+  options: ProductOption[]
+): Product['option_swatches'] {
+  const normalized: Record<string, Record<string, string>> = {};
+
+  options.forEach((option) => {
+    if (!isColorOption(option.name)) {
+      return;
+    }
+
+    const sourceMap = swatches?.[option.name] || {};
+    const values = option.values
+      .map((value) => {
+        const configured = sourceMap[value];
+        const hex = normalizeHex(configured || '') || getFallbackSwatch(value);
+        return [value, hex] as const;
+      })
+      .filter(Boolean);
+
+    if (values.length > 0) {
+      normalized[option.name] = Object.fromEntries(values);
+    }
+  });
+
+  return Object.keys(normalized).length > 0 ? normalized : undefined;
+}
+
+function syncDerivedProduct(product: Product): Product {
+  const options = normalizeProductOptionDefinitions(product.product_options);
+  const variants = normalizeProductVariantDefinitions(product.product_variants, options);
+  const gallerySource =
+    product.gallery_images && product.gallery_images.length > 0 ? product.gallery_images : (product.images || []);
+  const gallery = uniqueValues(gallerySource.map((url) => url.trim()).filter(Boolean));
+  const primaryInput = typeof product.primary_image_url === 'string' ? product.primary_image_url.trim() : '';
+  const secondaryInput = typeof product.secondary_image_url === 'string' ? product.secondary_image_url.trim() : '';
+  const fallbackPrimary = gallery[0] || product.images?.[0]?.trim() || '';
+  const fallbackSecondary = gallery[1] || product.images?.[1]?.trim() || fallbackPrimary;
+  const primary = primaryInput || (product.primary_image_url == null ? fallbackPrimary : '');
+  const secondary = secondaryInput || (product.secondary_image_url == null ? fallbackSecondary : '');
+  const images = uniqueValues([primary, secondary, ...gallery].filter(Boolean));
+  const stock = variants.length > 0 ? variants.reduce((sum, variant) => sum + variant.stock, 0) : product.stock;
+  const optionSwatches = normalizeOptionSwatches(product.option_swatches, options);
+
+  return {
+    ...product,
+    category: normalizeCategoryTerm(product.category || '') || 'rings',
+    badge: normalizeBadgeTerm(product.badge || '') || 'NEW',
+    primary_image_url: primary,
+    secondary_image_url: secondary,
+    gallery_images: gallery.length > 0 ? gallery : images,
+    images,
+    stock,
+    sale_tag_enabled: Boolean(product.sale_tag_enabled),
+    option_swatches: optionSwatches,
+    product_options: options,
+    product_variants: variants
+  };
+}
+
+function generateVariantsFromOptions(product: Product, options: ProductOption[]): ProductVariant[] {
+  const combinations = buildVariantCombinations(options);
+  if (combinations.length === 0) {
+    return [];
+  }
+
+  const existing = normalizeProductVariantDefinitions(product.product_variants, options);
+  const existingBySignature = new Map<string, ProductVariant>();
+  existing.forEach((variant) => {
+    const signature = buildVariantSignature(options, variant.option_values);
+    if (!existingBySignature.has(signature)) {
+      existingBySignature.set(signature, variant);
+    }
+  });
+
+  return combinations.map((optionValues) => {
+    const signature = buildVariantSignature(options, optionValues);
+    const current = existingBySignature.get(signature);
+
+    return {
+      id: current?.id || createVariantId(),
+      sku: current?.sku || '',
+      title: current?.title || buildVariantLabel(options, optionValues),
+      option_values: optionValues,
+      price: current?.price ?? product.price,
+      compare_price: current?.compare_price ?? product.compare_price,
+      stock: current?.stock ?? 0,
+      image_url: current?.image_url || product.primary_image_url || ''
+    };
+  });
+}
+
+interface AdminProductFormPageProps {
+  mode: 'create' | 'edit';
+  initialProduct: Product;
+  allProducts: Product[];
+  categoryOptions: ProductCategory[];
+  badgeOptions: string[];
+  adminCanWrite: boolean;
+  adminWriteNotice: string;
+  originalProductId?: string;
+}
+
+export function AdminProductFormPage({
+  mode,
+  initialProduct,
+  allProducts,
+  categoryOptions,
+  badgeOptions,
+  adminCanWrite,
+  adminWriteNotice,
+  originalProductId
+}: AdminProductFormPageProps) {
+  const router = useRouter();
+  const [product, setProduct] = useState<Product>(() => {
+    return syncDerivedProduct({
+      ...initialProduct,
+      description: normalizeDescriptionForEditor(initialProduct.description || '')
+    });
+  });
+  const [galleryDraft, setGalleryDraft] = useState<string>(() => {
+    const normalized = syncDerivedProduct({
+      ...initialProduct,
+      description: normalizeDescriptionForEditor(initialProduct.description || '')
+    });
+    return (normalized.gallery_images || []).join('\n');
+  });
+  const [optionValueDrafts, setOptionValueDrafts] = useState<Record<number, string>>({});
+  const [status, setStatus] = useState('');
+  const [isSaving, startSaving] = useTransition();
+
+  const options = useMemo(() => normalizeProductOptionDefinitions(product.product_options), [product.product_options]);
+  const variants = useMemo(
+    () => normalizeProductVariantDefinitions(product.product_variants, options),
+    [product.product_variants, options]
+  );
+  const combinationCount = useMemo(() => countOptionCombinations(options), [options]);
+  const duplicateVariantSignatures = useMemo(() => {
+    if (options.length === 0 || variants.length === 0) {
+      return new Set<string>();
+    }
+
+    const counts = new Map<string, number>();
+    variants.forEach((variant) => {
+      const signature = buildVariantSignature(options, variant.option_values);
+      counts.set(signature, (counts.get(signature) ?? 0) + 1);
+    });
+
+    return new Set(Array.from(counts.entries()).filter(([, count]) => count > 1).map(([signature]) => signature));
+  }, [options, variants]);
+
+  useEffect(() => {
+    setOptionValueDrafts((prev) => {
+      const next: Record<number, string> = {};
+      Object.entries(prev).forEach(([key, value]) => {
+        const index = Number(key);
+        if (Number.isInteger(index) && index >= 0 && index < options.length) {
+          next[index] = value;
+        }
+      });
+      return next;
+    });
+  }, [options.length]);
+
+  function commitOptionValuesDraft(optionIndex: number) {
+    const draft = optionValueDrafts[optionIndex];
+    if (draft === undefined) {
+      return;
+    }
+
+    updateOptionValues(optionIndex, draft);
+    setOptionValueDrafts((prev) => {
+      const next = { ...prev };
+      delete next[optionIndex];
+      return next;
+    });
+  }
+
+  function setField<K extends keyof Product>(key: K, value: Product[K]) {
+    setProduct((prev) => {
+      const next = { ...prev, [key]: value } as Product;
+
+      if (key === 'category') {
+        next.category = (normalizeCategoryTerm(String(value)) || prev.category) as ProductCategory;
+      }
+
+      if (key === 'badge') {
+        next.badge = normalizeBadgeTerm(String(value)) || prev.badge;
+      }
+
+      if (key === 'primary_image_url' || key === 'secondary_image_url') {
+        const gallery = (next.gallery_images || []).map((url) => url.trim()).filter(Boolean);
+        const primary = (next.primary_image_url || '').trim();
+        const secondary = (next.secondary_image_url || '').trim();
+        next.images = uniqueValues([primary, secondary, ...gallery].filter(Boolean));
+      }
+
+      if (key === 'stock') {
+        return syncDerivedProduct(next);
+      }
+
+      return next;
+    });
+  }
+
+  function setOptions(rawOptions: ProductOption[]) {
+    setProduct((prev) => {
+      const normalizedOptions = normalizeProductOptionDefinitions(rawOptions);
+      const normalizedVariants = normalizeProductVariantDefinitions(prev.product_variants, normalizedOptions);
+      const optionSwatches = normalizeOptionSwatches(prev.option_swatches, normalizedOptions);
+
+      return syncDerivedProduct({
+        ...prev,
+        product_options: normalizedOptions,
+        product_variants: normalizedVariants,
+        option_swatches: optionSwatches
+      });
+    });
+  }
+
+  function addOption() {
+    const suggestedName = DEFAULT_OPTION_NAMES[options.length] || `Option ${options.length + 1}`;
+    setOptions([...options, { name: suggestedName, values: ['Default'] }]);
+  }
+
+  function addColorSizeSet() {
+    const names = new Set(options.map((option) => option.name.trim().toLowerCase()));
+    const next = [...options];
+
+    if (!names.has('color') && !names.has('colour')) {
+      next.push({ name: 'Color', values: ['Gold', 'Silver'] });
+    }
+
+    if (!names.has('size')) {
+      next.push({ name: 'Size', values: ['6', '7', '8'] });
+    }
+
+    setOptions(next);
+  }
+
+  function updateOptionName(optionIndex: number, value: string) {
+    const previous = options[optionIndex];
+    if (!previous) {
+      return;
+    }
+
+    const nextOptions = options.map((option, idx) => (idx === optionIndex ? { ...option, name: value } : option));
+    const normalizedNext = normalizeProductOptionDefinitions(nextOptions);
+    const renamed = normalizedNext[optionIndex];
+    const nextName = renamed?.name || previous.name;
+
+    setProduct((prev) => {
+      const swatches = { ...(prev.option_swatches || {}) };
+      if (previous.name !== nextName && swatches[previous.name]) {
+        swatches[nextName] = swatches[previous.name];
+        delete swatches[previous.name];
+      }
+
+      const nextVariants = normalizeProductVariantDefinitions(prev.product_variants, options).map((variant) => {
+        const nextOptionValues = { ...variant.option_values };
+        if (previous.name !== nextName && nextOptionValues[previous.name] !== undefined) {
+          nextOptionValues[nextName] = nextOptionValues[previous.name];
+          delete nextOptionValues[previous.name];
+        }
+
+        return { ...variant, option_values: nextOptionValues };
+      });
+
+      return syncDerivedProduct({
+        ...prev,
+        product_options: normalizedNext,
+        product_variants: nextVariants,
+        option_swatches: swatches
+      });
+    });
+  }
+
+  function updateOptionValues(optionIndex: number, value: string) {
+    const target = options[optionIndex];
+    if (!target) {
+      return;
+    }
+
+    const nextValues = parseOptionValues(value);
+    const nextOptions = options.map((option, idx) => (idx === optionIndex ? { ...option, values: nextValues } : option));
+
+    setProduct((prev) => {
+      const normalizedOptions = normalizeProductOptionDefinitions(nextOptions);
+      const updatedOption = normalizedOptions[optionIndex];
+      const validValues = updatedOption?.values || [];
+
+      const nextSwatches = { ...(prev.option_swatches || {}) };
+      if (updatedOption && isColorOption(updatedOption.name)) {
+        const sourceSwatches = nextSwatches[updatedOption.name] || nextSwatches[target.name] || {};
+        const normalizedColorMap: Record<string, string> = {};
+        validValues.forEach((colorValue) => {
+          const existing = normalizeHex(sourceSwatches[colorValue] || '');
+          normalizedColorMap[colorValue] = existing || getFallbackSwatch(colorValue);
+        });
+
+        nextSwatches[updatedOption.name] = normalizedColorMap;
+        if (target.name !== updatedOption.name) {
+          delete nextSwatches[target.name];
+        }
+      } else {
+        delete nextSwatches[target.name];
+      }
+
+      const nextVariants = normalizeProductVariantDefinitions(prev.product_variants, options).map((variant) => {
+        const nextOptionValues = { ...variant.option_values };
+        if (updatedOption) {
+          const currentValue = nextOptionValues[updatedOption.name];
+          const valueExists = validValues.some(
+            (valid) => valid.toLowerCase() === (currentValue || '').toLowerCase()
+          );
+          if (!valueExists) {
+            nextOptionValues[updatedOption.name] = validValues[0] || '';
+          }
+        }
+
+        return { ...variant, option_values: nextOptionValues };
+      });
+
+      return syncDerivedProduct({
+        ...prev,
+        product_options: normalizedOptions,
+        product_variants: nextVariants,
+        option_swatches: nextSwatches
+      });
+    });
+  }
+
+  function removeOption(optionIndex: number) {
+    const target = options[optionIndex];
+    if (!target) {
+      return;
+    }
+
+    setProduct((prev) => {
+      const nextOptions = options.filter((_, idx) => idx !== optionIndex);
+      const swatches = { ...(prev.option_swatches || {}) };
+      delete swatches[target.name];
+
+      const nextVariants = normalizeProductVariantDefinitions(prev.product_variants, options).map((variant) => {
+        const nextOptionValues = { ...variant.option_values };
+        delete nextOptionValues[target.name];
+        return { ...variant, option_values: nextOptionValues };
+      });
+
+      return syncDerivedProduct({
+        ...prev,
+        product_options: nextOptions,
+        product_variants: nextVariants,
+        option_swatches: swatches
+      });
+    });
+  }
+
+  function setSwatch(optionName: string, optionValue: string, nextColor: string) {
+    const normalized = normalizeHex(nextColor);
+    if (!normalized) {
+      return;
+    }
+
+    setProduct((prev) => {
+      const nextSwatches = { ...(prev.option_swatches || {}) };
+      const optionMap = { ...(nextSwatches[optionName] || {}) };
+      optionMap[optionValue] = normalized;
+      nextSwatches[optionName] = optionMap;
+
+      return { ...prev, option_swatches: nextSwatches };
+    });
+  }
+
+  function regenerateVariants() {
+    const optionsWithDrafts = normalizeProductOptionDefinitions(
+      options.map((option, optionIndex) =>
+        optionValueDrafts[optionIndex] !== undefined
+          ? { ...option, values: parseOptionValues(optionValueDrafts[optionIndex]) }
+          : option
+      )
+    );
+
+    if (optionsWithDrafts.length === 0) {
+      setStatus('Add at least one option before generating variants.');
+      return;
+    }
+
+    const combinations = countOptionCombinations(optionsWithDrafts);
+    if (combinations > 250) {
+      setStatus(`Too many combinations (${combinations}). Reduce values first.`);
+      return;
+    }
+
+    const baseProduct = syncDerivedProduct({
+      ...product,
+      product_options: optionsWithDrafts
+    });
+    const nextVariants = generateVariantsFromOptions(baseProduct, optionsWithDrafts);
+    setProduct(
+      syncDerivedProduct({
+        ...baseProduct,
+        product_variants: nextVariants
+      })
+    );
+    setOptionValueDrafts({});
+    setStatus(`Generated ${nextVariants.length} variant combinations.`);
+  }
+
+  function addManualVariant() {
+    if (options.length === 0) {
+      setStatus('Add options first before creating a manual variant.');
+      return;
+    }
+
+    const optionValues = Object.fromEntries(options.map((option) => [option.name, option.values[0] || '']));
+    const nextVariant: ProductVariant = {
+      id: createVariantId(),
+      sku: '',
+      title: buildVariantLabel(options, optionValues),
+      option_values: optionValues,
+      price: product.price,
+      compare_price: product.compare_price,
+      stock: 0,
+      image_url: product.primary_image_url || ''
+    };
+
+    setProduct((prev) =>
+      syncDerivedProduct({
+        ...prev,
+        product_variants: [...variants, nextVariant]
+      })
+    );
+  }
+
+  function updateVariantField<K extends keyof ProductVariant>(variantIndex: number, key: K, value: ProductVariant[K]) {
+    const nextVariants = variants.map((variant, idx) => (idx === variantIndex ? { ...variant, [key]: value } : variant));
+    setProduct((prev) =>
+      syncDerivedProduct({
+        ...prev,
+        product_variants: nextVariants
+      })
+    );
+  }
+
+  function updateVariantOption(variantIndex: number, optionName: string, value: string) {
+    const nextVariants = variants.map((variant, idx) =>
+      idx === variantIndex
+        ? {
+            ...variant,
+            option_values: {
+              ...variant.option_values,
+              [optionName]: value
+            }
+          }
+        : variant
+    );
+
+    setProduct((prev) =>
+      syncDerivedProduct({
+        ...prev,
+        product_variants: nextVariants
+      })
+    );
+  }
+
+  function removeVariant(variantIndex: number) {
+    const nextVariants = variants.filter((_, idx) => idx !== variantIndex);
+    setProduct((prev) =>
+      syncDerivedProduct({
+        ...prev,
+        product_variants: nextVariants
+      })
+    );
+  }
+
+  function updateGallery(rawInput: string) {
+    setGalleryDraft(rawInput);
+    const urls = parseGalleryUrls(rawInput);
+
+    setProduct((prev) => {
+      const next = {
+        ...prev,
+        gallery_images: urls,
+        images: uniqueValues([
+          (prev.primary_image_url || '').trim(),
+          (prev.secondary_image_url || '').trim(),
+          ...urls
+        ])
+      };
+
+      if (!prev.primary_image_url?.trim() && urls[0]) {
+        next.primary_image_url = urls[0];
+      }
+      if (!prev.secondary_image_url?.trim() && (urls[1] || urls[0])) {
+        next.secondary_image_url = urls[1] || urls[0];
+      }
+
+      return next;
+    });
+  }
+
+  function handleSave() {
+    if (!adminCanWrite) {
+      setStatus(adminWriteNotice);
+      return;
+    }
+
+    const hasPendingDrafts = Object.keys(optionValueDrafts).length > 0;
+    const productWithDrafts = hasPendingDrafts
+      ? syncDerivedProduct({
+          ...product,
+          product_options: options.map((option, optionIndex) =>
+            optionValueDrafts[optionIndex] !== undefined
+              ? { ...option, values: parseOptionValues(optionValueDrafts[optionIndex]) }
+              : option
+          )
+        })
+      : product;
+
+    const galleryFromDraft = parseGalleryUrls(galleryDraft);
+    const normalizedProduct = syncDerivedProduct({
+      ...productWithDrafts,
+      gallery_images: galleryFromDraft
+    });
+    if (hasPendingDrafts) {
+      setProduct(normalizedProduct);
+      setOptionValueDrafts({});
+    }
+    if (!normalizedProduct.id.trim() || !normalizedProduct.name.trim()) {
+      setStatus('Product ID and Name are required.');
+      return;
+    }
+
+    const conflict = allProducts.find(
+      (item) => item.id === normalizedProduct.id && item.id !== (originalProductId || '')
+    );
+    if (conflict) {
+      setStatus(`Product ID "${normalizedProduct.id}" already exists. Use a unique ID.`);
+      return;
+    }
+
+    const payload =
+      mode === 'create'
+        ? [normalizedProduct, ...allProducts]
+        : allProducts.map((item) => (item.id === originalProductId ? normalizedProduct : item));
+
+    setStatus('Saving...');
+
+    startSaving(async () => {
+      let result: { ok: true; count: number } | { ok: false; error: string };
+      const actionResult = await saveProductsAction(payload);
+      result = actionResult.ok
+        ? { ok: true, count: actionResult.count ?? payload.length }
+        : { ok: false, error: actionResult.error || 'Failed to save products.' };
+
+      if (!result.ok) {
+        try {
+          const response = await fetch('/api/admin/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ products: payload })
+          });
+          const data = (await response.json()) as { ok?: boolean; count?: number; error?: string };
+          result = response.ok && data.ok
+            ? { ok: true, count: data.count ?? payload.length }
+            : { ok: false, error: data.error || 'Failed to save products.' };
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'Failed to save products.';
+          result = { ok: false, error: `Save action failed. ${message}`.trim() };
+        }
+      }
+
+      if (!result.ok) {
+        setStatus(result.error || 'Failed to save product.');
+        return;
+      }
+
+      router.push('/admin');
+      router.refresh();
+    });
+  }
+
+  return (
+    <section className="mx-auto w-full max-w-[1400px] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-stone-200 pb-5">
+        <div>
+          <p className="text-[10px] uppercase tracking-luxury text-stone-500">ZIVAAD Admin</p>
+          <h1 className="mt-2 font-serif text-4xl text-stone-950 sm:text-5xl">
+            {mode === 'create' ? 'Add New Product' : 'Edit Product'}
+          </h1>
+          <p className="mt-2 text-sm text-stone-600">
+            Configure variants, color swatches, media, and rich description content from one screen.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Link
+            href="/admin"
+            className="border border-stone-300 px-4 py-2 text-[10px] uppercase tracking-luxury text-stone-700"
+          >
+            Back to Admin
+          </Link>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving || !adminCanWrite}
+            className="bg-stone-950 px-5 py-2 text-[10px] uppercase tracking-luxury text-white disabled:opacity-50"
+          >
+            {isSaving ? 'Saving...' : 'Save Product'}
+          </button>
+        </div>
+      </div>
+
+      <div
+        className={`mb-5 border p-3 text-sm ${
+          adminCanWrite ? 'border-emerald-200 bg-emerald-50 text-emerald-900' : 'border-amber-200 bg-amber-50 text-amber-900'
+        }`}
+      >
+        {adminWriteNotice}
+      </div>
+
+      {status ? <p className="mb-4 text-sm text-stone-700">{status}</p> : null}
+
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <article className="min-w-0 space-y-5 border border-stone-200 bg-white p-4 sm:p-5">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Product ID</label>
+              <input
+                value={product.id}
+                onChange={(event) => setField('id', event.target.value)}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Product Name</label>
+              <input
+                value={product.name}
+                onChange={(event) => setField('name', event.target.value)}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Price</label>
+              <input
+                type="number"
+                value={product.price}
+                onChange={(event) => setField('price', Number(event.target.value) || 0)}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Compare Price</label>
+              <input
+                type="number"
+                value={product.compare_price}
+                onChange={(event) => setField('compare_price', Number(event.target.value) || 0)}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Stock</label>
+              <input
+                type="number"
+                value={product.stock}
+                onChange={(event) => setField('stock', Number(event.target.value) || 0)}
+                disabled={variants.length > 0}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm disabled:bg-stone-50"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Category</label>
+              <select
+                value={product.category}
+                onChange={(event) => setField('category', event.target.value as ProductCategory)}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+              >
+                {categoryOptions.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Badge</label>
+              <select
+                value={product.badge}
+                onChange={(event) => setField('badge', event.target.value)}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+              >
+                {badgeOptions.map((badge) => (
+                  <option key={badge} value={badge}>
+                    {badge}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <label className="space-y-2 block">
+              <span className="text-[10px] uppercase tracking-luxury text-stone-500">Sale Tag</span>
+              <span className="flex h-[42px] items-center gap-2 border border-stone-300 px-3">
+                <input
+                  type="checkbox"
+                  checked={Boolean(product.sale_tag_enabled)}
+                  onChange={(event) => setField('sale_tag_enabled', event.target.checked)}
+                  className="h-4 w-4 border border-stone-300"
+                />
+                <span className="text-xs text-stone-700">Show `Sale` on product page</span>
+              </span>
+            </label>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase tracking-luxury text-stone-500">Product Description (Rich Text)</label>
+            <RichTextEditor
+              value={product.description}
+              onChange={(nextDescription) => setField('description', nextDescription)}
+            />
+          </div>
+
+          <div className="space-y-3 border border-stone-200 p-4">
+            <p className="text-[10px] uppercase tracking-luxury text-stone-500">Media</p>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="space-y-2 block">
+                <span className="text-[10px] uppercase tracking-luxury text-stone-500">Primary Image URL</span>
+                <input
+                  value={product.primary_image_url || ''}
+                  onChange={(event) => setField('primary_image_url', event.target.value)}
+                  className="w-full border border-stone-300 bg-white px-3 py-2 font-mono text-xs"
+                />
+              </label>
+
+              <label className="space-y-2 block">
+                <span className="text-[10px] uppercase tracking-luxury text-stone-500">Secondary Image URL</span>
+                <input
+                  value={product.secondary_image_url || ''}
+                  onChange={(event) => setField('secondary_image_url', event.target.value)}
+                  className="w-full border border-stone-300 bg-white px-3 py-2 font-mono text-xs"
+                />
+              </label>
+
+              <label className="space-y-2 block sm:col-span-2">
+                <span className="text-[10px] uppercase tracking-luxury text-stone-500">Video URL</span>
+                <input
+                  value={product.video_url}
+                  onChange={(event) => setField('video_url', event.target.value)}
+                  className="w-full border border-stone-300 bg-white px-3 py-2 font-mono text-xs"
+                />
+              </label>
+
+              <label className="space-y-2 block sm:col-span-2">
+                <span className="text-[10px] uppercase tracking-luxury text-stone-500">
+                  Gallery URLs (line or comma separated)
+                </span>
+                <textarea
+                  rows={5}
+                  value={galleryDraft}
+                  onChange={(event) => updateGallery(event.target.value)}
+                  className="w-full resize-y border border-stone-300 bg-white px-3 py-2 font-mono text-xs leading-relaxed"
+                />
+              </label>
+            </div>
+          </div>
+
+          <div className="space-y-3 border border-stone-200 p-4">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[10px] uppercase tracking-luxury text-stone-500">Options</p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={addColorSizeSet}
+                  className="border border-stone-950 px-3 py-1 text-[10px] uppercase tracking-luxury text-stone-950"
+                >
+                  Add Color + Size
+                </button>
+                <button
+                  type="button"
+                  onClick={addOption}
+                  className="border border-stone-300 px-3 py-1 text-[10px] uppercase tracking-luxury text-stone-700"
+                >
+                  Add Option
+                </button>
+              </div>
+            </div>
+
+            {options.length === 0 ? (
+              <p className="text-sm text-stone-500">Add options like Color, Size, Material, etc.</p>
+            ) : (
+              <div className="space-y-4">
+                {options.map((option, optionIndex) => (
+                  <div key={`${option.name}-${optionIndex}`} className="border border-stone-200 p-3">
+                    <div className="grid gap-2 sm:grid-cols-[1fr_2fr_auto]">
+                      <input
+                        value={option.name}
+                        onChange={(event) => updateOptionName(optionIndex, event.target.value)}
+                        className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+                        placeholder="Option name (e.g. Color)"
+                      />
+                      <input
+                        value={optionValueDrafts[optionIndex] ?? formatOptionValues(option)}
+                        onFocus={() =>
+                          setOptionValueDrafts((prev) =>
+                            prev[optionIndex] !== undefined
+                              ? prev
+                              : { ...prev, [optionIndex]: formatOptionValues(option) }
+                          )
+                        }
+                        onChange={(event) =>
+                          setOptionValueDrafts((prev) => ({ ...prev, [optionIndex]: event.target.value }))
+                        }
+                        onBlur={() => commitOptionValuesDraft(optionIndex)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter') {
+                            event.preventDefault();
+                            (event.currentTarget as HTMLInputElement).blur();
+                          }
+                        }}
+                        className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+                        placeholder="Comma or new line separated values"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeOption(optionIndex)}
+                        className="border border-stone-300 px-3 py-2 text-[10px] uppercase tracking-luxury text-stone-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+
+                    {isColorOption(option.name) && option.values.length > 0 ? (
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        {option.values.map((colorValue) => {
+                          const swatch = product.option_swatches?.[option.name]?.[colorValue] || getFallbackSwatch(colorValue);
+                          return (
+                            <div key={`${option.name}-${colorValue}`} className="grid grid-cols-[1fr_56px_92px] items-center gap-2">
+                              <span className="truncate text-xs text-stone-700">{colorValue}</span>
+                              <input
+                                type="color"
+                                value={swatch}
+                                onChange={(event) => setSwatch(option.name, colorValue, event.target.value)}
+                                className="h-9 w-14 border border-stone-300 bg-white p-1"
+                              />
+                              <input
+                                value={swatch}
+                                onChange={(event) => setSwatch(option.name, colorValue, event.target.value)}
+                                className="w-full border border-stone-300 bg-white px-2 py-2 text-xs uppercase"
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3 border border-stone-200 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-[10px] uppercase tracking-luxury text-stone-500">Variants</p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={regenerateVariants}
+                  className="border border-stone-950 px-3 py-1 text-[10px] uppercase tracking-luxury text-stone-950"
+                >
+                  Generate / Refresh
+                </button>
+                <button
+                  type="button"
+                  onClick={addManualVariant}
+                  className="border border-stone-300 px-3 py-1 text-[10px] uppercase tracking-luxury text-stone-700"
+                >
+                  Add Manual
+                </button>
+              </div>
+            </div>
+
+            {options.length > 0 ? (
+              <div className="flex flex-wrap items-center justify-between gap-2 border border-stone-200 bg-stone-50 px-3 py-2">
+                <p className="text-xs text-stone-700">{combinationCount} possible combinations.</p>
+                <p className="text-[10px] uppercase tracking-luxury text-stone-500">Generate after changing options.</p>
+              </div>
+            ) : null}
+
+            {variants.length === 0 ? (
+              <p className="text-sm text-stone-500">No variants yet.</p>
+            ) : (
+              <div className="overflow-x-auto border border-stone-200">
+                <table className="min-w-[1100px] w-full border-collapse">
+                  <thead className="bg-stone-50">
+                    <tr>
+                      <th className="border-b border-stone-200 px-3 py-2 text-left text-[10px] uppercase tracking-luxury text-stone-500">
+                        Combination
+                      </th>
+                      <th className="border-b border-stone-200 px-3 py-2 text-left text-[10px] uppercase tracking-luxury text-stone-500">
+                        SKU
+                      </th>
+                      <th className="border-b border-stone-200 px-3 py-2 text-left text-[10px] uppercase tracking-luxury text-stone-500">
+                        Price
+                      </th>
+                      <th className="border-b border-stone-200 px-3 py-2 text-left text-[10px] uppercase tracking-luxury text-stone-500">
+                        Compare
+                      </th>
+                      <th className="border-b border-stone-200 px-3 py-2 text-left text-[10px] uppercase tracking-luxury text-stone-500">
+                        Stock
+                      </th>
+                      <th className="border-b border-stone-200 px-3 py-2 text-left text-[10px] uppercase tracking-luxury text-stone-500">
+                        Image URL
+                      </th>
+                      <th className="border-b border-stone-200 px-3 py-2 text-left text-[10px] uppercase tracking-luxury text-stone-500">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {variants.map((variant, variantIndex) => {
+                      const signature = buildVariantSignature(options, variant.option_values);
+                      const isDuplicate = duplicateVariantSignatures.has(signature);
+                      const label = buildVariantLabel(options, variant.option_values);
+
+                      return (
+                        <tr key={`${variant.id}-${variantIndex}`}>
+                          <td className="border-b border-stone-200 px-3 py-2 align-top">
+                            <p className="text-sm text-stone-900">{label || variant.title || 'Variant'}</p>
+                            <p className="mt-1 text-[10px] uppercase tracking-luxury text-stone-500">{variant.id}</p>
+                            {isDuplicate ? (
+                              <p className="mt-1 text-[10px] uppercase tracking-luxury text-red-700">
+                                Duplicate combination
+                              </p>
+                            ) : null}
+                            <div className="mt-2 space-y-1.5">
+                              {options.map((option) => (
+                                <label key={`${variant.id}-${option.name}`} className="grid grid-cols-[74px_minmax(0,1fr)] items-center gap-2">
+                                  <span className="truncate text-[10px] uppercase tracking-luxury text-stone-500">{option.name}</span>
+                                  <select
+                                    value={variant.option_values[option.name] || option.values[0] || ''}
+                                    onChange={(event) => updateVariantOption(variantIndex, option.name, event.target.value)}
+                                    className="border border-stone-300 bg-white px-2 py-1.5 text-xs"
+                                  >
+                                    {option.values.map((value) => (
+                                      <option key={`${option.name}-${value}`} value={value}>
+                                        {value}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </label>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="border-b border-stone-200 px-3 py-2 align-top">
+                            <input
+                              value={variant.sku || ''}
+                              onChange={(event) => updateVariantField(variantIndex, 'sku', event.target.value)}
+                              className="w-[150px] border border-stone-300 bg-white px-2 py-1.5 text-xs"
+                              placeholder="SKU"
+                            />
+                          </td>
+                          <td className="border-b border-stone-200 px-3 py-2 align-top">
+                            <input
+                              type="number"
+                              value={variant.price ?? ''}
+                              onChange={(event) =>
+                                updateVariantField(
+                                  variantIndex,
+                                  'price',
+                                  event.target.value ? Number(event.target.value) : undefined
+                                )
+                              }
+                              className="w-[110px] border border-stone-300 bg-white px-2 py-1.5 text-xs"
+                            />
+                          </td>
+                          <td className="border-b border-stone-200 px-3 py-2 align-top">
+                            <input
+                              type="number"
+                              value={variant.compare_price ?? ''}
+                              onChange={(event) =>
+                                updateVariantField(
+                                  variantIndex,
+                                  'compare_price',
+                                  event.target.value ? Number(event.target.value) : undefined
+                                )
+                              }
+                              className="w-[110px] border border-stone-300 bg-white px-2 py-1.5 text-xs"
+                            />
+                          </td>
+                          <td className="border-b border-stone-200 px-3 py-2 align-top">
+                            <input
+                              type="number"
+                              value={variant.stock}
+                              onChange={(event) => updateVariantField(variantIndex, 'stock', Number(event.target.value) || 0)}
+                              className="w-[90px] border border-stone-300 bg-white px-2 py-1.5 text-xs"
+                            />
+                          </td>
+                          <td className="border-b border-stone-200 px-3 py-2 align-top">
+                            <input
+                              value={variant.image_url || ''}
+                              onChange={(event) => updateVariantField(variantIndex, 'image_url', event.target.value)}
+                              className="w-[220px] border border-stone-300 bg-white px-2 py-1.5 text-xs"
+                              placeholder="https://..."
+                            />
+                          </td>
+                          <td className="border-b border-stone-200 px-3 py-2 align-top">
+                            <button
+                              type="button"
+                              onClick={() => removeVariant(variantIndex)}
+                              className="border border-stone-300 px-3 py-1 text-[10px] uppercase tracking-luxury text-stone-700"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </article>
+
+        <aside className="min-w-0 space-y-5">
+
+          <article className="space-y-3 border border-stone-200 bg-white p-4 sm:p-5">
+            <p className="text-[10px] uppercase tracking-luxury text-stone-500">Preview</p>
+            <div className="relative aspect-[4/5] overflow-hidden border border-stone-200 bg-stone-100">
+              <Image
+                src={product.primary_image_url || product.images[0] || fallbackImage}
+                alt={product.name || 'Preview image'}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 380px"
+              />
+            </div>
+            {(product.gallery_images || []).length > 0 ? (
+              <div className="grid grid-cols-3 gap-2">
+                {(product.gallery_images || []).slice(0, 6).map((url, index) => (
+                  <div key={`${url}-${index}`} className="relative aspect-square overflow-hidden border border-stone-200 bg-stone-100">
+                    <Image
+                      src={url}
+                      alt={`Gallery preview ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="120px"
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            <p className="text-xs text-stone-600">
+              {variants.length > 0 ? `${variants.length} variants · ${product.stock} total stock` : `${product.stock} stock units`}
+            </p>
+          </article>
+        </aside>
+      </div>
+    </section>
+  );
+}

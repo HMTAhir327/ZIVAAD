@@ -1,0 +1,64 @@
+{
+  "hero": {
+    "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto,w_1600,c_limit/f_auto,q_auto/aeff5673375689.5c077ee589738-1000_vadguw",
+    "gradient_enabled": false,
+    "overlay_gradient": "linear-gradient(to top, rgba(0,0,0,0.70), rgba(0,0,0,0.25), rgba(0,0,0,0.15))",
+    "eyebrow": "ZIVAAD",
+    "title": "Minimal Luxury Jewelry",
+    "subtitle": "Sculpted essentials with clean lines, subtle shine, and a timeless point of view.",
+    "primary_cta_label": "Shop Now",
+    "primary_cta_href": "/shop",
+    "secondary_cta_label": "The Collection",
+    "secondary_cta_href": "/collection"
+  },
+  "media": {
+    "storytelling_video_url": "https://res.cloudinary.com/dyb3292pp/video/upload/f_auto,q_auto/v1775081640/9328444-hd_1366_720_25fps_fztnna.mp4",
+    "editorial_banner_image_url": "https://res.cloudinary.com/demo/image/upload/f_auto,q_auto,w_1600,c_limit/v1690000000/samples/ecommerce/leather-bag-gray.jpg",
+    "editorial_banner_gradient_enabled": true,
+    "editorial_banner_overlay_gradient": "linear-gradient(to right, rgba(0,0,0,0.0), rgba(0,0,0,0.0))",
+    "visual_story_images": [
+      "https://res.cloudinary.com/demo/image/upload/f_auto,q_auto,w_1600,c_limit/v1690000000/samples/ecommerce/shoes.png"
+    ],
+    "category_collection_images": {
+      "earrings": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto,w_1600,c_limit/q_auto/f_auto/v1775087365/earings_im91ka.webp",
+      "rings": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto,w_1600,c_limit/q_auto/f_auto/v1775087688/rings_msllwu.webp",
+      "necklaces": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto,w_1600,c_limit/q_auto/f_auto/v1775090619/Necklace_bza7no.webp",
+      "bracelets": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto,w_1600,c_limit/q_auto/f_auto/v1775091269/Bracelets_Bangles_hxrchs.jpg",
+      "jewellery sets": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto,w_1600,c_limit/q_auto/f_auto/v1775097287/full_set_ugogyb.jpg",
+      "jewellery set": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto,w_1600,c_limit/f_auto/v1775097287/full_set_ugogyb.jpg"
+    }
+  },
+  "headings": {
+    "best_sellers": "Best Selling Jewelry in Pakistan",
+    "shop": "Shop Jewelry",
+    "collections": "Shop Jewelry by Category",
+    "related_pieces": "You May Also Like",
+    "cta": "Build your everyday collection",
+    "editorial_banner": "Timeless elegance for everyday wear"
+  },
+  "footer": {
+    "email": "zivaad.support@gmail.com",
+    "location": "Lahore, Pakistan",
+    "whatsapp_display": "+92 308 4271446",
+    "social_links": {
+      "instagram": "https://www.instagram.com/zivaadofficial/",
+      "whatsapp": "https://wa.me/923084271446",
+      "facebook": "https://www.facebook.com/profile.php?id=61577466489502",
+      "tiktok": "https://www.tiktok.com/@zivaadofficial"
+    }
+  },
+  "taxonomy": {
+    "categories": [
+      "bracelets",
+      "earrings",
+      "jewellery set",
+      "necklaces",
+      "rings"
+    ],
+    "badges": [
+      "BESTSELLER",
+      "NEW",
+      "LIMITED"
+    ]
+  }
+}

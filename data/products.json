@@ -1,0 +1,65 @@
+[
+  {
+    "id": "new-piece-1775109067994-dzq21",
+    "name": "Clover Jewellery Set",
+    "price": 1800,
+    "compare_price": 0,
+    "category": "jewellery set",
+    "primary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/white-necklace-02_s0xjtd.jpg",
+    "secondary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/black-necklace-01_bvp8aj.jpg",
+    "gallery_images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/white-necklace-02_s0xjtd.jpg",
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/black-necklace-01_bvp8aj.jpg"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/white-necklace-02_s0xjtd.jpg",
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/black-necklace-01_bvp8aj.jpg"
+    ],
+    "video_url": "",
+    "description": "<p><ul><li>100% Anti tarnish Material.</li><li>Premium Box packaging</li><li>Smooth excellent finish.</li><li>Pure Stainless Steel.</li><li>Colour Guarantee.</li><li>Imported Thai Quality Jewellery.</li></ul></p>",
+    "badge": "NEW",
+    "stock": 7,
+    "sale_tag_enabled": false,
+    "option_swatches": {
+      "Color": {
+        "White": "#f5f5f4",
+        "Black": "#111111"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "White",
+          "Black"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1775109087227-6ggk",
+        "sku": "111",
+        "title": "White / 1",
+        "option_values": {
+          "Color": "White"
+        },
+        "price": 1800,
+        "compare_price": 3500,
+        "stock": 4,
+        "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/white-necklace-02_s0xjtd.jpg"
+      },
+      {
+        "id": "variant-1775109087228-8pc0",
+        "sku": "555",
+        "title": "Black / 1",
+        "option_values": {
+          "Color": "Black"
+        },
+        "price": 1500,
+        "compare_price": 2000,
+        "stock": 3,
+        "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/black-necklace-01_bvp8aj.jpg"
+      }
+    ]
+  }
+]
