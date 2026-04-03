@@ -53,31 +53,37 @@ export default async function ContactPage() {
   ];
 
   return (
-    <section className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 lg:px-8 lg:py-20">
-      <p className="text-xs uppercase tracking-luxury text-stone-500">Contact</p>
-      <h1 className="mt-3 font-serif text-4xl text-stone-950 sm:text-6xl">Get In Touch</h1>
+    <section className="mx-auto w-full max-w-[1240px] px-5 py-12 sm:px-8 lg:py-24">
+      <div className="grid items-start gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16">
+        <aside className="max-w-xl">
+          <p className="text-[11px] uppercase tracking-luxury text-stone-500">Contact</p>
+          <h1 className="mt-4 font-serif text-5xl leading-[0.95] text-stone-950 sm:text-6xl">Get In Touch</h1>
+          <p className="mt-5 text-sm leading-relaxed text-stone-600">
+            For order updates, wholesale inquiries, and custom requests, send us a message and our team will respond shortly.
+          </p>
 
-      <div className="mt-7 grid gap-8 md:mt-8 md:grid-cols-2">
-        <div className="space-y-3 text-sm text-stone-700">
-          <p>
-            <span className="font-medium">WhatsApp:</span>{' '}
-            <a
-              href={siteContent.footer.social_links.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-stone-950"
-            >
-              {siteContent.footer.whatsapp_display}
-            </a>
-          </p>
-          <p>
-            <span className="font-medium">Email:</span> {siteContent.footer.email}
-          </p>
-          <p>
-            <span className="font-medium">Hours:</span> Mon-Sat, 11:00 AM - 7:00 PM
-          </p>
-          <div className="pt-3">
-            <p className="mb-2 text-[10px] uppercase tracking-luxury text-stone-500">Follow ZIVAAD</p>
+          <div className="mt-9 space-y-3.5 text-sm text-stone-700">
+            <p>
+              <span className="font-medium text-stone-900">WhatsApp:</span>{' '}
+              <a
+                href={siteContent.footer.social_links.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 hover:text-stone-950 hover:underline"
+              >
+                {siteContent.footer.whatsapp_display}
+              </a>
+            </p>
+            <p>
+              <span className="font-medium text-stone-900">Email:</span> {siteContent.footer.email}
+            </p>
+            <p>
+              <span className="font-medium text-stone-900">Hours:</span> Mon-Sat, 11:00 AM - 7:00 PM
+            </p>
+          </div>
+
+          <div className="mt-8">
+            <p className="mb-3 text-[10px] uppercase tracking-luxury text-stone-500">Follow ZIVAAD</p>
             <div className="flex items-center gap-3">
               {socialLinks.map(({ href, label, Icon }) => (
                 <a
@@ -86,16 +92,18 @@ export default async function ContactPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 text-stone-700 transition-colors hover:border-stone-950 hover:text-stone-950"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-700 transition-colors hover:border-stone-950 hover:text-stone-950"
                 >
                   <Icon />
                 </a>
               ))}
             </div>
           </div>
-        </div>
+        </aside>
 
-        <ContactForm />
+        <div className="w-full">
+          <ContactForm />
+        </div>
       </div>
     </section>
   );

@@ -127,7 +127,7 @@ export function Navbar() {
       <header
         className={`fixed inset-x-0 top-0 z-[90] border-b transition-all duration-500 ease-luxury ${
           isScrolled ? 'border-stone-200 bg-white/96 backdrop-blur-xl' : 'border-transparent bg-white/35 backdrop-blur-md'
-        }`}
+        } max-lg:border-stone-200 max-lg:bg-white/96 max-lg:backdrop-blur-xl`}
       >
         <div className="bg-black">
           <div className="flex h-7 w-full items-center justify-center px-4 text-[9px] uppercase tracking-luxury text-white/90 sm:h-8 sm:px-6 sm:text-[10px] lg:px-10">
@@ -162,7 +162,7 @@ export function Navbar() {
           <div className="flex items-center justify-center justify-self-center">
             <Link
               href="/"
-              className="font-serif text-[1.75rem] leading-none tracking-[0.14em] text-stone-950 sm:text-[2rem] lg:hidden"
+              className="font-serif text-[1.85rem] leading-none tracking-[0.14em] text-stone-950 sm:text-[2rem] lg:hidden"
               aria-label="ZIVAAD home"
             >
               ZIVAAD
@@ -287,21 +287,21 @@ export function Navbar() {
                     animate={{ x: 0 }}
                     exit={{ x: '-100%' }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                    className="fixed left-0 top-0 z-[210] flex h-full w-[88vw] max-w-[360px] flex-col bg-[#f6f2ed] px-7 pb-8 pt-7 shadow-[0_30px_80px_rgba(17,17,17,0.28)] lg:hidden"
+                    className="fixed left-0 top-0 z-[210] flex h-full w-[86vw] max-w-[380px] flex-col bg-white px-6 pb-7 pt-6 shadow-[0_30px_80px_rgba(17,17,17,0.28)] lg:hidden"
                   >
-                    <div className="flex items-center justify-between border-b border-stone-300 pb-5">
-                      <p className="font-serif text-[2rem] leading-none tracking-[0.14em] text-stone-950">ZIVAAD</p>
+                    <div className="flex items-center justify-between border-b border-stone-200 pb-4">
+                      <p className="font-serif text-[1.9rem] leading-none tracking-[0.14em] text-stone-950">ZIVAAD</p>
                       <button
                         type="button"
                         onClick={() => setIsMenuOpen(false)}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-2xl leading-none text-stone-700 transition-colors hover:border-stone-950 hover:text-stone-950"
+                        className="inline-flex h-9 w-9 items-center justify-center border border-stone-300 text-2xl leading-none text-stone-700 transition-colors hover:border-stone-950 hover:text-stone-950"
                         aria-label="Close menu"
                       >
                         ×
                       </button>
                     </div>
-                    <p className="mt-4 text-[10px] uppercase tracking-luxury text-stone-500">Menu</p>
-                    <nav className="mt-4 space-y-5">
+                    <p className="mt-4 text-[10px] uppercase tracking-luxury text-stone-400">Menu</p>
+                    <nav className="mt-3 space-y-4">
                       {primaryLinks.map((item) => {
                         const active = pathname === item.href;
 
@@ -310,7 +310,7 @@ export function Navbar() {
                             key={`sidebar-${item.href}`}
                             href={item.href}
                             onClick={() => setIsMenuOpen(false)}
-                            className={`block border-b pb-3 text-[13px] uppercase tracking-[0.26em] transition-colors ${
+                            className={`block border-b pb-3 text-[12px] uppercase tracking-[0.2em] transition-colors ${
                               active
                                 ? 'border-stone-950 text-stone-950'
                                 : 'border-stone-300 text-stone-500 hover:border-stone-950 hover:text-stone-950'
@@ -321,8 +321,8 @@ export function Navbar() {
                         );
                       })}
                     </nav>
-                    <div className="mt-auto border-t border-stone-300 pt-5">
-                      <p className="text-[10px] uppercase tracking-luxury text-stone-500">Minimal Luxury Jewelry</p>
+                    <div className="mt-auto border-t border-stone-200 pt-4">
+                      <p className="text-[10px] uppercase tracking-luxury text-stone-400">Minimal Luxury Jewelry</p>
                     </div>
                   </motion.aside>
                 </>

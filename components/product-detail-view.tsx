@@ -206,8 +206,8 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
   return (
     <>
       <section className="grid w-full gap-8 px-4 pb-16 pt-4 sm:px-8 sm:pb-20 sm:pt-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-14 lg:px-10">
-        <div className="grid grid-cols-[3.75rem_minmax(0,1fr)] items-start gap-2.5 sm:grid-cols-[4.5rem_minmax(0,1fr)] sm:gap-4 lg:max-w-[760px]">
-          <div className="max-h-[min(62vh,720px)] space-y-2 overflow-y-auto pr-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:space-y-3 [&::-webkit-scrollbar]:hidden">
+        <div className="flex flex-col gap-2.5 sm:gap-4 lg:grid lg:max-w-[760px] lg:grid-cols-[4.5rem_minmax(0,1fr)] lg:items-start">
+          <div className="order-2 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-3 lg:order-1 lg:max-h-[min(62vh,720px)] lg:block lg:space-y-3 lg:overflow-y-auto lg:pr-1 [&::-webkit-scrollbar]:hidden">
             {mediaItems.map((media, index) => {
               const isActive = activeMedia.url === media.url;
               return (
@@ -215,7 +215,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                   key={`${media.url}-${index}`}
                   type="button"
                   onClick={() => setActiveMedia(media)}
-                  className={`relative block aspect-square w-full overflow-hidden bg-stone-100 transition-opacity ${
+                  className={`relative block h-16 w-16 shrink-0 overflow-hidden bg-stone-100 transition-opacity sm:h-20 sm:w-20 lg:aspect-square lg:h-auto lg:w-full ${
                     isActive ? 'ring-1 ring-stone-400 opacity-100' : 'opacity-70 hover:opacity-100'
                   }`}
                 >
@@ -237,7 +237,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
             })}
           </div>
 
-          <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
+          <div className="order-1 relative aspect-[4/5] overflow-hidden bg-stone-100 lg:order-2">
             {activeMedia.kind === 'video' ? (
               <video
                 className="h-full w-full object-cover"
