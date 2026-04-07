@@ -1,5 +1,68 @@
 [
   {
+    "id": "new-piece-1775603205182-nlgkg",
+    "name": "4-Leaf Clover Magnetic Heart Necklace",
+    "price": 1299,
+    "compare_price": 1599,
+    "category": "necklaces",
+    "primary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603696/il_794xN.3414453306_peib_1080x_xehaj5.jpg",
+    "secondary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603222/neck0.2_zb5brv.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603696/il_794xN.3414453306_peib_1080x_xehaj5.jpg",
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603222/neck0.2_zb5brv.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603696/il_794xN.3414453306_peib_1080x_xehaj5.jpg",
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603222/neck0.2_zb5brv.png"
+    ],
+    "video_url": "",
+    "description": "<p>A necklace that’s more than just jewelry — it’s a symbol of love, luck, and connection. This <strong>4-Leaf Clover Magnetic Heart Necklace</strong> beautifully transforms from a lucky clover into a row of delicate hearts, giving you two stunning styles in one piece. Designed with a premium finish and sparkling stones, it’s perfect for everyday elegance or meaningful gifting.<br><br></p><li><strong>2-in-1 Transform Design</strong> – Converts from a <strong>4-leaf clover to heart-shaped necklace</strong>\n</li><li><strong>Magnetic Mechanism</strong> – Smoothly opens and closes for a unique styling experience\n</li><li><strong>Symbol of Luck &amp; Love</strong> – Clover represents luck, hearts represent love\n</li><li><strong>Two-Tone Luxury Look</strong> – Available in gold and silver styles</li><li><strong>Premium Quality Finish</strong><span> – Strong polish, elegant shine, and durable design</span></li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "sale_tag_enabled": false,
+    "option_swatches": {
+      "Color": {
+        "Gold": "#c9a24a",
+        "Silver": "#bfc3c9"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "Gold",
+          "Silver"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1775603720626-tzsv",
+        "sku": "ZID-NK-11",
+        "title": "Gold",
+        "option_values": {
+          "Color": "Gold"
+        },
+        "price": 1299,
+        "compare_price": 1599,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603222/neck0.2_zb5brv.png"
+      },
+      {
+        "id": "variant-1775603720626-x0s5",
+        "sku": "ZID-NK-22",
+        "title": "Silver",
+        "option_values": {
+          "Color": "Silver"
+        },
+        "price": 1299,
+        "compare_price": 1599,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603696/il_794xN.3414453306_peib_1080x_xehaj5.jpg"
+      }
+    ]
+  },
+  {
     "id": "new-piece-1775592899392-r3wag",
     "name": "Elegant Long Drop Statement Earrings",
     "price": 599,
