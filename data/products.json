@@ -1,5 +1,114 @@
 [
   {
+    "id": "new-piece-1775592899392-r3wag",
+    "name": "Elegant Long Drop Statement Earrings",
+    "price": 599,
+    "compare_price": 999,
+    "category": "earrings",
+    "primary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592869/Gemini_Generated_Image_whhd5gwhhd5gwhhd_fy5ndx.png",
+    "secondary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592870/Gemini_Generated_Image_lda5cdlda5cdlda5_dsqqdp.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592869/Gemini_Generated_Image_whhd5gwhhd5gwhhd_fy5ndx.png",
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592870/Gemini_Generated_Image_lda5cdlda5cdlda5_dsqqdp.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592869/Gemini_Generated_Image_whhd5gwhhd5gwhhd_fy5ndx.png",
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592870/Gemini_Generated_Image_lda5cdlda5cdlda5_dsqqdp.png"
+    ],
+    "video_url": "",
+    "description": "<p>Turn every moment into a statement with these <strong>Luxury Crystal Tassel Earrings</strong>, designed to add instant elegance and sparkle to your look. Featuring a refined arrangement of shimmering stones and cascading strands, these earrings create a graceful flow that moves beautifully with you. Their premium finish and eye-catching shine make them perfect for weddings, parties, and special occasions where you want to stand out effortlessly.</p><li>Stunning <strong>long tassel earrings</strong> with a premium crystal finish\n</li><li>\nElegant cascading design that adds <strong>movement and shine</strong>\n</li><li>\nPerfect for <strong>weddings, parties, formal events, and evening wear</strong>\n</li><li>\nLightweight and comfortable despite a bold statement look\n</li><li>\nHigh-quality polish for a <strong>luxury feel and lasting shine</strong></li><li><strong><span>Instantly enhances any outfit with a&nbsp;</span><span>glamorous touch</span></strong></li>",
+    "badge": "BESTSELLER",
+    "stock": 20,
+    "sale_tag_enabled": false,
+    "option_swatches": {
+      "Color": {
+        "Gold": "#c9a24a",
+        "Silver": "#bfc3c9"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "Gold",
+          "Silver"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1775593201623-td27",
+        "sku": "ZID-ER-11",
+        "title": "Gold",
+        "option_values": {
+          "Color": "Gold"
+        },
+        "price": 599,
+        "compare_price": 999,
+        "stock": 10,
+        "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592869/Gemini_Generated_Image_whhd5gwhhd5gwhhd_fy5ndx.png"
+      },
+      {
+        "id": "variant-1775593201623-si9f",
+        "sku": "ZID-ER-12",
+        "title": "Silver",
+        "option_values": {
+          "Color": "Silver"
+        },
+        "price": 599,
+        "compare_price": 999,
+        "stock": 10,
+        "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592869/Gemini_Generated_Image_whhd5gwhhd5gwhhd_fy5ndx.png"
+      }
+    ]
+  },
+  {
+    "id": "new-piece-1775589582301-1so1c",
+    "name": "Minimal Couple Hug Charm Necklace",
+    "price": 999,
+    "compare_price": 1499,
+    "category": "necklaces",
+    "primary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775589551/Gemini_Generated_Image_3a5exb3a5exb3a5e_jlzvgf.png",
+    "secondary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775590652/Gemini_Generated_Image_l91p1dl91p1dl91p_p6x0oi.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775589551/Gemini_Generated_Image_3a5exb3a5exb3a5e_jlzvgf.png",
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775590652/Gemini_Generated_Image_l91p1dl91p1dl91p_p6x0oi.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775589551/Gemini_Generated_Image_3a5exb3a5exb3a5e_jlzvgf.png",
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775590652/Gemini_Generated_Image_l91p1dl91p1dl91p_p6x0oi.png"
+    ],
+    "video_url": "",
+    "description": "<p><span>Artistic</span>, meaningful, and beautifully modern, this <strong>Two-Tone Embrace Pendant Necklace</strong> is designed to symbolize love, closeness, and connection. Featuring a graceful silver and gold-toned hugging figure pendant on a fine chain, this necklace brings a soft emotional touch to your everyday style. Its polished finish, artistic design, and premium feel make it a beautiful choice for daily wear or heartfelt gifting.</p><li>Unique <strong>embrace pendant necklace</strong> with a modern artistic design\n</li><li>\nStylish <strong>two-tone finish</strong> for an elegant and premium look\n</li><li>\nLightweight, comfortable, and easy to wear all day\n</li><li>\nPerfect for <strong>daily wear, special occasions, and meaningful gifting</strong></li><li><strong><span>Symbolizes&nbsp;</span><span>love, warmth, togetherness, and emotional connection</span></strong></li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "sale_tag_enabled": false,
+    "product_options": [],
+    "product_variants": []
+  },
+  {
+    "id": "new-piece-1775587209480-x9h2q",
+    "name": "Silver Heart Charm Necklace",
+    "price": 750,
+    "compare_price": 950,
+    "category": "necklaces",
+    "primary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/f_auto/v1775587142/Gemini_Generated_Image_6sc68d6sc68d6sc6_u2ropy.png",
+    "secondary_image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/f_auto/v1775587142/Gemini_Generated_Image_6sc68d6sc68d6sc6_u2ropy.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/f_auto/v1775587142/Gemini_Generated_Image_6sc68d6sc68d6sc6_u2ropy.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/f_auto/v1775587142/Gemini_Generated_Image_6sc68d6sc68d6sc6_u2ropy.png"
+    ],
+    "video_url": "",
+    "description": "<p>Delicate, elegant, and made to say a lot without trying too hard, this <strong>Silver Heart Charm Necklace</strong> is the perfect piece for everyday wear. Designed with a sleek chain, modern bar detail, and a polished heart pendant, it adds a soft romantic touch to both casual and dressy looks. Its refined finish and premium feel make it a beautiful choice for self-gifting or for someone special.</p><li>Elegant <strong>heart pendant necklace</strong> with a clean modern look\n</li><li>\nPerfect for <strong>daily wear</strong>, office wear, dinners, and gifting\n</li><li>\nLightweight, comfortable, and easy to style with any outfit\n</li><li>\nMinimal design with a premium polished finish</li><li><span>A thoughtful piece that adds a soft emotional touch to your look</span></li>",
+    "badge": "LIMITED",
+    "stock": 7,
+    "sale_tag_enabled": false,
+    "product_options": [],
+    "product_variants": []
+  },
+  {
     "id": "new-piece-1775109067994-dzq21",
     "name": "Clover Jewellery Set",
     "price": 1800,

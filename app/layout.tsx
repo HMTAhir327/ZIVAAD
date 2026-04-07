@@ -28,6 +28,15 @@ export const metadata: Metadata = {
     template: '%s | ZIVAAD'
   },
   description: 'Sculpted essentials with clean lines and a timeless point of view.',
+  icons: {
+    icon: [{ url: 'https://res.cloudinary.com/dyb3292pp/image/upload/q_auto/f_auto/v1775200846/zivaad_sm_logo_o8hykt.jpg' }],
+    shortcut: [
+      { url: 'https://res.cloudinary.com/dyb3292pp/image/upload/q_auto/f_auto/v1775200846/zivaad_sm_logo_o8hykt.jpg' }
+    ],
+    apple: [
+      { url: 'https://res.cloudinary.com/dyb3292pp/image/upload/q_auto/f_auto/v1775200846/zivaad_sm_logo_o8hykt.jpg' }
+    ]
+  },
   openGraph: {
     title: 'ZIVAAD | Minimal Luxury Jewelry',
     description: 'Luxury-inspired minimal jewelry experience.',

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { saveProductsAction } from '@/app/admin/actions';
@@ -53,6 +53,122 @@ function parseGalleryUrls(value: string): string[] {
       .split(/(?:\r?\n)+|,\s*(?=https?:\/\/)/i)
       .map((item) => item.trim())
       .filter(Boolean)
+  );
+}
+
+function formatMediaOptionLabel(url: string, index: number): string {
+  try {
+    const parsed = new URL(url);
+    const filename = parsed.pathname.split('/').pop() || url;
+    return `${index + 1}. ${filename}`;
+  } catch {
+    return `${index + 1}. ${url}`;
+  }
+}
+
+interface MediaPickerOption {
+  url: string;
+  label: string;
+}
+
+interface MediaPickerProps {
+  value: string;
+  options: MediaPickerOption[];
+  onChange: (value: string) => void;
+  placeholder: string;
+  emptyLabel?: string;
+  className?: string;
+}
+
+function MediaPicker({ value, options, onChange, placeholder, emptyLabel, className = '' }: MediaPickerProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  const selected = options.find((option) => option.url === value);
+  const buttonLabel = selected?.label || placeholder;
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    function handlePointerDown(event: MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  return (
+    <div ref={rootRef} className={`relative ${className}`}>
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="flex h-[42px] w-full items-center justify-between gap-2 border border-stone-300 bg-white px-2.5 text-left"
+      >
+        <span className="flex min-w-0 items-center gap-2">
+          {value ? (
+            <img src={value} alt="" className="h-7 w-7 shrink-0 rounded-sm border border-stone-200 object-cover bg-stone-100" />
+          ) : (
+            <span className="h-7 w-7 shrink-0 rounded-sm border border-dashed border-stone-300 bg-stone-50" />
+          )}
+          <span className="truncate text-xs text-stone-700">{buttonLabel}</span>
+        </span>
+        <span className="shrink-0 text-[11px] text-stone-400">▾</span>
+      </button>
+
+      {isOpen ? (
+        <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-40 max-h-64 overflow-y-auto border border-stone-200 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+          {emptyLabel ? (
+            <button
+              type="button"
+              onClick={() => {
+                onChange('');
+                setIsOpen(false);
+              }}
+              className="flex w-full items-center gap-2 border-b border-stone-100 px-2.5 py-2 text-left text-xs text-stone-700 hover:bg-stone-50"
+            >
+              <span className="h-7 w-7 shrink-0 rounded-sm border border-dashed border-stone-300 bg-stone-50" />
+              <span className="truncate">{emptyLabel}</span>
+            </button>
+          ) : null}
+
+          {options.map((option) => (
+            <button
+              key={option.url}
+              type="button"
+              onClick={() => {
+                onChange(option.url);
+                setIsOpen(false);
+              }}
+              className={`flex w-full items-center gap-2 px-2.5 py-2 text-left text-xs hover:bg-stone-50 ${
+                option.url === value ? 'bg-stone-100 text-stone-900' : 'text-stone-700'
+              }`}
+            >
+              <img
+                src={option.url}
+                alt=""
+                className="h-8 w-8 shrink-0 rounded-sm border border-stone-200 object-cover bg-stone-100"
+              />
+              <span className="truncate">{option.label}</span>
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -277,6 +393,30 @@ export function AdminProductFormPage({
     [product.product_variants, options]
   );
   const combinationCount = useMemo(() => countOptionCombinations(options), [options]);
+  const mediaOptions = useMemo(() => {
+    const variantImages = variants.map((variant) => (variant.image_url || '').trim()).filter(Boolean);
+    return uniqueValues(
+      [
+        ...(product.gallery_images || []),
+        ...(product.images || []),
+        (product.primary_image_url || '').trim(),
+        (product.secondary_image_url || '').trim(),
+        ...variantImages
+      ]
+        .map((url) => url.trim())
+        .filter(Boolean)
+    );
+  }, [
+    product.gallery_images,
+    product.images,
+    product.primary_image_url,
+    product.secondary_image_url,
+    variants
+  ]);
+  const mediaPickerOptions = useMemo(
+    () => mediaOptions.map((url, index) => ({ url, label: formatMediaOptionLabel(url, index) })),
+    [mediaOptions]
+  );
   const duplicateVariantSignatures = useMemo(() => {
     if (options.length === 0 || variants.length === 0) {
       return new Set<string>();
@@ -872,20 +1012,30 @@ export function AdminProductFormPage({
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="space-y-2 block">
                 <span className="text-[10px] uppercase tracking-luxury text-stone-500">Primary Image URL</span>
-                <input
+                <MediaPicker
                   value={product.primary_image_url || ''}
-                  onChange={(event) => setField('primary_image_url', event.target.value)}
-                  className="w-full border border-stone-300 bg-white px-3 py-2 font-mono text-xs"
+                  onChange={(nextValue) => setField('primary_image_url', nextValue)}
+                  options={mediaPickerOptions}
+                  placeholder="Select from Gallery URLs"
+                  emptyLabel="None"
                 />
+                {product.primary_image_url ? (
+                  <p className="break-all font-mono text-[11px] text-stone-500">{product.primary_image_url}</p>
+                ) : null}
               </label>
 
               <label className="space-y-2 block">
                 <span className="text-[10px] uppercase tracking-luxury text-stone-500">Secondary Image URL</span>
-                <input
+                <MediaPicker
                   value={product.secondary_image_url || ''}
-                  onChange={(event) => setField('secondary_image_url', event.target.value)}
-                  className="w-full border border-stone-300 bg-white px-3 py-2 font-mono text-xs"
+                  onChange={(nextValue) => setField('secondary_image_url', nextValue)}
+                  options={mediaPickerOptions}
+                  placeholder="Select from Gallery URLs"
+                  emptyLabel="None"
                 />
+                {product.secondary_image_url ? (
+                  <p className="break-all font-mono text-[11px] text-stone-500">{product.secondary_image_url}</p>
+                ) : null}
               </label>
 
               <label className="space-y-2 block sm:col-span-2">
@@ -907,6 +1057,15 @@ export function AdminProductFormPage({
                   onChange={(event) => updateGallery(event.target.value)}
                   className="w-full resize-y border border-stone-300 bg-white px-3 py-2 font-mono text-xs leading-relaxed"
                 />
+                {mediaOptions.length > 0 ? (
+                  <p className="text-[11px] text-stone-500">
+                    {mediaOptions.length} media option{mediaOptions.length === 1 ? '' : 's'} available for dropdowns.
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-stone-500">
+                    Add image URLs here to populate Primary, Secondary, and Variant image dropdowns.
+                  </p>
+                )}
               </label>
             </div>
           </div>
@@ -1143,12 +1302,19 @@ export function AdminProductFormPage({
                             />
                           </td>
                           <td className="border-b border-stone-200 px-3 py-2 align-top">
-                            <input
+                            <MediaPicker
                               value={variant.image_url || ''}
-                              onChange={(event) => updateVariantField(variantIndex, 'image_url', event.target.value)}
-                              className="w-[220px] border border-stone-300 bg-white px-2 py-1.5 text-xs"
-                              placeholder="https://..."
+                              onChange={(nextValue) => updateVariantField(variantIndex, 'image_url', nextValue || undefined)}
+                              options={mediaPickerOptions}
+                              placeholder="Select variant image"
+                              emptyLabel="Use Primary Image"
+                              className="w-[240px]"
                             />
+                            {variant.image_url ? (
+                              <p className="mt-1 max-w-[220px] break-all font-mono text-[10px] text-stone-500">
+                                {variant.image_url}
+                              </p>
+                            ) : null}
                           </td>
                           <td className="border-b border-stone-200 px-3 py-2 align-top">
                             <button
