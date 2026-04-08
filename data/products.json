@@ -1,5 +1,77 @@
 [
   {
+    "id": "new-piece-1775662301601-7trl4",
+    "name": "Rose Gold Elegant Statement Necklace",
+    "price": 999,
+    "compare_price": 1500,
+    "category": "necklaces",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775662152/Gemini_Generated_Image_lgg42algg42algg4_1_ey9skm.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775662149/Gemini_Generated_Image_10ktyb10ktyb10kt_1_xpcdro.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775662152/Gemini_Generated_Image_lgg42algg42algg4_1_ey9skm.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775662149/Gemini_Generated_Image_10ktyb10ktyb10kt_1_xpcdro.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775662152/Gemini_Generated_Image_lgg42algg42algg4_1_ey9skm.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775662149/Gemini_Generated_Image_10ktyb10ktyb10kt_1_xpcdro.png"
+    ],
+    "video_url": "",
+    "description": "<p>Graceful, radiant, and timeless — this&nbsp;<span><b>Luxury&nbsp;</b></span><strong>Teardrop</strong><strong>&nbsp;Crystal Pendant Necklace</strong><span> is designed to capture attention with its soft sparkle and refined elegance. Featuring a beautifully crafted teardrop shape with a brilliant center stone and delicate crystal detailing, it adds a luxurious touch to your look. With its premium finish and feminine design, it’s perfect for moments when you want to feel confident, elegant, and effortlessly beautiful.</span></p><li>Elegant <strong>teardrop pendant design</strong> with a classic luxury feel\n</li><li>Sparkling crystal centerpiece for a <strong>rich, eye-catching shine</strong>\n</li><li>Premium rose gold finish with a smooth, polished look\n</li><li>Perfect for <strong>parties, weddings, dinners, and special occasions</strong>\n</li><li>Lightweight, comfortable, and easy to wear all day</li><li>Ideal gift for <strong>wife, girlfriend, sister, or someone special</strong></li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "sale_tag_enabled": false,
+    "product_options": [],
+    "product_variants": []
+  },
+  {
+    "id": "new-piece-1775660360480-ddpf0",
+    "name": "Gold Charm - Roman Numeral Pendant",
+    "price": 999,
+    "compare_price": 1500,
+    "category": "necklaces",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775660323/Gemini_Generated_Image_6ggquc6ggquc6ggq_1_agyydz.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775661076/nec001_with_bgc_qdatyb.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775660323/Gemini_Generated_Image_6ggquc6ggquc6ggq_1_agyydz.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775661076/nec001_with_bgc_qdatyb.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775660323/Gemini_Generated_Image_6ggquc6ggquc6ggq_1_agyydz.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775661076/nec001_with_bgc_qdatyb.png"
+    ],
+    "video_url": "",
+    "description": "<p>Timeless, elegant, and full of meaning — this <strong>Roman Numeral Pendant Necklace</strong> is designed to symbolize lasting moments and refined style. Featuring a sleek gold circle engraved with Roman numerals and a sparkling crystal center, it adds a sophisticated touch to any look. With its premium finish and classic design, this necklace makes you feel confident, graceful, and effortlessly stylish every day.</p><li>Elegant <strong>Roman numeral circle design</strong> with a timeless look\n</li><li>Sparkling crystal center for a <strong>subtle premium shine</strong>\n</li><li>High-quality gold-tone finish with lasting durability\n</li><li>Perfect for <strong>daily wear, office, casual, and special occasions</strong>\n</li><li>Lightweight, comfortable, and easy to style with any outfit</li><li>Ideal gift for <strong>wife, sister, or someone special</strong></li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "sale_tag_enabled": false,
+    "product_options": [],
+    "product_variants": []
+  },
+  {
+    "id": "new-piece-1775656449098-pveic",
+    "name": "Gold Sparkling Statement Stud Earrings",
+    "price": 699,
+    "compare_price": 897,
+    "category": "earrings",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775656346/1713808444407232f5c984eb45ea76669eb065eec4_thumbnail_900x_rq6l3b.jpg",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775656347/Gemini_Generated_Image_gbwd7lgbwd7lgbwd_iisyk1.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775656346/1713808444407232f5c984eb45ea76669eb065eec4_thumbnail_900x_rq6l3b.jpg",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775656347/Gemini_Generated_Image_gbwd7lgbwd7lgbwd_iisyk1.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775656346/1713808444407232f5c984eb45ea76669eb065eec4_thumbnail_900x_rq6l3b.jpg",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775656347/Gemini_Generated_Image_gbwd7lgbwd7lgbwd_iisyk1.png"
+    ],
+    "video_url": "",
+    "description": "<p>Shine with effortless elegance in these <strong>Luxury Crystal Teardrop Earrings</strong>, designed to add a radiant sparkle to your look. Featuring a beautifully crafted teardrop shape adorned with shimmering stones, these earrings bring a perfect blend of glamour and sophistication. With their premium finish and eye-catching shine, they are made to make you feel confident, graceful, and truly special wherever you go.</p><li>Elegant <strong>teardrop design</strong> with a bold, statement look\n</li><li>High-quality crystal detailing for <strong>maximum sparkle and shine</strong>\n</li><li>Premium gold-tone finish with a luxurious feel\n</li><li>Perfect for <strong>parties, weddings, dinners, and festive occasions</strong>\n</li><li>Lightweight and comfortable despite a statement style</li><li>Ideal gift for <strong>wife, sister, or someone special</strong></li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "sale_tag_enabled": false,
+    "product_options": [],
+    "product_variants": []
+  },
+  {
     "id": "new-piece-1775652196304-hl078",
     "name": "Minimal Silver Open Ring Earrings",
     "price": 699,
