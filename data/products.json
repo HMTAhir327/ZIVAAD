@@ -1,5 +1,283 @@
 [
   {
+    "id": "new-piece-1775831166820-nj45g",
+    "name": "Curved Baguette Crystal Adjustable Ring",
+    "price": 999,
+    "compare_price": 1499,
+    "category": "rings",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_vvkz83.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_1_mbkuqs.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_vvkz83.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_1_mbkuqs.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_vvkz83.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_1_mbkuqs.png"
+    ],
+    "video_url": "",
+    "description": "<p>Grace meets modern elegance in this <strong>Luxury Curved Baguette Crystal Ring</strong>, designed to wrap your finger with a smooth, flowing silhouette. Adorned with finely cut crystals that catch the light beautifully, this ring adds a soft yet striking sparkle to your look. With its premium gold finish and refined detailing, it’s perfect for women who love subtle luxury and want to feel confident, stylish, and effortlessly graceful every day.</p><li>Unique <strong>curved wrap design</strong> with a modern elegant look\n</li><li>Baguette and micro crystal detailing for a <strong>rich, radiant sparkle</strong>\n</li><li>Premium gold finish with smooth, high-quality shine\n</li><li>Perfect for <strong>daily wear, office, and special occasions</strong>\n</li><li>Adjustable fit for comfort and easy styling</li><li><span>Ideal gift for&nbsp;</span><span>wife, sister, yourself,</span><span>&nbsp;<span>or someone special</span></span></li>",
+    "badge": "BESTSELLER",
+    "stock": 0,
+    "sale_tag_enabled": false,
+    "option_swatches": {
+      "Color": {
+        "Gold": "#c9a24a",
+        "Silver": "#bfc3c9"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "Gold",
+          "Silver"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1775831314294-90gl",
+        "sku": "ZID-RG-77",
+        "title": "Gold",
+        "option_values": {
+          "Color": "Gold"
+        },
+        "price": 999,
+        "compare_price": 1499,
+        "stock": 0,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_vvkz83.png"
+      },
+      {
+        "id": "variant-1775831314294-y9mc",
+        "sku": "ZID-RG-88",
+        "title": "Silver",
+        "option_values": {
+          "Color": "Silver"
+        },
+        "price": 999,
+        "compare_price": 1499,
+        "stock": 0,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_1_mbkuqs.png"
+      }
+    ]
+  },
+  {
+    "id": "new-piece-1775829184435-gdetl",
+    "name": "Baguette Crystal Adjustable Ring",
+    "price": 999,
+    "compare_price": 1199,
+    "category": "rings",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_sluqjisluqjisluq_1_l5alhj.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_mngo4emngo4emngo_1_nxv95p.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_sluqjisluqjisluq_1_l5alhj.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_mngo4emngo4emngo_1_nxv95p.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_sluqjisluqjisluq_1_l5alhj.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_mngo4emngo4emngo_1_nxv95p.png"
+    ],
+    "video_url": "",
+    "description": "<p>Refined, radiant, and effortlessly stylish — this <strong>Luxury Baguette Crystal&nbsp;<span><span>Gold/Silver</span></span>&nbsp;Ring</strong> is designed to elevate your everyday look with a touch of elegance. Featuring a sleek band lined with shimmering baguette-cut stones and delicate crystal accents, it reflects light beautifully from every angle. With its premium gold finish and modern design, this ring makes you feel confident, graceful, and truly polished.</p><li>Elegant <strong>baguette crystal band design</strong> with a modern luxury feel\n</li><li>High-quality stones for a <strong>brilliant, eye-catching sparkle</strong>\n</li><li>Premium gold polish with smooth and durable finish\n</li><li>Perfect for <strong>daily wear, office, parties, and special occasions</strong>\n</li><li>Adjustable design for a comfortable and flexible fit</li><li><span>Ideal gift for&nbsp;</span><span>wife, sister, yourself,</span><span>&nbsp;<span>or someone special</span></span></li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "sale_tag_enabled": false,
+    "option_swatches": {
+      "Color": {
+        "Gold": "#c9a24a",
+        "Silver": "#bfc3c9"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "Gold",
+          "Silver"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1775829590380-m3db",
+        "sku": "ZID-RG-55",
+        "title": "Gold",
+        "option_values": {
+          "Color": "Silver"
+        },
+        "price": 999,
+        "compare_price": 1199,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_sluqjisluqjisluq_1_l5alhj.png"
+      },
+      {
+        "id": "variant-1775829590380-l3ud",
+        "sku": "ZID-RG-66",
+        "title": "Silver",
+        "option_values": {
+          "Color": "Gold"
+        },
+        "price": 999,
+        "compare_price": 1199,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_mngo4emngo4emngo_1_nxv95p.png"
+      }
+    ]
+  },
+  {
+    "id": "new-piece-1775826548031-zidmf",
+    "name": "Infinity Inspired Adjustable Statement Ring",
+    "price": 999,
+    "compare_price": 1199,
+    "category": "rings",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826948/Gemini_Generated_Image_5a750i5a750i5a75_1_q5a5dw.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826443/Gemini_Generated_Image_987e2e987e2e987e_2_ob84gm.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826948/Gemini_Generated_Image_5a750i5a750i5a75_1_q5a5dw.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826443/Gemini_Generated_Image_987e2e987e2e987e_2_ob84gm.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826948/Gemini_Generated_Image_5a750i5a750i5a75_1_q5a5dw.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826443/Gemini_Generated_Image_987e2e987e2e987e_2_ob84gm.png"
+    ],
+    "video_url": "",
+    "description": "<p>Elegant, timeless, and full of meaning — this <strong>Infinity Crystal&nbsp;<span>Gold/Silver</span>&nbsp;Ring</strong> is designed to symbolize endless beauty and connection. Featuring a graceful infinity-style design with shimmering stones and a rich gold finish, it adds a sophisticated glow to your look. Crafted with premium quality and fine detailing, this ring makes you feel confident, graceful, and effortlessly luxurious every time you wear it.</p><p>\n\n</p><h2></h2><li>Elegant <strong>infinity-inspired design</strong> symbolizing endless beauty\n</li>\n<li>High-quality crystal detailing for a <strong>brilliant sparkling finish</strong>\n</li>\n<li>Premium gold polish with a smooth, luxurious feel\n</li>\n<li>Perfect for <strong>daily wear, parties, and special occasions</strong>\n</li>\n<li>Adjustable design for a comfortable and flexible fit\n</li>\n<li><span>Ideal gift for&nbsp;</span><span>wife, sister, yourself,</span><span>&nbsp;<span>or someone special</span></span></li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "sale_tag_enabled": false,
+    "option_swatches": {
+      "Color": {
+        "Gold": "#c9a24a",
+        "Silver": "#bfc3c9"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "Gold",
+          "Silver"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1775827357217-lenj",
+        "sku": "ZID-RG-33",
+        "title": "Gold",
+        "option_values": {
+          "Color": "Silver"
+        },
+        "price": 999,
+        "compare_price": 1199,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826948/Gemini_Generated_Image_5a750i5a750i5a75_1_q5a5dw.png"
+      },
+      {
+        "id": "variant-1775827357217-wgfx",
+        "sku": "ZID-RG-44",
+        "title": "Silver",
+        "option_values": {
+          "Color": "Gold"
+        },
+        "price": 999,
+        "compare_price": 1199,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826443/Gemini_Generated_Image_987e2e987e2e987e_2_ob84gm.png"
+      }
+    ]
+  },
+  {
+    "id": "new-piece-1775786345801-vbq4g",
+    "name": "Crystal Studded Statement Wrap Ring",
+    "price": 999,
+    "compare_price": 1500,
+    "category": "rings",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775786281/distress-ring-00_azitez.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775786281/distress-ring-01_w76xhf.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775786281/distress-ring-00_azitez.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775786281/distress-ring-01_w76xhf.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775786281/distress-ring-03_jm3fys.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775786281/distress-ring-00_azitez.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775786281/distress-ring-01_w76xhf.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775786281/distress-ring-03_jm3fys.png"
+    ],
+    "video_url": "",
+    "description": "<p>Bold, unique, and made to stand out, this <strong>Luxury Nail Design Gold Ring</strong> brings a modern twist to classic elegance. Inspired by a sleek nail shape and detailed with sparkling crystals, it adds a powerful yet refined touch to your style. With its premium finish and eye-catching design, this ring is perfect for women who love to express confidence, individuality, and effortless luxury.</p><li>Unique <strong>nail-inspired wrap design</strong> with a bold modern look\n</li><li>Crystal-studded detailing for a <strong>rich, sparkling finish</strong>\n</li><li>Premium gold polish with smooth, high-quality shine\n</li><li>Perfect for <strong>parties, events, and stylish everyday wear</strong>\n</li><li>Comfortable fit with a strong and elegant presence</li><li>Ideal gift for <strong>wife, sister,&nbsp;<span>yourself&nbsp;</span>or someone special</strong></li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "sale_tag_enabled": false,
+    "product_options": [],
+    "product_variants": []
+  },
+  {
+    "id": "new-piece-1775774554564-vcajw",
+    "name": "Elegant Multi-Layer Statement Ring",
+    "price": 999,
+    "compare_price": 1500,
+    "category": "rings",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774587/2._ZIVAAD_product_photo_sample_aupysa.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774588/Gemini_Generated_Image_7pwqd27pwqd27pwq_1_rkcski.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774587/2._ZIVAAD_product_photo_sample_aupysa.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774588/Gemini_Generated_Image_7pwqd27pwqd27pwq_1_rkcski.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774587/2._ZIVAAD_product_photo_sample_aupysa.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774588/Gemini_Generated_Image_7pwqd27pwqd27pwq_1_rkcski.png"
+    ],
+    "video_url": "",
+    "description": "<p>Bold, elegant, and beautifully crafted, this <strong>Luxury Gold/Silver</strong><strong>&nbsp;Crystal Wrap Ring</strong><span> is designed to make a statement without saying a word. Featuring a unique multi-layer design with shimmering stones and a polished gold finish, it adds a rich, sophisticated touch to your look. Whether for everyday elegance or special moments, this ring gives you that confident, refined feeling that stands out effortlessly.</span></p><li>Unique <strong>multi-layer wrap design</strong> with a modern luxury look\n</li><li>High-quality crystal detailing for a <strong>rich, sparkling finish</strong>\n</li><li>Premium gold polish with smooth and durable quality\n</li><li>Perfect for <strong>parties, events, and stylish everyday wear</strong>\n</li><li>Comfortable fit with a bold yet elegant appearance</li><li>Ideal gift for <strong>wife, sister, yourself,</strong><b>&nbsp;<span>or someone special</span></b></li>",
+    "badge": "BESTSELLER",
+    "stock": 5,
+    "sale_tag_enabled": false,
+    "option_swatches": {
+      "Color": {
+        "Gold": "#c9a24a",
+        "Silver": "#bfc3c9"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "Gold",
+          "Silver"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1775774833788-pm19",
+        "sku": "ZID-RG-11",
+        "title": "Gold",
+        "option_values": {
+          "Color": "Gold"
+        },
+        "price": 999,
+        "compare_price": 1500,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774587/2._ZIVAAD_product_photo_sample_aupysa.png"
+      },
+      {
+        "id": "variant-1775774833788-esxy",
+        "sku": "ZID-RG-22",
+        "title": "Silver",
+        "option_values": {
+          "Color": "Silver"
+        },
+        "price": 999,
+        "compare_price": 1500,
+        "stock": 0,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774588/Gemini_Generated_Image_7pwqd27pwqd27pwq_1_rkcski.png"
+      }
+    ]
+  },
+  {
     "id": "new-piece-1775662301601-7trl4",
     "name": "Rose Gold Elegant Statement Necklace",
     "price": 999,
