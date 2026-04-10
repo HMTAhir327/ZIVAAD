@@ -1,5 +1,6 @@
 'use client';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -171,6 +172,27 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     }
   }, [selectedVariant?.id, selectedVariant?.image_url, mediaItems]);
 
+  const imageMediaItems = useMemo(() => mediaItems.filter((media) => media.kind === 'image'), [mediaItems]);
+  const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isFullscreenOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isFullscreenOpen]);
+
+  useEffect(() => {
+    if (isFullscreenOpen && activeMedia.kind !== 'image') {
+      setIsFullscreenOpen(false);
+    }
+  }, [activeMedia.kind, isFullscreenOpen]);
+
   const lowStock = effectiveState.stock > 0 && effectiveState.stock < 5;
   const canAddToBag = effectiveState.stock > 0;
   const [quantity, setQuantity] = useState(1);
@@ -250,13 +272,24 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                 <source src={optimizeCloudinaryVideo(activeMedia.url, 1200)} type="video/mp4" />
               </video>
             ) : (
-              <Image
-                src={optimizeCloudinaryImage(activeMedia.url, 1200)}
-                alt={product.name}
-                fill
-                sizes="(max-width: 1024px) calc(100vw - 7rem), 48vw"
-                className="object-cover transition-transform duration-700 ease-luxury hover:scale-[1.03]"
-              />
+              <>
+                <Image
+                  src={optimizeCloudinaryImage(activeMedia.url, 1200)}
+                  alt={product.name}
+                  fill
+                  sizes="(max-width: 1024px) calc(100vw - 7rem), 48vw"
+                  className="object-cover transition-transform duration-700 ease-luxury hover:scale-[1.03]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsFullscreenOpen(true)}
+                  className="absolute inset-0 z-10 md:hidden"
+                  aria-label="Open image in fullscreen"
+                />
+                <span className="absolute bottom-2 right-2 z-20 border border-white/50 bg-black/30 px-2 py-1 text-[9px] uppercase tracking-luxury text-white md:hidden">
+                  Tap to expand
+                </span>
+              </>
             )}
           </div>
         </div>
@@ -446,6 +479,73 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
           {canAddToBag ? `Add ${quantity} · ${formatPrice(effectiveState.price * quantity, currency)}` : 'Sold Out'}
         </button>
       </div>
+
+      <AnimatePresence>
+        {isFullscreenOpen && activeMedia.kind === 'image' ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[130] bg-black/95 md:hidden"
+          >
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
+                <p className="text-[10px] uppercase tracking-luxury text-white/70">Image View</p>
+                <button
+                  type="button"
+                  onClick={() => setIsFullscreenOpen(false)}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/40 text-white"
+                  aria-label="Close fullscreen image"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M6 6l12 12" />
+                    <path d="M18 6L6 18" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="relative mx-4 flex-1 overflow-hidden rounded-sm bg-black">
+                <Image
+                  src={optimizeCloudinaryImage(activeMedia.url, 1800)}
+                  alt={product.name}
+                  fill
+                  sizes="100vw"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+
+              {imageMediaItems.length > 1 ? (
+                <div className="mt-3 flex gap-2 overflow-x-auto px-4 pb-[max(0.9rem,env(safe-area-inset-bottom))] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {imageMediaItems.map((media, index) => {
+                    const isActive = media.url === activeMedia.url;
+                    return (
+                      <button
+                        key={`${media.url}-${index}`}
+                        type="button"
+                        onClick={() => setActiveMedia(media)}
+                        className={`relative h-14 w-14 shrink-0 overflow-hidden border ${
+                          isActive ? 'border-white' : 'border-white/35'
+                        }`}
+                      >
+                        <Image
+                          src={optimizeCloudinaryImage(media.url, 220)}
+                          alt={`${product.name} image ${index + 1}`}
+                          fill
+                          sizes="56px"
+                          className="object-cover"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="pb-[max(0.9rem,env(safe-area-inset-bottom))]" />
+              )}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </>
   );
 }

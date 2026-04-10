@@ -1,5 +1,6 @@
 import { ProductGrid } from '@/components/product-grid';
 import { getProducts } from '@/lib/products';
+import { getSiteContent } from '@/lib/site-content';
 
 export const revalidate = 60;
 
@@ -11,7 +12,7 @@ interface ShopPageProps {
 }
 
 export default async function ShopPage({ searchParams }: ShopPageProps) {
-  const products = await getProducts();
+  const [products, siteContent] = await Promise.all([getProducts(), getSiteContent()]);
   const category = Array.isArray(searchParams?.category) ? searchParams?.category[0] : searchParams?.category;
   const searchQuery = Array.isArray(searchParams?.q) ? searchParams?.q[0] : searchParams?.q;
   const normalizedCategory = (category || '').trim().toLowerCase();
@@ -25,7 +26,12 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
       <div className="mb-4">
         <p className="text-xs uppercase tracking-luxury text-stone-500">ZIVAAD Catalog</p>
       </div>
-      <ProductGrid products={products} initialCategory={initialCategory} initialQuery={initialQuery} />
+      <ProductGrid
+        products={products}
+        initialCategory={initialCategory}
+        initialQuery={initialQuery}
+        shuffleOnInitialLoad={siteContent.settings.shuffle_shop_before_filter}
+      />
     </section>
   );
 }

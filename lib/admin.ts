@@ -168,6 +168,7 @@ function sanitizeProduct(rawProduct: unknown, index: number): Product {
     description: normalizedDescription,
     badge: product.badge as ProductBadge,
     stock: normalizedStock,
+    zivaad_choice: toBoolean(product.zivaad_choice, false),
     sale_tag_enabled: toBoolean(product.sale_tag_enabled, false),
     option_swatches: normalizedSwatches,
     product_options: variantData.options,

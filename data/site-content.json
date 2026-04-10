@@ -62,5 +62,8 @@
       "NEW",
       "LIMITED"
     ]
+  },
+  "settings": {
+    "shuffle_shop_before_filter": false
   }
 }

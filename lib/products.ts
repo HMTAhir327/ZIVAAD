@@ -39,6 +39,7 @@ function normalizeProduct(product: Product): Product {
     secondary_image_url: secondary,
     gallery_images,
     images,
+    zivaad_choice: Boolean(product.zivaad_choice),
     sale_tag_enabled: Boolean(product.sale_tag_enabled),
     stock: normalizedStock,
     product_options: variantData.options,

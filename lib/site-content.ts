@@ -51,6 +51,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   taxonomy: {
     categories: ['rings', 'earrings', 'necklaces', 'bracelets'],
     badges: ['BESTSELLER', 'NEW', 'LIMITED']
+  },
+  settings: {
+    shuffle_shop_before_filter: true
   }
 };
 
@@ -158,6 +161,8 @@ export function sanitizeSiteContent(raw: unknown): SiteContent {
       : {}) as Partial<SiteContent['footer']['social_links']>;
   const taxonomy =
     (input.taxonomy && typeof input.taxonomy === 'object' ? input.taxonomy : {}) as Partial<SiteContent['taxonomy']>;
+  const settings =
+    (input.settings && typeof input.settings === 'object' ? input.settings : {}) as Partial<SiteContent['settings']>;
 
   const normalizedCategories = normalizeCategories(
     asStringArray(taxonomy.categories, DEFAULT_SITE_CONTENT.taxonomy.categories)
@@ -224,6 +229,12 @@ export function sanitizeSiteContent(raw: unknown): SiteContent {
       categories:
         normalizedCategories.length > 0 ? normalizedCategories : [...DEFAULT_SITE_CONTENT.taxonomy.categories],
       badges: normalizedBadges.length > 0 ? normalizedBadges : [...DEFAULT_SITE_CONTENT.taxonomy.badges]
+    },
+    settings: {
+      shuffle_shop_before_filter: asBoolean(
+        settings.shuffle_shop_before_filter,
+        DEFAULT_SITE_CONTENT.settings.shuffle_shop_before_filter
+      )
     }
   };
 }

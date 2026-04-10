@@ -15,6 +15,7 @@ interface ProductGridProps {
   products: Product[];
   initialCategory?: FilterCategory;
   initialQuery?: string;
+  shuffleOnInitialLoad?: boolean;
 }
 
 interface FilterOption<T extends string> {
@@ -39,7 +40,20 @@ function extractNumericId(value: string): number {
   return Number(match.join('')) || 0;
 }
 
-export function ProductGrid({ products, initialCategory = 'all', initialQuery = '' }: ProductGridProps) {
+function hashString(input: string): number {
+  let hash = 0;
+  for (let index = 0; index < input.length; index += 1) {
+    hash = (hash * 31 + input.charCodeAt(index)) >>> 0;
+  }
+  return hash;
+}
+
+export function ProductGrid({
+  products,
+  initialCategory = 'all',
+  initialQuery = '',
+  shuffleOnInitialLoad = true
+}: ProductGridProps) {
   const [category, setCategory] = useState<FilterCategory>(initialCategory);
   const [query, setQuery] = useState(initialQuery);
   const [availability, setAvailability] = useState<AvailabilityFilter>('all');
@@ -50,6 +64,10 @@ export function ProductGrid({ products, initialCategory = 'all', initialQuery = 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [isMobileFilterSidebarOpen, setIsMobileFilterSidebarOpen] = useState(false);
   const [activeFilterColumn, setActiveFilterColumn] = useState<'category' | 'availability' | 'price'>('category');
+  const [shuffleSeed] = useState(() => Math.random().toString(36).slice(2));
+  const [hasUserAppliedFilters, setHasUserAppliedFilters] = useState(
+    initialCategory !== 'all' || Boolean(initialQuery.trim())
+  );
   const filterPanelRef = useRef<HTMLDivElement>(null);
 
   const categoryOptions = useMemo(() => {
@@ -145,6 +163,14 @@ export function ProductGrid({ products, initialCategory = 'all', initialQuery = 
   const parsedMaxPrice = Number(maxPriceInput);
   const minPrice = Number.isFinite(parsedMinPrice) && parsedMinPrice > 0 ? parsedMinPrice : null;
   const maxPrice = Number.isFinite(parsedMaxPrice) && parsedMaxPrice > 0 ? parsedMaxPrice : null;
+  const hasActiveFilters =
+    category !== 'all' || availability !== 'all' || priceQuick !== 'all' || minPrice !== null || maxPrice !== null || Boolean(query.trim());
+
+  useEffect(() => {
+    if (hasActiveFilters) {
+      setHasUserAppliedFilters(true);
+    }
+  }, [hasActiveFilters]);
 
   const highestPrice = useMemo(() => {
     if (products.length === 0) {
@@ -161,7 +187,8 @@ export function ProductGrid({ products, initialCategory = 'all', initialQuery = 
       .map((product, index) => ({
         product,
         index,
-        numericId: extractNumericId(product.id)
+        numericId: extractNumericId(product.id),
+        shuffleRank: hashString(`${shuffleSeed}:${product.id}`)
       }))
       .filter(({ product }) => {
       const categoryMatch = category === 'all' || product.category === category;
@@ -210,6 +237,12 @@ export function ProductGrid({ products, initialCategory = 'all', initialQuery = 
       return searchContent.includes(normalizedQuery);
       })
       .sort((a, b) => {
+        const shouldUseShuffle =
+          shuffleOnInitialLoad && sortBy === 'featured' && !hasUserAppliedFilters && !hasActiveFilters;
+        if (shouldUseShuffle) {
+          return a.shuffleRank - b.shuffleRank;
+        }
+
         if (sortBy === 'featured') {
           return a.index - b.index;
         }
@@ -262,18 +295,31 @@ export function ProductGrid({ products, initialCategory = 'all', initialQuery = 
         return a.index - b.index;
       })
       .map((entry) => entry.product);
-  }, [products, category, query, availability, priceQuick, minPrice, maxPrice, sortBy]);
+  }, [
+    products,
+    category,
+    query,
+    availability,
+    priceQuick,
+    minPrice,
+    maxPrice,
+    sortBy,
+    shuffleSeed,
+    hasUserAppliedFilters,
+    hasActiveFilters,
+    shuffleOnInitialLoad
+  ]);
 
   const selectedCategoryLabel = categoryOptions.find((option) => option.value === category)?.label || 'All';
   const selectedAvailabilityLabel = availabilityOptions.find((option) => option.value === availability)?.label || 'All';
   const selectedPriceLabel = priceOptions.find((option) => option.value === priceQuick)?.label || 'All';
   const activeFilterCount = [
-    category !== 'all',
-    availability !== 'all',
-    priceQuick !== 'all',
-    minPrice !== null,
-    maxPrice !== null,
-    Boolean(query.trim())
+    hasActiveFilters && category !== 'all',
+    hasActiveFilters && availability !== 'all',
+    hasActiveFilters && priceQuick !== 'all',
+    hasActiveFilters && minPrice !== null,
+    hasActiveFilters && maxPrice !== null,
+    hasActiveFilters && Boolean(query.trim())
   ].filter(Boolean).length;
 
   function openFilterPanel(column: 'category' | 'availability' | 'price') {

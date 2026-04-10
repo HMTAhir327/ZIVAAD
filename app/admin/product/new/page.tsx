@@ -1,5 +1,7 @@
+import { notFound } from 'next/navigation';
+
 import { AdminProductFormPage } from '@/components/admin-product-form-page';
-import { getAdminWriteBlockMessage, isAdminWriteEnabled } from '@/lib/admin-mode';
+import { getAdminWriteBlockMessage, isAdminUiEnabled, isAdminWriteEnabled } from '@/lib/admin-mode';
 import { getProducts } from '@/lib/products';
 import { getSiteContent } from '@/lib/site-content';
 import type { Product } from '@/lib/types';
@@ -26,6 +28,7 @@ function createEmptyProduct(defaultCategory: string, defaultBadge: string): Prod
     description: '<p>Designed for everyday elegance.</p>',
     badge: defaultBadge,
     stock: 10,
+    zivaad_choice: false,
     sale_tag_enabled: false,
     option_swatches: {},
     product_options: [],
@@ -34,6 +37,10 @@ function createEmptyProduct(defaultCategory: string, defaultBadge: string): Prod
 }
 
 export default async function AdminNewProductPage() {
+  if (!isAdminUiEnabled()) {
+    notFound();
+  }
+
   const adminCanWrite = isAdminWriteEnabled();
   const adminWriteNotice = adminCanWrite
     ? 'Local write mode is active. Saving updates writes to data/products.json.'

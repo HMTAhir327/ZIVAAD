@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
 import { sanitizeProducts } from '@/lib/admin';
-import { getAdminWriteBlockMessage, isAdminWriteEnabled } from '@/lib/admin-mode';
+import { getAdminWriteBlockMessage, isAdminUiEnabled, isAdminWriteEnabled } from '@/lib/admin-mode';
 import { readProductsFile, writeProductsFile } from '@/lib/product-storage';
 
 export async function GET() {
+  if (!isAdminUiEnabled()) {
+    return NextResponse.json({ ok: false, error: 'Not found' }, { status: 404 });
+  }
+
   const file = await readProductsFile();
   const products = JSON.parse(file);
 
@@ -14,6 +18,10 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!isAdminUiEnabled()) {
+      return NextResponse.json({ ok: false, error: 'Not found' }, { status: 404 });
+    }
+
     if (!isAdminWriteEnabled()) {
       return NextResponse.json({ ok: false, error: getAdminWriteBlockMessage() }, { status: 403 });
     }

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { AdminProductFormPage } from '@/components/admin-product-form-page';
-import { getAdminWriteBlockMessage, isAdminWriteEnabled } from '@/lib/admin-mode';
+import { getAdminWriteBlockMessage, isAdminUiEnabled, isAdminWriteEnabled } from '@/lib/admin-mode';
 import { getProducts } from '@/lib/products';
 import { getSiteContent } from '@/lib/site-content';
 
@@ -15,6 +15,10 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export default async function AdminEditProductPage({ params }: AdminEditProductPageProps) {
+  if (!isAdminUiEnabled()) {
+    notFound();
+  }
+
   const adminCanWrite = isAdminWriteEnabled();
   const adminWriteNotice = adminCanWrite
     ? 'Local write mode is active. Saving updates writes to data/products.json.'

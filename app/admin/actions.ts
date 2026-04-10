@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { sanitizeProducts } from '@/lib/admin';
-import { getAdminWriteBlockMessage, isAdminWriteEnabled } from '@/lib/admin-mode';
+import { getAdminUiBlockMessage, getAdminWriteBlockMessage, isAdminUiEnabled, isAdminWriteEnabled } from '@/lib/admin-mode';
 import { sanitizeSiteContent } from '@/lib/site-content';
 import { writeProductsFile } from '@/lib/product-storage';
 import { writeSiteContentFile } from '@/lib/site-content-storage';
@@ -11,6 +11,10 @@ import type { Product, SiteContent } from '@/lib/types';
 
 export async function saveProductsAction(products: Product[]) {
   try {
+    if (!isAdminUiEnabled()) {
+      return { ok: false, error: getAdminUiBlockMessage() };
+    }
+
     if (!isAdminWriteEnabled()) {
       return { ok: false, error: getAdminWriteBlockMessage() };
     }
@@ -35,6 +39,10 @@ export async function saveProductsAction(products: Product[]) {
 
 export async function saveSiteContentAction(content: SiteContent) {
   try {
+    if (!isAdminUiEnabled()) {
+      return { ok: false, error: getAdminUiBlockMessage() };
+    }
+
     if (!isAdminWriteEnabled()) {
       return { ok: false, error: getAdminWriteBlockMessage() };
     }

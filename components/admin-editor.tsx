@@ -2339,6 +2339,23 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
             </article>
 
             <article className="border border-stone-200 p-4">
+              <p className="text-[10px] uppercase tracking-luxury text-stone-500">Catalog Behavior</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <label className="flex items-center gap-2 border border-stone-300 px-3 py-2 text-xs text-stone-700 sm:col-span-2">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(siteContent.settings?.shuffle_shop_before_filter)}
+                    onChange={(event) =>
+                      updateSiteContent('settings', { shuffle_shop_before_filter: event.target.checked })
+                    }
+                    className="h-4 w-4 border border-stone-300"
+                  />
+                  Shuffle products on Shop and Home before users apply filters
+                </label>
+              </div>
+            </article>
+
+            <article className="border border-stone-200 p-4">
               <p className="text-[10px] uppercase tracking-luxury text-stone-500">Main Headings</p>
               <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <input

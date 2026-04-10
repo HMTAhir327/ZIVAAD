@@ -309,6 +309,7 @@ function syncDerivedProduct(product: Product): Product {
     gallery_images: gallery.length > 0 ? gallery : images,
     images,
     stock,
+    zivaad_choice: Boolean(product.zivaad_choice),
     sale_tag_enabled: Boolean(product.sale_tag_enabled),
     option_swatches: optionSwatches,
     product_options: options,
@@ -955,7 +956,7 @@ export function AdminProductFormPage({
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-2">
               <label className="text-[10px] uppercase tracking-luxury text-stone-500">Category</label>
               <select
@@ -994,6 +995,18 @@ export function AdminProductFormPage({
                   className="h-4 w-4 border border-stone-300"
                 />
                 <span className="text-xs text-stone-700">Show `Sale` on product page</span>
+              </span>
+            </label>
+            <label className="space-y-2 block">
+              <span className="text-[10px] uppercase tracking-luxury text-stone-500">ZIVAAD Choice</span>
+              <span className="flex h-[42px] items-center gap-2 border border-stone-300 px-3">
+                <input
+                  type="checkbox"
+                  checked={Boolean(product.zivaad_choice)}
+                  onChange={(event) => setField('zivaad_choice', event.target.checked)}
+                  className="h-4 w-4 border border-stone-300"
+                />
+                <span className="text-xs text-stone-700">Show first in Most Loved Pieces</span>
               </span>
             </label>
           </div>

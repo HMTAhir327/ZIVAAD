@@ -9,11 +9,32 @@ import { getSiteContent } from '@/lib/site-content';
 
 export const revalidate = 60;
 
+function shuffleWithSeed<T>(items: T[], seed: string): T[] {
+  const output = [...items];
+  let hash = 0;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = (hash * 31 + seed.charCodeAt(index)) >>> 0;
+  }
+
+  for (let index = output.length - 1; index > 0; index -= 1) {
+    hash = (hash * 1664525 + 1013904223) >>> 0;
+    const swapIndex = hash % (index + 1);
+    [output[index], output[swapIndex]] = [output[swapIndex], output[index]];
+  }
+
+  return output;
+}
+
 export default async function HomePage() {
   const [products, siteContent] = await Promise.all([getProducts(), getSiteContent()]);
-  const bestSellers = products.filter((product) => product.badge === 'BESTSELLER');
-  const nonBestSellers = products.filter((product) => product.badge !== 'BESTSELLER');
-  const featuredProducts = [...bestSellers, ...nonBestSellers].slice(0, 12);
+  const zivaadChoice = products.filter((product) => product.zivaad_choice);
+  const nonChoice = products.filter((product) => !product.zivaad_choice);
+
+  const nonChoiceOrdered = siteContent.settings.shuffle_shop_before_filter
+    ? shuffleWithSeed(nonChoice, `${Date.now()}:${products.length}`)
+    : nonChoice;
+
+  const featuredProducts = [...zivaadChoice, ...nonChoiceOrdered].slice(0, 12);
 
   return (
     <>

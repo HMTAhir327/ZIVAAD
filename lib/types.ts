@@ -32,6 +32,7 @@ export interface Product {
   description: string;
   badge: ProductBadge;
   stock: number;
+  zivaad_choice?: boolean;
   sale_tag_enabled?: boolean;
   option_swatches?: Record<string, Record<string, string>>;
   product_options?: ProductOption[];
@@ -81,6 +82,9 @@ export interface SiteContent {
   taxonomy: {
     categories: ProductCategory[];
     badges: ProductBadge[];
+  };
+  settings: {
+    shuffle_shop_before_filter: boolean;
   };
 }
 

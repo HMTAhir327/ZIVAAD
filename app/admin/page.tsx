@@ -1,5 +1,7 @@
+import { notFound } from 'next/navigation';
+
 import { AdminEditor } from '@/components/admin-editor';
-import { getAdminWriteBlockMessage, isAdminWriteEnabled } from '@/lib/admin-mode';
+import { getAdminWriteBlockMessage, isAdminUiEnabled, isAdminWriteEnabled } from '@/lib/admin-mode';
 import { getProducts } from '@/lib/products';
 import { DEFAULT_SITE_CONTENT, getSiteContent } from '@/lib/site-content';
 
@@ -7,6 +9,10 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export default async function AdminPage() {
+  if (!isAdminUiEnabled()) {
+    notFound();
+  }
+
   const adminCanWrite = isAdminWriteEnabled();
   const adminWriteNotice = adminCanWrite
     ? 'Local write mode is active. Saving updates writes to data/products.json and data/site-content.json.'

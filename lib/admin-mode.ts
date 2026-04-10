@@ -1,5 +1,6 @@
 const WRITE_BLOCK_MESSAGE =
   'Admin writes are disabled in production. Update JSON locally with npm run dev, then deploy.';
+const UI_BLOCK_MESSAGE = 'Admin is available only in local development mode.';
 
 function normalizeFlag(value: string | undefined): 'true' | 'false' | null {
   if (!value) return null;
@@ -17,6 +18,14 @@ export function isAdminWriteEnabled(): boolean {
   return true;
 }
 
+export function isAdminUiEnabled(): boolean {
+  return process.env.NODE_ENV === 'development';
+}
+
 export function getAdminWriteBlockMessage(): string {
   return WRITE_BLOCK_MESSAGE;
+}
+
+export function getAdminUiBlockMessage(): string {
+  return UI_BLOCK_MESSAGE;
 }

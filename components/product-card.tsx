@@ -129,10 +129,13 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
       </div>
 
       <div className="mt-3 space-y-1.5 text-center sm:mt-4 sm:space-y-2">
-        <Link href={`/product/${product.id}`} className="block font-serif text-[1.24rem] leading-none text-stone-950 sm:text-[1.45rem] lg:text-[1.65rem]">
+        <Link
+          href={`/product/${product.id}`}
+          className="block font-serif text-[0.98rem] leading-tight text-stone-950 sm:text-[1.22rem] lg:text-[1.45rem]"
+        >
           {product.name}
         </Link>
-        <div className="flex items-center justify-center gap-2 text-[11px] text-stone-600 sm:text-[12px]">
+        <div className="flex items-center justify-center gap-2 text-[10px] text-stone-600 sm:text-[12px]">
           <span>{formatPrice(effectiveState.price, currency)}</span>
           {effectiveState.comparePrice > effectiveState.price ? (
             <span className="text-stone-400 line-through">{formatPrice(effectiveState.comparePrice, currency)}</span>
