@@ -1,5 +1,100 @@
 [
   {
+    "id": "new-piece-1775980660031-sgqgi",
+    "name": "Pearl & Crystal Floral Tops",
+    "price": 799,
+    "compare_price": 1200,
+    "category": "earrings",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775983405/image_1_lf8xsx.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775977993/d71f676f-68f9-41d7-a580-23fc1c2d90c9_jveuuw.webp",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775983405/image_1_lf8xsx.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775977993/d71f676f-68f9-41d7-a580-23fc1c2d90c9_jveuuw.webp"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775983405/image_1_lf8xsx.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775977993/d71f676f-68f9-41d7-a580-23fc1c2d90c9_jveuuw.webp"
+    ],
+    "video_url": "",
+    "description": "<p>Soft, graceful, and effortlessly elegant, these <strong>Purple Flower Stud Earrings</strong> bring a delicate floral charm to any look. Designed with a beautiful petal shape, smooth pearl finish, and a subtle crystal center, they add a refined touch without being overpowering. Crafted with quality materials and a polished finish, they offer the perfect balance of simplicity and sophistication for everyday wear or special moments.</p><li>Elegant <strong>floral design</strong> with soft purple petals and pearl finish\n</li><li>\nSubtle crystal center for a clean, refined shine\n</li><li>\nHigh-quality alloy construction with a smooth polished look\n</li><li>\nLightweight and comfortable for all-day wear\n</li><li>\nPerfect for <strong>casual, office, formal, and party use</strong>\n</li><li>\nTimeless style that pairs easily with any outfit</li><li>Durable and affordable with a premium appearance</li>",
+    "badge": "LIMITED",
+    "stock": 10,
+    "supplier_urls": [
+      "https://abwholesale.pk/products/uni-10290-purple-flower-earring?utm_source=koala-inspector&utm_medium=koala-inspector&utm_campaign=koala-inspector"
+    ],
+    "zivaad_choice": true,
+    "sale_tag_enabled": false,
+    "product_options": [],
+    "product_variants": []
+  },
+  {
+    "id": "new-piece-1775969857721-voanf",
+    "name": "Infinity Gold - Bracelet",
+    "price": 799,
+    "compare_price": 1000,
+    "category": "necklaces",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775969711/Gemini_Generated_Image_hhlpcchhlpcchhlp_1_er4jlt.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775971702/image_ahc6zz.png",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775969711/Gemini_Generated_Image_hhlpcchhlpcchhlp_1_er4jlt.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775971702/image_ahc6zz.png"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775969711/Gemini_Generated_Image_hhlpcchhlpcchhlp_1_er4jlt.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775971702/image_ahc6zz.png"
+    ],
+    "video_url": "",
+    "description": "<p>Simple, elegant, and full of meaning, this <strong>Infinity Gold Bracelet</strong> is designed to add a timeless charm to your everyday style. With its sleek gold finish and delicate design, it can be worn as both a bracelet or anklet, giving you versatility with a touch of luxury. Crafted with care and premium detailing, it makes you feel effortlessly graceful, confident, and beautifully put together.</p><li>Elegant <strong>infinity-inspired design</strong> with a timeless look\n</li><li>Dual use as <strong>bracelet or anklet</strong> for versatile styling\n</li><li>Premium gold finish with a smooth, polished feel\n</li><li>Perfect for <strong>daily wear, casual outings, and special occasions</strong>\n</li><li>Adjustable size for a comfortable and secure fit</li><li><span>Ideal gift for&nbsp;</span><span>wife, sister,&nbsp;<span>yourself&nbsp;</span>or someone special</span></li>",
+    "badge": "NEW",
+    "stock": 10,
+    "supplier_urls": [
+      "https://abwholesale.pk/products/uni-10446-infinity-gold-bracelet?utm_source=koala-inspector&utm_medium=koala-inspector&utm_campaign=koala-inspector"
+    ],
+    "zivaad_choice": true,
+    "sale_tag_enabled": false,
+    "option_swatches": {
+      "Color": {
+        "Gold": "#c9a24a",
+        "Silver": "#bfc3c9"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "Gold",
+          "Silver"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1775971756131-0295",
+        "sku": "ZID-NK-11",
+        "title": "Gold",
+        "option_values": {
+          "Color": "Gold"
+        },
+        "price": 799,
+        "compare_price": 1000,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775969711/Gemini_Generated_Image_hhlpcchhlpcchhlp_1_er4jlt.png"
+      },
+      {
+        "id": "variant-1775971756131-qqq4",
+        "sku": "ZID-NK-22",
+        "title": "Silver",
+        "option_values": {
+          "Color": "Silver"
+        },
+        "price": 799,
+        "compare_price": 1000,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775971702/image_ahc6zz.png"
+      }
+    ]
+  },
+  {
     "id": "new-piece-1775831166820-nj45g",
     "name": "Curved Baguette Crystal Adjustable Ring",
     "price": 999,
@@ -19,6 +114,7 @@
     "description": "<p>Grace meets modern elegance in this <strong>Luxury Curved Baguette Crystal Ring</strong>, designed to wrap your finger with a smooth, flowing silhouette. Adorned with finely cut crystals that catch the light beautifully, this ring adds a soft yet striking sparkle to your look. With its premium gold finish and refined detailing, it’s perfect for women who love subtle luxury and want to feel confident, stylish, and effortlessly graceful every day.</p><li>Unique <strong>curved wrap design</strong> with a modern elegant look\n</li><li>Baguette and micro crystal detailing for a <strong>rich, radiant sparkle</strong>\n</li><li>Premium gold finish with smooth, high-quality shine\n</li><li>Perfect for <strong>daily wear, office, and special occasions</strong>\n</li><li>Adjustable fit for comfort and easy styling</li><li><span>Ideal gift for&nbsp;</span><span>wife, sister, yourself,</span><span>&nbsp;<span>or someone special</span></span></li>",
     "badge": "BESTSELLER",
     "stock": 0,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "option_swatches": {
@@ -83,6 +179,7 @@
     "description": "<p>Refined, radiant, and effortlessly stylish — this <strong>Luxury Baguette Crystal&nbsp;<span><span>Gold/Silver</span></span>&nbsp;Ring</strong> is designed to elevate your everyday look with a touch of elegance. Featuring a sleek band lined with shimmering baguette-cut stones and delicate crystal accents, it reflects light beautifully from every angle. With its premium gold finish and modern design, this ring makes you feel confident, graceful, and truly polished.</p><li>Elegant <strong>baguette crystal band design</strong> with a modern luxury feel\n</li><li>High-quality stones for a <strong>brilliant, eye-catching sparkle</strong>\n</li><li>Premium gold polish with smooth and durable finish\n</li><li>Perfect for <strong>daily wear, office, parties, and special occasions</strong>\n</li><li>Adjustable design for a comfortable and flexible fit</li><li><span>Ideal gift for&nbsp;</span><span>wife, sister, yourself,</span><span>&nbsp;<span>or someone special</span></span></li>",
     "badge": "BESTSELLER",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "option_swatches": {
@@ -147,6 +244,7 @@
     "description": "<p>Elegant, timeless, and full of meaning — this <strong>Infinity Crystal&nbsp;<span>Gold/Silver</span>&nbsp;Ring</strong> is designed to symbolize endless beauty and connection. Featuring a graceful infinity-style design with shimmering stones and a rich gold finish, it adds a sophisticated glow to your look. Crafted with premium quality and fine detailing, this ring makes you feel confident, graceful, and effortlessly luxurious every time you wear it.</p><p>\n\n</p><h2></h2><li>Elegant <strong>infinity-inspired design</strong> symbolizing endless beauty\n</li>\n<li>High-quality crystal detailing for a <strong>brilliant sparkling finish</strong>\n</li>\n<li>Premium gold polish with a smooth, luxurious feel\n</li>\n<li>Perfect for <strong>daily wear, parties, and special occasions</strong>\n</li>\n<li>Adjustable design for a comfortable and flexible fit\n</li>\n<li><span>Ideal gift for&nbsp;</span><span>wife, sister, yourself,</span><span>&nbsp;<span>or someone special</span></span></li>",
     "badge": "BESTSELLER",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "option_swatches": {
@@ -213,6 +311,7 @@
     "description": "<p>Bold, unique, and made to stand out, this <strong>Luxury Nail Design Gold Ring</strong> brings a modern twist to classic elegance. Inspired by a sleek nail shape and detailed with sparkling crystals, it adds a powerful yet refined touch to your style. With its premium finish and eye-catching design, this ring is perfect for women who love to express confidence, individuality, and effortless luxury.</p><li>Unique <strong>nail-inspired wrap design</strong> with a bold modern look\n</li><li>Crystal-studded detailing for a <strong>rich, sparkling finish</strong>\n</li><li>Premium gold polish with smooth, high-quality shine\n</li><li>Perfect for <strong>parties, events, and stylish everyday wear</strong>\n</li><li>Comfortable fit with a strong and elegant presence</li><li>Ideal gift for <strong>wife, sister,&nbsp;<span>yourself&nbsp;</span>or someone special</strong></li>",
     "badge": "BESTSELLER",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": true,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -238,6 +337,7 @@
     "description": "<p>Bold, elegant, and beautifully crafted, this <strong>Luxury Gold/Silver</strong><strong>&nbsp;Crystal Wrap Ring</strong><span> is designed to make a statement without saying a word. Featuring a unique multi-layer design with shimmering stones and a polished gold finish, it adds a rich, sophisticated touch to your look. Whether for everyday elegance or special moments, this ring gives you that confident, refined feeling that stands out effortlessly.</span></p><li>Unique <strong>multi-layer wrap design</strong> with a modern luxury look\n</li><li>High-quality crystal detailing for a <strong>rich, sparkling finish</strong>\n</li><li>Premium gold polish with smooth and durable quality\n</li><li>Perfect for <strong>parties, events, and stylish everyday wear</strong>\n</li><li>Comfortable fit with a bold yet elegant appearance</li><li>Ideal gift for <strong>wife, sister, yourself,</strong><b>&nbsp;<span>or someone special</span></b></li>",
     "badge": "BESTSELLER",
     "stock": 5,
+    "supplier_urls": [],
     "zivaad_choice": true,
     "sale_tag_enabled": false,
     "option_swatches": {
@@ -302,6 +402,7 @@
     "description": "<p>Graceful, radiant, and timeless — this&nbsp;<span><b>Luxury&nbsp;</b></span><strong>Teardrop</strong><strong>&nbsp;Crystal Pendant Necklace</strong><span> is designed to capture attention with its soft sparkle and refined elegance. Featuring a beautifully crafted teardrop shape with a brilliant center stone and delicate crystal detailing, it adds a luxurious touch to your look. With its premium finish and feminine design, it’s perfect for moments when you want to feel confident, elegant, and effortlessly beautiful.</span></p><li>Elegant <strong>teardrop pendant design</strong> with a classic luxury feel\n</li><li>Sparkling crystal centerpiece for a <strong>rich, eye-catching shine</strong>\n</li><li>Premium rose gold finish with a smooth, polished look\n</li><li>Perfect for <strong>parties, weddings, dinners, and special occasions</strong>\n</li><li>Lightweight, comfortable, and easy to wear all day</li><li>Ideal gift for <strong>wife, girlfriend, sister, or someone special</strong></li>",
     "badge": "BESTSELLER",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": true,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -327,6 +428,7 @@
     "description": "<p>Timeless, elegant, and full of meaning — this <strong>Roman Numeral Pendant Necklace</strong> is designed to symbolize lasting moments and refined style. Featuring a sleek gold circle engraved with Roman numerals and a sparkling crystal center, it adds a sophisticated touch to any look. With its premium finish and classic design, this necklace makes you feel confident, graceful, and effortlessly stylish every day.</p><li>Elegant <strong>Roman numeral circle design</strong> with a timeless look\n</li><li>Sparkling crystal center for a <strong>subtle premium shine</strong>\n</li><li>High-quality gold-tone finish with lasting durability\n</li><li>Perfect for <strong>daily wear, office, casual, and special occasions</strong>\n</li><li>Lightweight, comfortable, and easy to style with any outfit</li><li>Ideal gift for <strong>wife, sister, or someone special</strong></li>",
     "badge": "BESTSELLER",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": true,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -352,6 +454,7 @@
     "description": "<p>Shine with effortless elegance in these <strong>Luxury Crystal Teardrop Earrings</strong>, designed to add a radiant sparkle to your look. Featuring a beautifully crafted teardrop shape adorned with shimmering stones, these earrings bring a perfect blend of glamour and sophistication. With their premium finish and eye-catching shine, they are made to make you feel confident, graceful, and truly special wherever you go.</p><li>Elegant <strong>teardrop design</strong> with a bold, statement look\n</li><li>High-quality crystal detailing for <strong>maximum sparkle and shine</strong>\n</li><li>Premium gold-tone finish with a luxurious feel\n</li><li>Perfect for <strong>parties, weddings, dinners, and festive occasions</strong>\n</li><li>Lightweight and comfortable despite a statement style</li><li>Ideal gift for <strong>wife, sister, or someone special</strong></li>",
     "badge": "BESTSELLER",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -377,6 +480,7 @@
     "description": "<p>Simple, modern, and effortlessly elegant — these <strong>Crystal Circle Stud Earrings</strong> are designed for women who love subtle luxury. Featuring a sleek open-ring design with finely set sparkling stones, they add just the right amount of shine to your everyday look. With their premium finish and timeless style, these earrings make you feel confident, polished, and beautifully put together in any moment.<br><br></p><li>Minimal <strong>open circle design</strong> with a modern elegant look\n</li><li>Fine crystal detailing for a <strong>soft, premium sparkle</strong>\n</li><li>High-quality polished finish with lasting shine\n</li><li>Perfect for <strong>daily wear, office, casual, and formal outfits</strong></li><li>Lightweight, comfortable, and easy to style</li>",
     "badge": "NEW",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -402,6 +506,7 @@
     "description": "<p>Make a bold yet elegant statement with these <strong>Luxury Geometric Drop Earrings</strong>, designed with a modern square frame, sparkling crystal details, and a deep red gemstone drop. The perfect blend of sophistication and style, these earrings add a rich, graceful touch to any outfit. Crafted with a premium finish and eye-catching shine, they are ideal for special occasions or whenever you want to feel confident, stylish, and unforgettable.<br><br></p><li>Unique <strong>geometric square design</strong> with a modern luxury look\n</li><li>Sparkling crystal detailing with a <strong>rich red gemstone drop</strong>\n</li><li>Premium quality finish with elegant shine and durability\n</li><li>Perfect for <strong>parties, weddings, dinners, and special occasions</strong></li><li>Lightweight and comfortable for long wear</li>",
     "badge": "NEW",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -427,6 +532,7 @@
     "description": "<p>Refined, modern, and effortlessly elegant — this <strong>Layered Necklace Jewelry Set</strong> is designed to elevate your everyday style. Featuring a delicate multi-layer chain with a stylish square pendant and matching earrings, it brings a perfect balance of minimalism and shine. Its premium finish and graceful design make it ideal for daily wear or special moments when you want to feel confident and put together.</p><li>Complete <strong>necklace + earrings set</strong> for a coordinated look\n</li><li>Stylish <strong>layered chain design</strong> with modern square pendant\n</li><li>Premium polished finish with a soft, elegant shine\n</li><li>Perfect for <strong>daily wear, office, casual outings, and gifting</strong>\n</li><li>Lightweight and comfortable for all-day wear</li>",
     "badge": "LIMITED",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -452,6 +558,7 @@
     "description": "<p>Add a touch of timeless elegance to your look with this <strong>Mehndi Floral Hair Vine</strong>, beautifully crafted with delicate leaf details, pearls, and crystal accents. Designed to flow gracefully through your hairstyle, it creates a soft, romantic look perfect for weddings, festive events, and special occasions. Its lightweight yet premium design ensures comfort while making you feel effortlessly graceful and confident.</p><li>Elegant <strong>floral hair vine design</strong> with leaf, pearl, and crystal detailing\n</li><li>Perfect for <strong>bridal hairstyles, mehndi, walima, and formal events</strong>\n</li><li>Premium quality finish with a soft, luxurious shine\n</li><li>Flexible and easy to style with braids, buns, or open hairstyles</li><li>&nbsp;Lightweight and comfortable for long wear</li>",
     "badge": "LIMITED",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -477,6 +584,7 @@
     "description": "<p>A necklace that’s more than just jewelry — it’s a symbol of love, luck, and connection. This <strong>4-Leaf Clover Magnetic Heart Necklace</strong> beautifully transforms from a lucky clover into a row of delicate hearts, giving you two stunning styles in one piece. Designed with a premium finish and sparkling stones, it’s perfect for everyday elegance or meaningful gifting.<br><br></p><li><strong>2-in-1 Transform Design</strong> – Converts from a <strong>4-leaf clover to heart-shaped necklace</strong>\n</li><li><strong>Magnetic Mechanism</strong> – Smoothly opens and closes for a unique styling experience\n</li><li><strong>Symbol of Luck &amp; Love</strong> – Clover represents luck, hearts represent love\n</li><li><strong>Two-Tone Luxury Look</strong> – Available in gold and silver styles</li><li><strong>Premium Quality Finish</strong><span> – Strong polish, elegant shine, and durable design</span></li>",
     "badge": "BESTSELLER",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "option_swatches": {
@@ -541,6 +649,7 @@
     "description": "<p>Turn every moment into a statement with these <strong>Luxury Crystal Tassel Earrings</strong>, designed to add instant elegance and sparkle to your look. Featuring a refined arrangement of shimmering stones and cascading strands, these earrings create a graceful flow that moves beautifully with you. Their premium finish and eye-catching shine make them perfect for weddings, parties, and special occasions where you want to stand out effortlessly.</p><li>Stunning <strong>long tassel earrings</strong> with a premium crystal finish\n</li><li>\nElegant cascading design that adds <strong>movement and shine</strong>\n</li><li>\nPerfect for <strong>weddings, parties, formal events, and evening wear</strong>\n</li><li>\nLightweight and comfortable despite a bold statement look\n</li><li>\nHigh-quality polish for a <strong>luxury feel and lasting shine</strong></li><li><strong><span>Instantly enhances any outfit with a&nbsp;</span><span>glamorous touch</span></strong></li>",
     "badge": "BESTSELLER",
     "stock": 20,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "option_swatches": {
@@ -605,6 +714,7 @@
     "description": "<p><span>Artistic</span>, meaningful, and beautifully modern, this <strong>Two-Tone Embrace Pendant Necklace</strong> is designed to symbolize love, closeness, and connection. Featuring a graceful silver and gold-toned hugging figure pendant on a fine chain, this necklace brings a soft emotional touch to your everyday style. Its polished finish, artistic design, and premium feel make it a beautiful choice for daily wear or heartfelt gifting.</p><li>Unique <strong>embrace pendant necklace</strong> with a modern artistic design\n</li><li>\nStylish <strong>two-tone finish</strong> for an elegant and premium look\n</li><li>\nLightweight, comfortable, and easy to wear all day\n</li><li>\nPerfect for <strong>daily wear, special occasions, and meaningful gifting</strong></li><li><strong><span>Symbolizes&nbsp;</span><span>love, warmth, togetherness, and emotional connection</span></strong></li>",
     "badge": "BESTSELLER",
     "stock": 10,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -628,6 +738,7 @@
     "description": "<p>Delicate, elegant, and made to say a lot without trying too hard, this <strong>Silver Heart Charm Necklace</strong> is the perfect piece for everyday wear. Designed with a sleek chain, modern bar detail, and a polished heart pendant, it adds a soft romantic touch to both casual and dressy looks. Its refined finish and premium feel make it a beautiful choice for self-gifting or for someone special.</p><li>Elegant <strong>heart pendant necklace</strong> with a clean modern look\n</li><li>\nPerfect for <strong>daily wear</strong>, office wear, dinners, and gifting\n</li><li>\nLightweight, comfortable, and easy to style with any outfit\n</li><li>\nMinimal design with a premium polished finish</li><li><span>A thoughtful piece that adds a soft emotional touch to your look</span></li>",
     "badge": "LIMITED",
     "stock": 7,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "product_options": [],
@@ -653,6 +764,7 @@
     "description": "<p><ul><li>100% Anti tarnish Material.</li><li>Premium Box packaging</li><li>Smooth excellent finish.</li><li>Pure Stainless Steel.</li><li>Colour Guarantee.</li><li>Imported Thai Quality Jewellery.</li></ul></p>",
     "badge": "NEW",
     "stock": 7,
+    "supplier_urls": [],
     "zivaad_choice": false,
     "sale_tag_enabled": false,
     "option_swatches": {

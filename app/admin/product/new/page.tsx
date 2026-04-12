@@ -28,6 +28,7 @@ function createEmptyProduct(defaultCategory: string, defaultBadge: string): Prod
     description: '<p>Designed for everyday elegance.</p>',
     badge: defaultBadge,
     stock: 10,
+    supplier_urls: [],
     zivaad_choice: false,
     sale_tag_enabled: false,
     option_swatches: {},

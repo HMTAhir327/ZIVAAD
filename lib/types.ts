@@ -32,6 +32,7 @@ export interface Product {
   description: string;
   badge: ProductBadge;
   stock: number;
+  supplier_urls?: string[];
   zivaad_choice?: boolean;
   sale_tag_enabled?: boolean;
   option_swatches?: Record<string, Record<string, string>>;

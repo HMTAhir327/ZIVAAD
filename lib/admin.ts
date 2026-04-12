@@ -153,6 +153,11 @@ function sanitizeProduct(rawProduct: unknown, index: number): Product {
   const aggregatedVariantStock = variantData.variants.reduce((sum, variant) => sum + variant.stock, 0);
   const normalizedStock = variantData.variants.length > 0 ? aggregatedVariantStock : product.stock;
   const normalizedSwatches = normalizeOptionSwatches(product.option_swatches, variantData.options);
+  const supplierUrls = dedupeUrls(
+    (Array.isArray(product.supplier_urls) ? product.supplier_urls : [])
+      .map((url) => (typeof url === 'string' ? url.trim() : ''))
+      .filter(Boolean)
+  );
 
   return {
     id: product.id,
@@ -168,6 +173,7 @@ function sanitizeProduct(rawProduct: unknown, index: number): Product {
     description: normalizedDescription,
     badge: product.badge as ProductBadge,
     stock: normalizedStock,
+    supplier_urls: supplierUrls,
     zivaad_choice: toBoolean(product.zivaad_choice, false),
     sale_tag_enabled: toBoolean(product.sale_tag_enabled, false),
     option_swatches: normalizedSwatches,

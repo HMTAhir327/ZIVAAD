@@ -56,6 +56,15 @@ function parseGalleryUrls(value: string): string[] {
   );
 }
 
+function parseSupplierUrls(value: string): string[] {
+  return uniqueValues(
+    value
+      .split(/\r?\n|,/)
+      .map((item) => item.trim())
+      .filter(Boolean)
+  );
+}
+
 function formatMediaOptionLabel(url: string, index: number): string {
   try {
     const parsed = new URL(url);
@@ -299,6 +308,7 @@ function syncDerivedProduct(product: Product): Product {
   const images = uniqueValues([primary, secondary, ...gallery].filter(Boolean));
   const stock = variants.length > 0 ? variants.reduce((sum, variant) => sum + variant.stock, 0) : product.stock;
   const optionSwatches = normalizeOptionSwatches(product.option_swatches, options);
+  const supplierUrls = uniqueValues((product.supplier_urls || []).map((url) => url.trim()).filter(Boolean));
 
   return {
     ...product,
@@ -309,6 +319,7 @@ function syncDerivedProduct(product: Product): Product {
     gallery_images: gallery.length > 0 ? gallery : images,
     images,
     stock,
+    supplier_urls: supplierUrls,
     zivaad_choice: Boolean(product.zivaad_choice),
     sale_tag_enabled: Boolean(product.sale_tag_enabled),
     option_swatches: optionSwatches,
@@ -383,6 +394,13 @@ export function AdminProductFormPage({
       description: normalizeDescriptionForEditor(initialProduct.description || '')
     });
     return (normalized.gallery_images || []).join('\n');
+  });
+  const [supplierDraft, setSupplierDraft] = useState<string>(() => {
+    const normalized = syncDerivedProduct({
+      ...initialProduct,
+      description: normalizeDescriptionForEditor(initialProduct.description || '')
+    });
+    return (normalized.supplier_urls || []).join('\n');
   });
   const [optionValueDrafts, setOptionValueDrafts] = useState<Record<number, string>>({});
   const [status, setStatus] = useState('');
@@ -783,6 +801,15 @@ export function AdminProductFormPage({
     });
   }
 
+  function updateSupplierUrls(rawInput: string) {
+    setSupplierDraft(rawInput);
+    const urls = parseSupplierUrls(rawInput);
+    setProduct((prev) => ({
+      ...prev,
+      supplier_urls: urls
+    }));
+  }
+
   function handleSave() {
     if (!adminCanWrite) {
       setStatus(adminWriteNotice);
@@ -802,9 +829,11 @@ export function AdminProductFormPage({
       : product;
 
     const galleryFromDraft = parseGalleryUrls(galleryDraft);
+    const suppliersFromDraft = parseSupplierUrls(supplierDraft);
     const normalizedProduct = syncDerivedProduct({
       ...productWithDrafts,
-      gallery_images: galleryFromDraft
+      gallery_images: galleryFromDraft,
+      supplier_urls: suppliersFromDraft
     });
     if (hasPendingDrafts) {
       setProduct(normalizedProduct);
@@ -1077,6 +1106,28 @@ export function AdminProductFormPage({
                 ) : (
                   <p className="text-[11px] text-stone-500">
                     Add image URLs here to populate Primary, Secondary, and Variant image dropdowns.
+                  </p>
+                )}
+              </label>
+
+              <label className="space-y-2 block sm:col-span-2">
+                <span className="text-[10px] uppercase tracking-luxury text-stone-500">
+                  Supplier URLs (line or comma separated)
+                </span>
+                <textarea
+                  rows={4}
+                  value={supplierDraft}
+                  onChange={(event) => updateSupplierUrls(event.target.value)}
+                  className="w-full resize-y border border-stone-300 bg-white px-3 py-2 font-mono text-xs leading-relaxed"
+                />
+                {(product.supplier_urls || []).length > 0 ? (
+                  <p className="text-[11px] text-stone-500">
+                    {(product.supplier_urls || []).length} supplier link
+                    {(product.supplier_urls || []).length === 1 ? '' : 's'} saved for this product.
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-stone-500">
+                    Save supplier links here so you can quickly source this item after receiving orders.
                   </p>
                 )}
               </label>

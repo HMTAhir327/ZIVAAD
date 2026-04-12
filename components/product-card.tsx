@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type TouchEvent } from 'react';
 
 import { optimizeCloudinaryImage } from '@/lib/cloudinary';
 import { formatPrice } from '@/lib/currency';
@@ -31,13 +31,32 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
   const primaryImage = product.primary_image_url || product.images?.[0] || fallbackImage;
   const secondaryImage = product.secondary_image_url || product.images?.[1] || primaryImage;
   const hasPeekImage = Boolean(secondaryImage && secondaryImage !== primaryImage);
+  const mobileGalleryImages = useMemo(() => {
+    const source = [
+      primaryImage,
+      secondaryImage,
+      ...(product.gallery_images || []),
+      ...(product.images || [])
+    ]
+      .map((url) => url.trim())
+      .filter(Boolean);
+
+    return Array.from(new Set(source)).slice(0, 6);
+  }, [primaryImage, secondaryImage, product.gallery_images, product.images]);
+  const hasMobileGallery = mobileGalleryImages.length > 1;
 
   const [isHovered, setIsHovered] = useState(false);
   const [isSecondaryLoaded, setIsSecondaryLoaded] = useState(!hasPeekImage);
+  const [mobileMediaIndex, setMobileMediaIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   useEffect(() => {
     setIsSecondaryLoaded(!hasPeekImage);
   }, [hasPeekImage, secondaryImage]);
+
+  useEffect(() => {
+    setMobileMediaIndex(0);
+  }, [product.id, mobileGalleryImages.length]);
   const trimmedBadge = product.badge.trim();
   const badgeLabel = trimmedBadge
     ? trimmedBadge === 'NEW'
@@ -50,6 +69,47 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
   function handleQuickAdd() {
     addItem(product, defaultVariant, defaultVariant?.option_values);
     showToast('Added to Box');
+  }
+
+  function goToMobileImage(index: number) {
+    const total = mobileGalleryImages.length;
+    if (total === 0) {
+      return;
+    }
+
+    if (index < 0) {
+      setMobileMediaIndex(total - 1);
+      return;
+    }
+
+    if (index >= total) {
+      setMobileMediaIndex(0);
+      return;
+    }
+
+    setMobileMediaIndex(index);
+  }
+
+  function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
+    if (!hasMobileGallery) {
+      return;
+    }
+    setTouchStartX(event.touches[0]?.clientX ?? null);
+  }
+
+  function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
+    if (!hasMobileGallery || touchStartX === null) {
+      setTouchStartX(null);
+      return;
+    }
+
+    const endX = event.changedTouches[0]?.clientX ?? touchStartX;
+    const deltaX = endX - touchStartX;
+    const threshold = 28;
+    if (Math.abs(deltaX) > threshold) {
+      goToMobileImage(mobileMediaIndex + (deltaX < 0 ? 1 : -1));
+    }
+    setTouchStartX(null);
   }
 
   return (
@@ -66,9 +126,55 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="relative aspect-[4/5] overflow-hidden">
-          <Link href={`/product/${product.id}`} className="absolute inset-0 z-10" aria-label={`View ${product.name}`} />
+          <Link
+            href={`/product/${product.id}`}
+            className="absolute inset-0 z-10 hidden md:block"
+            aria-label={`View ${product.name}`}
+          />
 
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 md:hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+            <div
+              className="flex h-full w-full transition-transform duration-500 ease-luxury"
+              style={{ transform: `translateX(-${mobileMediaIndex * 100}%)` }}
+            >
+              {mobileGalleryImages.map((imageUrl, index) => (
+                <div key={`${imageUrl}-${index}`} className="relative h-full w-full shrink-0">
+                  <Image
+                    src={optimizeCloudinaryImage(imageUrl, 1000)}
+                    alt={product.name}
+                    fill
+                    sizes="50vw"
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {hasMobileGallery ? (
+              <>
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-black/10 to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-black/10 to-transparent" />
+                <div className="absolute right-2 top-2 bg-black/30 px-1.5 py-0.5 text-[9px] uppercase tracking-[0.16em] text-white backdrop-blur-[1px]">
+                  {mobileMediaIndex + 1}/{mobileGalleryImages.length}
+                </div>
+                <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1.5">
+                  {mobileGalleryImages.map((_, index) => (
+                    <button
+                      key={`dot-${product.id}-${index}`}
+                      type="button"
+                      onClick={() => goToMobileImage(index)}
+                      aria-label={`Show image ${index + 1}`}
+                      className={`h-1.5 w-1.5 rounded-full transition-all ${
+                        index === mobileMediaIndex ? 'bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.35)]' : 'bg-white/60'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : null}
+          </div>
+
+          <div className="absolute inset-0 hidden md:block">
             <Image
               src={optimizeCloudinaryImage(primaryImage, 1000)}
               alt={product.name}
@@ -81,7 +187,7 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
           </div>
 
           {hasPeekImage ? (
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 hidden md:block">
               <Image
                 src={optimizeCloudinaryImage(secondaryImage, 1000)}
                 alt={`${product.name} alternate`}

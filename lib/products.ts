@@ -31,6 +31,7 @@ function normalizeProduct(product: Product): Product {
   const images = gallery_images;
   const aggregatedVariantStock = variantData.variants.reduce((sum, variant) => sum + variant.stock, 0);
   const normalizedStock = variantData.variants.length > 0 ? aggregatedVariantStock : product.stock;
+  const supplier_urls = dedupeUrls((product.supplier_urls || []).map((url) => url.trim()).filter(Boolean));
 
   return {
     ...product,
@@ -39,6 +40,7 @@ function normalizeProduct(product: Product): Product {
     secondary_image_url: secondary,
     gallery_images,
     images,
+    supplier_urls,
     zivaad_choice: Boolean(product.zivaad_choice),
     sale_tag_enabled: Boolean(product.sale_tag_enabled),
     stock: normalizedStock,
