@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type TouchEvent } from 'react';
 
 import { optimizeCloudinaryImage, optimizeCloudinaryVideo } from '@/lib/cloudinary';
 import { formatPrice } from '@/lib/currency';
@@ -174,6 +174,14 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
 
   const imageMediaItems = useMemo(() => mediaItems.filter((media) => media.kind === 'image'), [mediaItems]);
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
+  const [mobileTouchStartX, setMobileTouchStartX] = useState<number | null>(null);
+  const [fullscreenTouchStartX, setFullscreenTouchStartX] = useState<number | null>(null);
+  const activeMediaIndex = useMemo(() => {
+    return mediaItems.findIndex((media) => media.kind === activeMedia.kind && media.url === activeMedia.url);
+  }, [mediaItems, activeMedia.kind, activeMedia.url]);
+  const activeImageIndex = useMemo(() => {
+    return imageMediaItems.findIndex((media) => media.url === activeMedia.url);
+  }, [imageMediaItems, activeMedia.url]);
 
   useEffect(() => {
     if (!isFullscreenOpen) {
@@ -192,6 +200,66 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
       setIsFullscreenOpen(false);
     }
   }, [activeMedia.kind, isFullscreenOpen]);
+
+  function setActiveMediaByIndex(index: number) {
+    if (mediaItems.length === 0) {
+      return;
+    }
+
+    const normalized = (index + mediaItems.length) % mediaItems.length;
+    setActiveMedia(mediaItems[normalized]);
+  }
+
+  function setActiveImageByIndex(index: number) {
+    if (imageMediaItems.length === 0) {
+      return;
+    }
+
+    const normalized = (index + imageMediaItems.length) % imageMediaItems.length;
+    setActiveMedia(imageMediaItems[normalized]);
+  }
+
+  function handleMainTouchStart(event: TouchEvent<HTMLDivElement>) {
+    if (mediaItems.length <= 1) {
+      return;
+    }
+    setMobileTouchStartX(event.touches[0]?.clientX ?? null);
+  }
+
+  function handleMainTouchEnd(event: TouchEvent<HTMLDivElement>) {
+    if (mediaItems.length <= 1 || mobileTouchStartX === null) {
+      setMobileTouchStartX(null);
+      return;
+    }
+
+    const endX = event.changedTouches[0]?.clientX ?? mobileTouchStartX;
+    const deltaX = endX - mobileTouchStartX;
+    if (Math.abs(deltaX) > 28) {
+      setActiveMediaByIndex(activeMediaIndex + (deltaX < 0 ? 1 : -1));
+    }
+    setMobileTouchStartX(null);
+  }
+
+  function handleFullscreenTouchStart(event: TouchEvent<HTMLDivElement>) {
+    if (imageMediaItems.length <= 1) {
+      return;
+    }
+    setFullscreenTouchStartX(event.touches[0]?.clientX ?? null);
+  }
+
+  function handleFullscreenTouchEnd(event: TouchEvent<HTMLDivElement>) {
+    if (imageMediaItems.length <= 1 || fullscreenTouchStartX === null) {
+      setFullscreenTouchStartX(null);
+      return;
+    }
+
+    const endX = event.changedTouches[0]?.clientX ?? fullscreenTouchStartX;
+    const deltaX = endX - fullscreenTouchStartX;
+    if (Math.abs(deltaX) > 28) {
+      setActiveImageByIndex(activeImageIndex + (deltaX < 0 ? 1 : -1));
+    }
+    setFullscreenTouchStartX(null);
+  }
 
   const lowStock = effectiveState.stock > 0 && effectiveState.stock < 5;
   const canAddToBag = effectiveState.stock > 0;
@@ -229,7 +297,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     <>
       <section className="grid w-full gap-8 px-4 pb-16 pt-4 sm:px-8 sm:pb-20 sm:pt-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-14 lg:px-10">
         <div className="flex flex-col gap-2.5 sm:gap-4 lg:grid lg:max-w-[760px] lg:grid-cols-[4.5rem_minmax(0,1fr)] lg:items-start">
-          <div className="order-2 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-3 lg:order-1 lg:max-h-[min(62vh,720px)] lg:block lg:space-y-3 lg:overflow-y-auto lg:pr-1 [&::-webkit-scrollbar]:hidden">
+          <div className="order-2 hidden gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-3 md:flex lg:order-1 lg:max-h-[min(62vh,720px)] lg:block lg:space-y-3 lg:overflow-y-auto lg:pr-1 [&::-webkit-scrollbar]:hidden">
             {mediaItems.map((media, index) => {
               const isActive = activeMedia.url === media.url;
               return (
@@ -259,7 +327,11 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
             })}
           </div>
 
-          <div className="order-1 relative aspect-[4/5] overflow-hidden bg-stone-100 lg:order-2">
+          <div
+            className="order-1 relative aspect-[4/5] overflow-hidden bg-stone-100 lg:order-2"
+            onTouchStart={handleMainTouchStart}
+            onTouchEnd={handleMainTouchEnd}
+          >
             {activeMedia.kind === 'video' ? (
               <video
                 className="h-full w-full object-cover"
@@ -283,14 +355,62 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                 <button
                   type="button"
                   onClick={() => setIsFullscreenOpen(true)}
-                  className="absolute inset-0 z-10 md:hidden"
+                  className="absolute left-2 top-2 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/60 bg-black/30 text-white backdrop-blur-[1px] md:hidden"
                   aria-label="Open image in fullscreen"
-                />
-                <span className="absolute bottom-2 right-2 z-20 border border-white/50 bg-black/30 px-2 py-1 text-[9px] uppercase tracking-luxury text-white md:hidden">
-                  Tap to expand
-                </span>
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
+                    <path d="M8 3H3v5" />
+                    <path d="M16 3h5v5" />
+                    <path d="M3 16v5h5" />
+                    <path d="M21 16v5h-5" />
+                  </svg>
+                </button>
               </>
             )}
+
+            {mediaItems.length > 1 ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaByIndex(activeMediaIndex - 1)}
+                  className="absolute left-2 top-1/2 z-20 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-black/25 text-white md:hidden"
+                  aria-label="Previous media"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
+                    <path d="M15 5l-7 7 7 7" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaByIndex(activeMediaIndex + 1)}
+                  className="absolute right-2 top-1/2 z-20 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-black/25 text-white md:hidden"
+                  aria-label="Next media"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
+                    <path d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+                <span className="absolute right-2 top-2 z-20 border border-white/50 bg-black/30 px-2 py-1 text-[9px] uppercase tracking-luxury text-white md:hidden">
+                  {Math.max(activeMediaIndex + 1, 1)}/{mediaItems.length}
+                </span>
+                <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 md:hidden">
+                  {mediaItems.map((media, index) => {
+                    const active = index === activeMediaIndex;
+                    return (
+                      <button
+                        key={`${media.kind}-${media.url}-dot`}
+                        type="button"
+                        onClick={() => setActiveMediaByIndex(index)}
+                        aria-label={`Show media ${index + 1}`}
+                        className={`h-1.5 rounded-full transition-all ${
+                          active ? 'w-4 bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.35)]' : 'w-1.5 bg-white/65'
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
+              </>
+            ) : null}
           </div>
         </div>
 
@@ -490,7 +610,9 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
           >
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
-                <p className="text-[10px] uppercase tracking-luxury text-white/70">Image View</p>
+                <p className="text-[10px] uppercase tracking-luxury text-white/70">
+                  Image {Math.max(activeImageIndex + 1, 1)} / {imageMediaItems.length}
+                </p>
                 <button
                   type="button"
                   onClick={() => setIsFullscreenOpen(false)}
@@ -504,7 +626,11 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                 </button>
               </div>
 
-              <div className="relative mx-4 flex-1 overflow-hidden rounded-sm bg-black">
+              <div
+                className="relative mx-4 flex-1 overflow-hidden rounded-sm bg-black"
+                onTouchStart={handleFullscreenTouchStart}
+                onTouchEnd={handleFullscreenTouchEnd}
+              >
                 <Image
                   src={optimizeCloudinaryImage(activeMedia.url, 1800)}
                   alt={product.name}
@@ -513,6 +639,30 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                   className="object-contain"
                   priority
                 />
+                {imageMediaItems.length > 1 ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setActiveImageByIndex(activeImageIndex - 1)}
+                      className="absolute left-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/35 text-white"
+                      aria-label="Previous image"
+                    >
+                      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
+                        <path d="M15 5l-7 7 7 7" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveImageByIndex(activeImageIndex + 1)}
+                      className="absolute right-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/35 text-white"
+                      aria-label="Next image"
+                    >
+                      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
+                        <path d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </>
+                ) : null}
               </div>
 
               {imageMediaItems.length > 1 ? (
