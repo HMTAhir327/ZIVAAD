@@ -370,26 +370,6 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
 
             {mediaItems.length > 1 ? (
               <>
-                <button
-                  type="button"
-                  onClick={() => setActiveMediaByIndex(activeMediaIndex - 1)}
-                  className="absolute left-2 top-1/2 z-20 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-black/25 text-white md:hidden"
-                  aria-label="Previous media"
-                >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
-                    <path d="M15 5l-7 7 7 7" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveMediaByIndex(activeMediaIndex + 1)}
-                  className="absolute right-2 top-1/2 z-20 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-black/25 text-white md:hidden"
-                  aria-label="Next media"
-                >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
-                    <path d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
                 <span className="absolute right-2 top-2 z-20 border border-white/50 bg-black/30 px-2 py-1 text-[9px] uppercase tracking-luxury text-white md:hidden">
                   {Math.max(activeMediaIndex + 1, 1)}/{mediaItems.length}
                 </span>
@@ -418,7 +398,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
           <div className="bg-white p-1 sm:p-2">
             <p className="text-[10px] uppercase tracking-luxury text-stone-500">ZIVAAD</p>
 
-            <h1 className="mt-3 font-serif text-[2.1rem] leading-tight text-stone-950 sm:text-[2.45rem]">
+            <h1 className="mt-3 font-serif text-[1.72rem] leading-[1.06] text-stone-950 sm:text-[2.3rem]">
               {product.name}
             </h1>
 
@@ -426,7 +406,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
               {effectiveState.comparePrice > effectiveState.price ? (
                 <p className="text-sm text-stone-400 line-through">{formatPrice(effectiveState.comparePrice, currency)}</p>
               ) : null}
-              <p className="text-[2rem] font-medium tracking-tight text-stone-950 sm:text-[2.2rem]">
+              <p className="text-[1.72rem] font-medium tracking-tight text-stone-950 sm:text-[2rem]">
                 {formatPrice(effectiveState.price, currency)}
               </p>
               {product.sale_tag_enabled && effectiveState.comparePrice > effectiveState.price ? (
@@ -639,30 +619,6 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                   className="object-contain"
                   priority
                 />
-                {imageMediaItems.length > 1 ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setActiveImageByIndex(activeImageIndex - 1)}
-                      className="absolute left-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/35 text-white"
-                      aria-label="Previous image"
-                    >
-                      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
-                        <path d="M15 5l-7 7 7 7" />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveImageByIndex(activeImageIndex + 1)}
-                      className="absolute right-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/35 text-white"
-                      aria-label="Next image"
-                    >
-                      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
-                        <path d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  </>
-                ) : null}
               </div>
 
               {imageMediaItems.length > 1 ? (

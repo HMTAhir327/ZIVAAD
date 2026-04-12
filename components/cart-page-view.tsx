@@ -66,7 +66,7 @@ export function CartPageView() {
     <section className="w-full px-4 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-14">
       <div className="mb-8 sm:mb-10">
         <p className="text-xs uppercase tracking-luxury text-stone-500">Checkout</p>
-        <h1 className="mt-2 font-serif text-4xl text-stone-950 sm:text-5xl">Your Cart</h1>
+        <h1 className="mt-2 font-serif text-[2rem] text-stone-950 sm:text-[2.45rem]">Your Cart</h1>
       </div>
 
       {items.length === 0 ? (

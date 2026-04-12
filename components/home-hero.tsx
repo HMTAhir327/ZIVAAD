@@ -48,7 +48,7 @@ export function HomeHero({ hero }: HomeHeroProps) {
         className="relative z-10 w-full px-5 pb-14 pt-14 text-center text-white sm:px-8 sm:pb-16 sm:pt-20 lg:px-10"
       >
         <p className="text-[10px] uppercase tracking-luxury text-white/80 sm:text-[11px]">{hero.eyebrow}</p>
-        <h1 className="mx-auto mt-4 max-w-[14ch] font-serif text-[2.65rem] leading-[0.95] sm:text-6xl md:text-7xl">{hero.title}</h1>
+        <h1 className="mx-auto mt-4 max-w-[14ch] font-serif text-[2.18rem] leading-[0.96] sm:text-6xl md:text-7xl">{hero.title}</h1>
         <p className="mx-auto mt-5 max-w-2xl text-[13px] leading-relaxed text-white/85 sm:mt-6 sm:text-base">
           {hero.subtitle}
         </p>

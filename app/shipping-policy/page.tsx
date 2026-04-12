@@ -9,7 +9,7 @@ export default function ShippingPolicyPage() {
   return (
     <section className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
       <p className="text-xs uppercase tracking-luxury text-stone-500">Policy</p>
-      <h1 className="mt-3 font-serif text-5xl text-stone-950 sm:text-6xl">Shipping Policy</h1>
+      <h1 className="mt-3 font-serif text-[2.1rem] text-stone-950 sm:text-[3.35rem]">Shipping Policy</h1>
 
       <div className="mt-8 space-y-6 text-sm leading-7 text-stone-700 sm:text-base">
         <div>
@@ -28,4 +28,3 @@ export default function ShippingPolicyPage() {
     </section>
   );
 }
-

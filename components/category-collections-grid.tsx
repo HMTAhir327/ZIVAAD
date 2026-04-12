@@ -72,7 +72,7 @@ export function CategoryCollectionsGrid({
     <section className="mx-auto w-full max-w-[1320px] bg-[#fcfcfb] px-4 py-12 sm:px-6 sm:py-16 lg:px-6 lg:py-20">
       <div className="mb-6 text-center sm:mb-8 lg:mb-10">
         <h2 className="text-[10px] uppercase tracking-luxury text-stone-500">Collections</h2>
-        <h2 className="mt-4 font-serif text-4xl leading-none text-stone-950 sm:text-5xl">{title}</h2>
+        <h2 className="mt-4 font-serif text-[1.72rem] leading-none text-stone-950 sm:text-[2.15rem]">{title}</h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm text-stone-600">
           Explore rings, earrings, necklaces, and bracelets to build your signature everyday collection.
         </p>
@@ -91,7 +91,7 @@ export function CategoryCollectionsGrid({
               />
             </div>
             <div className="mt-3 flex items-center gap-2 text-stone-900 sm:mt-4">
-              <span className="font-body text-lg leading-none sm:text-[1.75rem]">{item.label}</span>
+              <span className="font-body text-[1.02rem] leading-none sm:text-[1.5rem]">{item.label}</span>
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"

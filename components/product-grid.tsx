@@ -1,5 +1,6 @@
 'use client';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { Product, ProductCategory } from '@/lib/types';
@@ -556,149 +557,161 @@ export function ProductGrid({
           </div>
         ) : null}
 
-        {isMobileFilterSidebarOpen ? (
-          <>
-            <button
-              type="button"
-              aria-label="Close filters"
-              onClick={() => setIsMobileFilterSidebarOpen(false)}
-              className="fixed inset-0 z-[220] bg-stone-950/45 backdrop-blur-[2px] lg:hidden"
-            />
-            <aside className="fixed inset-y-0 left-0 z-[230] w-[min(88vw,360px)] border-r border-stone-200 bg-[#f8f8f7] shadow-[0_30px_80px_rgba(17,17,17,0.28)] lg:hidden">
-              <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
-                  <p className="text-[12px] uppercase tracking-luxury text-stone-700">Filters</p>
-                  <button
-                    type="button"
-                    onClick={() => setIsMobileFilterSidebarOpen(false)}
-                    className="inline-flex h-9 w-9 items-center justify-center border border-stone-300 text-stone-700"
-                    aria-label="Close filters sidebar"
-                  >
-                    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M6 6l12 12" />
-                      <path d="M18 6L6 18" />
-                    </svg>
-                  </button>
-                </div>
+        <AnimatePresence>
+          {isMobileFilterSidebarOpen ? (
+            <>
+              <motion.button
+                type="button"
+                aria-label="Close filters"
+                onClick={() => setIsMobileFilterSidebarOpen(false)}
+                className="fixed inset-0 z-[220] bg-stone-950/45 backdrop-blur-[2px] lg:hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              />
+              <motion.aside
+                className="fixed inset-y-0 left-0 z-[230] w-[min(88vw,360px)] border-r border-stone-200 bg-[#f8f8f7] shadow-[0_30px_80px_rgba(17,17,17,0.28)] lg:hidden"
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="flex h-full flex-col">
+                  <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
+                    <p className="text-[12px] uppercase tracking-luxury text-stone-700">Filters</p>
+                    <button
+                      type="button"
+                      onClick={() => setIsMobileFilterSidebarOpen(false)}
+                      className="inline-flex h-9 w-9 items-center justify-center border border-stone-300 text-stone-700"
+                      aria-label="Close filters sidebar"
+                    >
+                      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M6 6l12 12" />
+                        <path d="M18 6L6 18" />
+                      </svg>
+                    </button>
+                  </div>
 
-                <div className="flex-1 space-y-5 overflow-y-auto px-4 py-4">
-                  <section className="space-y-2">
-                    <p className="text-[10px] uppercase tracking-luxury text-stone-500">Category</p>
-                    <div className="space-y-1">
-                      {categoryOptions.map((option) => (
+                  <div className="flex-1 space-y-5 overflow-y-auto px-4 py-4">
+                    <section className="space-y-2">
+                      <p className="text-[10px] uppercase tracking-luxury text-stone-500">Category</p>
+                      <div className="space-y-1">
+                        {categoryOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setCategory(option.value)}
+                            className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
+                              category === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
+                            }`}
+                          >
+                            <span>{option.label}</span>
+                            {category === option.value ? <span>✓</span> : null}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+
+                    <section className="space-y-2">
+                      <p className="text-[10px] uppercase tracking-luxury text-stone-500">Availability</p>
+                      <div className="space-y-1">
+                        {availabilityOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setAvailability(option.value)}
+                            className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
+                              availability === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
+                            }`}
+                          >
+                            <span>{option.label}</span>
+                            {availability === option.value ? <span>✓</span> : null}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+
+                    <section className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[10px] uppercase tracking-luxury text-stone-500">Price</p>
                         <button
-                          key={option.value}
                           type="button"
-                          onClick={() => setCategory(option.value)}
-                          className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
-                            category === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
-                          }`}
+                          onClick={() => {
+                            setPriceQuick('all');
+                            setMinPriceInput('');
+                            setMaxPriceInput('');
+                          }}
+                          className="text-[10px] uppercase tracking-luxury text-stone-500 underline underline-offset-2"
                         >
-                          <span>{option.label}</span>
-                          {category === option.value ? <span>✓</span> : null}
+                          Reset
                         </button>
-                      ))}
-                    </div>
-                  </section>
+                      </div>
 
-                  <section className="space-y-2">
-                    <p className="text-[10px] uppercase tracking-luxury text-stone-500">Availability</p>
-                    <div className="space-y-1">
-                      {availabilityOptions.map((option) => (
-                        <button
-                          key={option.value}
-                          type="button"
-                          onClick={() => setAvailability(option.value)}
-                          className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
-                            availability === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
-                          }`}
-                        >
-                          <span>{option.label}</span>
-                          {availability === option.value ? <span>✓</span> : null}
-                        </button>
-                      ))}
-                    </div>
-                  </section>
+                      <p className="text-[13px] text-stone-600">Highest price: PKR {highestPrice.toLocaleString()}</p>
 
-                  <section className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <p className="text-[10px] uppercase tracking-luxury text-stone-500">Price</p>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPriceQuick('all');
-                          setMinPriceInput('');
-                          setMaxPriceInput('');
-                        }}
-                        className="text-[10px] uppercase tracking-luxury text-stone-500 underline underline-offset-2"
-                      >
-                        Reset
-                      </button>
-                    </div>
+                      <div className="space-y-1">
+                        {priceOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setPriceQuick(option.value)}
+                            className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
+                              priceQuick === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
+                            }`}
+                          >
+                            <span>{option.label}</span>
+                            {priceQuick === option.value ? <span>✓</span> : null}
+                          </button>
+                        ))}
+                      </div>
 
-                    <p className="text-[13px] text-stone-600">Highest price: PKR {highestPrice.toLocaleString()}</p>
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <label className="flex items-center gap-2 border border-stone-300 bg-white px-2.5 py-2 text-[13px] text-stone-700">
+                          <span className="text-stone-500">Rs</span>
+                          <input
+                            value={minPriceInput}
+                            onChange={(event) => setMinPriceInput(event.target.value.replace(/[^\d]/g, ''))}
+                            placeholder="From"
+                            inputMode="numeric"
+                            className="w-full bg-transparent outline-none"
+                          />
+                        </label>
+                        <label className="flex items-center gap-2 border border-stone-300 bg-white px-2.5 py-2 text-[13px] text-stone-700">
+                          <span className="text-stone-500">Rs</span>
+                          <input
+                            value={maxPriceInput}
+                            onChange={(event) => setMaxPriceInput(event.target.value.replace(/[^\d]/g, ''))}
+                            placeholder="To"
+                            inputMode="numeric"
+                            className="w-full bg-transparent outline-none"
+                          />
+                        </label>
+                      </div>
+                    </section>
+                  </div>
 
-                    <div className="space-y-1">
-                      {priceOptions.map((option) => (
-                        <button
-                          key={option.value}
-                          type="button"
-                          onClick={() => setPriceQuick(option.value)}
-                          className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
-                            priceQuick === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
-                          }`}
-                        >
-                          <span>{option.label}</span>
-                          {priceQuick === option.value ? <span>✓</span> : null}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 pt-1">
-                      <label className="flex items-center gap-2 border border-stone-300 bg-white px-2.5 py-2 text-[13px] text-stone-700">
-                        <span className="text-stone-500">Rs</span>
-                        <input
-                          value={minPriceInput}
-                          onChange={(event) => setMinPriceInput(event.target.value.replace(/[^\d]/g, ''))}
-                          placeholder="From"
-                          inputMode="numeric"
-                          className="w-full bg-transparent outline-none"
-                        />
-                      </label>
-                      <label className="flex items-center gap-2 border border-stone-300 bg-white px-2.5 py-2 text-[13px] text-stone-700">
-                        <span className="text-stone-500">Rs</span>
-                        <input
-                          value={maxPriceInput}
-                          onChange={(event) => setMaxPriceInput(event.target.value.replace(/[^\d]/g, ''))}
-                          placeholder="To"
-                          inputMode="numeric"
-                          className="w-full bg-transparent outline-none"
-                        />
-                      </label>
-                    </div>
-                  </section>
+                  <div className="grid grid-cols-2 gap-2 border-t border-stone-200 px-4 py-3">
+                    <button
+                      type="button"
+                      onClick={resetFilters}
+                      className="border border-stone-300 bg-white px-3 py-2 text-[11px] uppercase tracking-luxury text-stone-700"
+                    >
+                      Reset
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsMobileFilterSidebarOpen(false)}
+                      className="bg-stone-950 px-3 py-2 text-[11px] uppercase tracking-luxury text-white"
+                    >
+                      Apply
+                    </button>
+                  </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-2 border-t border-stone-200 px-4 py-3">
-                  <button
-                    type="button"
-                    onClick={resetFilters}
-                    className="border border-stone-300 bg-white px-3 py-2 text-[11px] uppercase tracking-luxury text-stone-700"
-                  >
-                    Reset
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsMobileFilterSidebarOpen(false)}
-                    className="bg-stone-950 px-3 py-2 text-[11px] uppercase tracking-luxury text-white"
-                  >
-                    Apply
-                  </button>
-                </div>
-              </div>
-            </aside>
-          </>
-        ) : null}
+              </motion.aside>
+            </>
+          ) : null}
+        </AnimatePresence>
 
         {query.trim() ? (
           <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-stone-600">

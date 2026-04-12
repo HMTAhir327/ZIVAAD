@@ -2,8 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect, useMemo, useState, type TouchEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent, type TouchEvent } from 'react';
 
 import { optimizeCloudinaryImage } from '@/lib/cloudinary';
 import { formatPrice } from '@/lib/currency';
@@ -21,6 +22,7 @@ interface ProductCardProps {
 const fallbackImage = 'https://res.cloudinary.com/demo/image/upload/v1690000000/samples/ecommerce/accessories-bag.jpg';
 
 export function ProductCard({ product, disableRevealAnimation = false }: ProductCardProps) {
+  const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
   const currency = useCurrencyStore((state) => state.currency);
   const showToast = useUiStore((state) => state.showToast);
@@ -49,6 +51,7 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
   const [isSecondaryLoaded, setIsSecondaryLoaded] = useState(!hasPeekImage);
   const [mobileMediaIndex, setMobileMediaIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const mobileDidSwipeRef = useRef(false);
 
   useEffect(() => {
     setIsSecondaryLoaded(!hasPeekImage);
@@ -94,6 +97,7 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
     if (!hasMobileGallery) {
       return;
     }
+    mobileDidSwipeRef.current = false;
     setTouchStartX(event.touches[0]?.clientX ?? null);
   }
 
@@ -107,9 +111,20 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
     const deltaX = endX - touchStartX;
     const threshold = 28;
     if (Math.abs(deltaX) > threshold) {
+      mobileDidSwipeRef.current = true;
       goToMobileImage(mobileMediaIndex + (deltaX < 0 ? 1 : -1));
     }
     setTouchStartX(null);
+  }
+
+  function handleMobileMediaClick(event: MouseEvent<HTMLDivElement>) {
+    if (mobileDidSwipeRef.current) {
+      mobileDidSwipeRef.current = false;
+      return;
+    }
+
+    event.preventDefault();
+    router.push(`/product/${product.id}`);
   }
 
   return (
@@ -132,7 +147,7 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
             aria-label={`View ${product.name}`}
           />
 
-          <div className="absolute inset-0 md:hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+          <div className="absolute inset-0 md:hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onClick={handleMobileMediaClick}>
             <div
               className="flex h-full w-full transition-transform duration-500 ease-luxury"
               style={{ transform: `translateX(-${mobileMediaIndex * 100}%)` }}
@@ -162,7 +177,10 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
                     <button
                       key={`dot-${product.id}-${index}`}
                       type="button"
-                      onClick={() => goToMobileImage(index)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        goToMobileImage(index);
+                      }}
                       aria-label={`Show image ${index + 1}`}
                       className={`h-1.5 w-1.5 rounded-full transition-all ${
                         index === mobileMediaIndex ? 'bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.35)]' : 'bg-white/60'

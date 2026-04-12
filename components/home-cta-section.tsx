@@ -7,7 +7,7 @@ interface HomeCtaSectionProps {
 export function HomeCtaSection({ title = 'Build your everyday collection' }: HomeCtaSectionProps) {
   return (
     <section className="mx-auto w-full max-w-[1320px] px-4 py-14 text-center sm:px-6 sm:py-20 lg:px-6 lg:py-28">
-      <h2 className="font-serif text-3xl text-stone-950 sm:text-5xl">{title}</h2>
+      <h2 className="font-serif text-[1.72rem] text-stone-950 sm:text-[2.25rem]">{title}</h2>
       <p className="mx-auto mt-3 max-w-2xl text-[13px] text-stone-600 sm:mt-4 sm:text-base">
         Discover minimal rings, earrings, and necklaces designed to be worn daily and loved for years.
       </p>

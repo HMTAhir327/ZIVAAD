@@ -114,8 +114,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {relatedProducts.length > 0 ? (
         <section className="w-full px-4 pb-20 sm:px-8 sm:pb-24 lg:px-10 lg:pb-32">
           <div className="mb-6 sm:mb-8">
-            <p className="text-xs uppercase tracking-luxury text-stone-500">Related Pieces</p>
-            <h2 className="mt-2 font-serif text-3xl text-stone-950 sm:text-4xl">{siteContent.headings.related_pieces}</h2>
+            <p className="text-[10px] uppercase tracking-luxury text-stone-500">Related Pieces</p>
+            <h2 className="mt-2 font-serif text-[1.72rem] text-stone-950 sm:text-[2.15rem]">{siteContent.headings.related_pieces}</h2>
           </div>
           <CollectionCarousel items={relatedProducts} />
         </section>

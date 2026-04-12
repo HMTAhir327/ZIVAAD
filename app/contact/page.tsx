@@ -57,7 +57,7 @@ export default async function ContactPage() {
       <div className="grid items-start gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16">
         <aside className="max-w-xl">
           <p className="text-[11px] uppercase tracking-luxury text-stone-500">Contact</p>
-          <h1 className="mt-4 font-serif text-5xl leading-[0.95] text-stone-950 sm:text-6xl">Get In Touch</h1>
+          <h1 className="mt-4 font-serif text-[2.15rem] leading-[0.95] text-stone-950 sm:text-[3.4rem]">Get In Touch</h1>
           <p className="mt-5 text-sm leading-relaxed text-stone-600">
             For order updates, wholesale inquiries, and custom requests, send us a message and our team will respond shortly.
           </p>

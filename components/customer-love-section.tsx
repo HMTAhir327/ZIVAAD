@@ -96,7 +96,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-[24px] leading-none text-stone-900">{testimonial.name}</p>
+            <p className="text-[18px] leading-none text-stone-900">{testimonial.name}</p>
             {testimonial.verified ? <VerifiedIcon /> : null}
             <Stars />
           </div>
@@ -132,8 +132,8 @@ export function CustomerLoveSection() {
   return (
     <section className="mx-auto w-full max-w-[1320px] px-4 py-12 sm:px-6 sm:py-14 lg:px-6 lg:py-16">
       <div className="mb-6 text-center sm:mb-8">
-        <h2 className="font-serif text-4xl text-stone-950 sm:text-5xl">Our customers love us</h2>
-        <p className="mt-2 text-[15px] font-medium text-stone-700 sm:text-lg">5.0 star based on 761 reviews</p>
+        <h2 className="font-serif text-[1.72rem] text-stone-950 sm:text-[2.2rem]">Our customers love us</h2>
+        <p className="mt-2 text-[13px] font-medium text-stone-700 sm:text-base">5.0 star based on 761 reviews</p>
       </div>
 
       <div className="space-y-3 sm:space-y-4">
