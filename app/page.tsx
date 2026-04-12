@@ -39,13 +39,13 @@ export default async function HomePage() {
   return (
     <>
       <HomeHero hero={siteContent.hero} />
+      <BestSellersCarousel products={featuredProducts} title={siteContent.headings.best_sellers} />
       <CategoryCollectionsGrid
         products={products}
         categories={siteContent.taxonomy.categories}
         categoryImages={siteContent.media.category_collection_images}
         title={siteContent.headings.collections || 'Collections'}
       />
-      <BestSellersCarousel products={featuredProducts} title={siteContent.headings.best_sellers} />
       <VideoShowcaseSection videoUrl={siteContent.media.storytelling_video_url} />
       <HomeCtaSection title={siteContent.headings.cta} />
       <CustomerLoveSection />
