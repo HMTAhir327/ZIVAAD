@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
 import { CollectionCarousel } from '@/components/collection-carousel';
+import { CustomerLoveSection } from '@/components/customer-love-section';
 import { ProductDetailView } from '@/components/product-detail-view';
 import { optimizeCloudinaryImage } from '@/lib/cloudinary';
 import { getProductVariantData } from '@/lib/product-variants';
@@ -63,8 +65,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const relatedProducts = (await getProducts())
-    .filter((item) => item.category === product.category && item.id !== product.id);
+  const allProducts = await getProducts();
+  const relatedProducts = allProducts.filter((item) => item.category === product.category && item.id !== product.id);
+  const pairsWellWith = [
+    ...allProducts.filter((item) => item.id !== product.id && item.category !== product.category && item.stock > 0),
+    ...relatedProducts.filter((item) => item.stock > 0)
+  ]
+    .filter((item, index, array) => array.findIndex((candidate) => candidate.id === item.id) === index)
+    .slice(0, 2);
   const siteContent = await getSiteContent();
   const variantData = getProductVariantData(product);
   const plainDescription = stripRichTextToPlainText(product.description);
@@ -109,17 +117,30 @@ export default async function ProductPage({ params }: ProductPageProps) {
         }}
       />
 
-      <ProductDetailView product={product} />
+      <ProductDetailView product={product} pairsWellWith={pairsWellWith} />
 
       {relatedProducts.length > 0 ? (
         <section className="w-full px-4 pb-20 sm:px-8 sm:pb-24 lg:px-10 lg:pb-32">
-          <div className="mb-6 sm:mb-8">
-            <p className="text-[10px] uppercase tracking-luxury text-stone-500">Related Pieces</p>
-            <h2 className="mt-2 font-serif text-[1.72rem] text-stone-950 sm:text-[2.15rem]">{siteContent.headings.related_pieces}</h2>
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4 sm:mb-8">
+            <div>
+              <p className="text-[10px] uppercase tracking-luxury text-stone-500">Related Pieces</p>
+              <h2 className="mt-2 font-serif text-[1.72rem] text-stone-950 sm:text-[2.15rem]">{siteContent.headings.related_pieces}</h2>
+              <p className="mt-2 text-sm text-stone-600">
+                Pair this piece with complementary styles from the same collection mood.
+              </p>
+            </div>
+            <Link
+              href="/shop"
+              className="border border-stone-300 px-4 py-2 text-[11px] uppercase tracking-luxury text-stone-700 transition-colors hover:border-stone-950 hover:text-stone-950"
+            >
+              View Full Catalog
+            </Link>
           </div>
           <CollectionCarousel items={relatedProducts} />
         </section>
       ) : null}
+
+      <CustomerLoveSection />
     </>
   );
 }

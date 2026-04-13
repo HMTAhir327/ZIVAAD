@@ -6,6 +6,7 @@ import { CartDrawer } from '@/components/cart-drawer';
 import { Footer } from '@/components/footer';
 import { FloatingWhatsAppButton } from '@/components/floating-whatsapp-button';
 import { Navbar } from '@/components/navbar';
+import { getSiteContent } from '@/lib/site-content';
 
 import './globals.css';
 
@@ -59,16 +60,21 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const siteContent = await getSiteContent();
+  const mainTopPaddingClass = siteContent.settings.sale_counter_enabled
+    ? 'pt-[8rem] sm:pt-[8.75rem] lg:pt-[11.3rem]'
+    : 'pt-[5.5rem] sm:pt-[6rem] lg:pt-[8.5rem]';
+
   return (
     <html lang="en" className={`${headingFont.variable} ${bodyFont.variable}`}>
       <body className="bg-white text-[#1a1a1a] antialiased">
         <div className="relative min-h-screen overflow-x-clip">
-          <Navbar />
+          <Navbar settings={siteContent.settings} />
           <CartDrawer />
           <AddedToBoxToast />
           <FloatingWhatsAppButton />
-          <main className="pt-[5.25rem] sm:pt-[6rem]">{children}</main>
+          <main className={mainTopPaddingClass}>{children}</main>
           <Footer />
         </div>
       </body>

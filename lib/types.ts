@@ -35,6 +35,8 @@ export interface Product {
   supplier_urls?: string[];
   zivaad_choice?: boolean;
   sale_tag_enabled?: boolean;
+  rating?: number;
+  rating_count?: number;
   option_swatches?: Record<string, Record<string, string>>;
   product_options?: ProductOption[];
   product_variants?: ProductVariant[];
@@ -86,6 +88,17 @@ export interface SiteContent {
   };
   settings: {
     shuffle_shop_before_filter: boolean;
+    promo_messages: string[];
+    trust_marquee_items: string[];
+    sale_counter_enabled: boolean;
+    sale_counter_title: string;
+    sale_counter_subtitle: string;
+    sale_counter_badge: string;
+    sale_counter_end_at: string;
+    sale_counter_repeat_enabled: boolean;
+    sale_counter_cycle_seconds: number;
+    sale_counter_anchor_hour: number;
+    sale_counter_anchor_minute: number;
   };
 }
 

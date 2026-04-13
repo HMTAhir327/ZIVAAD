@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useMemo, useState, type TouchEvent } from 'react';
 
 import { optimizeCloudinaryImage, optimizeCloudinaryVideo } from '@/lib/cloudinary';
@@ -16,10 +17,12 @@ import {
   getProductVariantData
 } from '@/lib/product-variants';
 import { renderRichTextHtml } from '@/lib/rich-text';
+import { getSocialProofSeed } from '@/lib/social-proof';
 import type { Product } from '@/lib/types';
 import { useCartStore } from '@/store/cart-store';
 import { useCurrencyStore } from '@/store/currency-store';
 import { useUiStore } from '@/store/ui-store';
+import { ZIVAAD_WHATSAPP_NUMBER } from '@/lib/whatsapp';
 
 type Media =
   | { kind: 'image'; url: string }
@@ -27,6 +30,7 @@ type Media =
 
 interface ProductDetailViewProps {
   product: Product;
+  pairsWellWith?: Product[];
 }
 
 const fallbackImage =
@@ -104,7 +108,7 @@ function getConfiguredColorSwatch(
   return valueKey ? swatches[optionKey][valueKey] : undefined;
 }
 
-export function ProductDetailView({ product }: ProductDetailViewProps) {
+export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetailViewProps) {
   const addItem = useCartStore((state) => state.addItem);
   const openCart = useCartStore((state) => state.openCart);
   const currency = useCurrencyStore((state) => state.currency);
@@ -131,6 +135,17 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
   );
   const selectedOptionsSummary = useMemo(() => formatSelectedOptions(selectedOptions), [selectedOptions]);
   const descriptionHtml = useMemo(() => renderRichTextHtml(product.description), [product.description]);
+  const socialProof = useMemo(() => getSocialProofSeed(product.id), [product.id]);
+  const ratingValue = useMemo(() => {
+    const parsed = Number(product.rating);
+    if (!Number.isFinite(parsed)) return 4.8;
+    return Number(Math.min(5, Math.max(0, parsed)).toFixed(1));
+  }, [product.rating]);
+  const ratingCount = useMemo(() => {
+    const parsed = Number(product.rating_count);
+    if (!Number.isFinite(parsed)) return 0;
+    return Math.max(0, Math.floor(parsed));
+  }, [product.rating_count]);
 
   const mediaItems: Media[] = useMemo(() => {
     const variantImage = selectedVariant?.image_url?.trim();
@@ -402,6 +417,17 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
               {product.name}
             </h1>
 
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-stone-700">
+              <span className="text-[#c9a24a]">★ ★ ★ ★ ★</span>
+              <span>{ratingValue.toFixed(1)}</span>
+              {ratingCount > 0 ? <span>({ratingCount})</span> : null}
+              <span className="text-stone-500">Loved by customers across Pakistan</span>
+            </div>
+
+            <p className="mt-3 text-[10px] uppercase tracking-luxury text-stone-500">
+              {socialProof.viewing} people viewed this style today · {socialProof.soldToday} ordered today
+            </p>
+
             <div className="mt-4 flex flex-wrap items-center gap-3">
               {effectiveState.comparePrice > effectiveState.price ? (
                 <p className="text-sm text-stone-400 line-through">{formatPrice(effectiveState.comparePrice, currency)}</p>
@@ -416,6 +442,15 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
               ) : null}
             </div>
             <p className="mt-3 text-sm text-stone-600">Shipping calculated at checkout.</p>
+            <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-stone-600">
+              Designed for everyday elegance with a premium finish, skin-friendly wear, and timeless styling.
+            </p>
+
+            <div className="mt-5 grid gap-2 text-[10px] uppercase tracking-luxury text-stone-600 sm:grid-cols-3">
+              <div className="border border-stone-200 bg-stone-50 px-3 py-2">COD Available</div>
+              <div className="border border-stone-200 bg-stone-50 px-3 py-2">Dispatch in 24 Hours</div>
+              <div className="border border-stone-200 bg-stone-50 px-3 py-2">Premium Finish</div>
+            </div>
 
             <div className="mt-6 border-t border-stone-200 pt-5">
               {hasVariants ? (
@@ -544,6 +579,15 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                 )}
               </div>
 
+              <div className="mt-5 border border-stone-200 bg-[#fcfcfb] px-3 py-3">
+                <p className="text-[10px] uppercase tracking-luxury text-stone-500">Why this piece works</p>
+                <ul className="mt-2 space-y-1.5 text-sm text-stone-700">
+                  <li>• Premium anti-tarnish finish for everyday wear</li>
+                  <li>• Lightweight comfort with refined, clean detailing</li>
+                  <li>• Easy to style solo or stacked with other pieces</li>
+                </ul>
+              </div>
+
               <button
                 type="button"
                 onClick={handleAddToBag}
@@ -554,6 +598,24 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                   ? `Add ${quantity} to Bag · ${formatPrice(effectiveState.price * quantity, currency)}`
                   : 'Sold Out'}
               </button>
+
+              {lowStock ? (
+                <p className="mt-2 text-[10px] uppercase tracking-luxury text-red-700">
+                  Low stock: only {effectiveState.stock} left for immediate dispatch.
+                </p>
+              ) : null}
+
+              <a
+                href={`https://wa.me/${ZIVAAD_WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex w-full items-center justify-center border border-stone-300 px-6 py-3 text-[11px] uppercase tracking-luxury text-stone-700 transition-colors hover:border-stone-950 hover:text-stone-950"
+              >
+                Ask on WhatsApp Before Ordering
+              </a>
+              <p className="mt-2 text-center text-[10px] uppercase tracking-luxury text-stone-500">
+                Need help with size, finish, or delivery timing? We respond quickly.
+              </p>
             </div>
           </div>
 
@@ -564,6 +626,83 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                 className="mt-3 space-y-3 text-sm leading-relaxed text-stone-700 [&_a]:underline [&_blockquote]:border-l-2 [&_blockquote]:border-stone-300 [&_blockquote]:pl-4 [&_h3]:font-serif [&_h3]:text-2xl [&_h4]:font-serif [&_h4]:text-xl [&_li]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:list-disc"
                 dangerouslySetInnerHTML={{ __html: descriptionHtml }}
               />
+            </div>
+          ) : null}
+
+          <div className="mt-6 divide-y divide-stone-200 border-y border-stone-200">
+            <details className="group py-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-[11px] uppercase tracking-luxury text-stone-700">
+                Shipping & Delivery
+                <span className="text-stone-400 transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p className="mt-2 max-w-[50ch] text-sm leading-relaxed text-stone-600">
+                Orders are confirmed via WhatsApp and dispatched quickly. Typical delivery window is 3-5 business days
+                across major cities in Pakistan.
+              </p>
+            </details>
+
+            <details className="group py-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-[11px] uppercase tracking-luxury text-stone-700">
+                Returns & Support
+                <span className="text-stone-400 transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p className="mt-2 max-w-[50ch] text-sm leading-relaxed text-stone-600">
+                For incorrect or damaged items, contact support within 24 hours of delivery. Our team guides the
+                resolution directly on WhatsApp.
+              </p>
+            </details>
+
+            <details className="group py-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-[11px] uppercase tracking-luxury text-stone-700">
+                Care Guide
+                <span className="text-stone-400 transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p className="mt-2 max-w-[50ch] text-sm leading-relaxed text-stone-600">
+                Keep jewelry dry, avoid direct perfume contact, and store in a clean pouch after use to maintain finish
+                and shine.
+              </p>
+            </details>
+          </div>
+
+          <div className="mt-6 border border-stone-200 bg-[#fcfcfb] p-4 sm:p-5">
+            <p className="text-[10px] uppercase tracking-luxury text-stone-500">Why people love this</p>
+            <ul className="mt-3 space-y-2 text-sm leading-relaxed text-stone-700">
+              <li>• Premium look that works from daywear to events</li>
+              <li>• Comfortable fit with clean craftsmanship and polish</li>
+              <li>• Fast delivery and direct support on WhatsApp</li>
+            </ul>
+          </div>
+
+          {pairsWellWith.length > 0 ? (
+            <div className="mt-6 border border-stone-200 bg-[#fcfcfb] p-4 sm:p-5">
+              <div className="mb-3">
+                <p className="text-[10px] uppercase tracking-luxury text-stone-500">Pairs Well With</p>
+                <p className="mt-1 text-sm text-stone-600">Complete your look with these complementary pieces.</p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {pairsWellWith.slice(0, 2).map((item) => (
+                  <Link
+                    key={`pairs-${item.id}`}
+                    href={`/product/${item.id}`}
+                    className="group grid grid-cols-[72px_minmax(0,1fr)] gap-2 border border-stone-200 bg-white p-2.5 transition-colors hover:border-stone-950"
+                  >
+                    <div className="relative h-[88px] w-[72px] overflow-hidden bg-stone-100">
+                      <Image
+                        src={optimizeCloudinaryImage(item.primary_image_url || item.images?.[0] || fallbackImage, 420)}
+                        alt={item.name}
+                        fill
+                        sizes="72px"
+                        className="object-cover transition-transform duration-500 ease-luxury group-hover:scale-[1.04]"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm text-stone-900">{item.name}</p>
+                      <p className="mt-1 text-[10px] uppercase tracking-luxury text-stone-500">{item.category}</p>
+                      <p className="mt-1.5 text-xs text-stone-700">{formatPrice(item.price, currency)}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           ) : null}
         </div>

@@ -7,6 +7,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useCartStore } from '@/store/cart-store';
+import type { SiteContent } from '@/lib/types';
 
 const primaryLinks = [
   { href: '/', label: 'Home' },
@@ -15,10 +16,28 @@ const primaryLinks = [
   { href: '/contact', label: 'Contact' }
 ];
 
+const mobilePrimaryLinks = primaryLinks.filter((item) => item.href !== '/collection');
+
+const collectionLinks = [
+  { href: '/shop?category=rings', label: 'Rings' },
+  { href: '/shop?category=earrings', label: 'Earrings' },
+  { href: '/shop?category=necklaces', label: 'Necklaces' },
+  { href: '/shop?category=jewellery%20set', label: 'Sets' },
+  { href: '/shop?category=bracelets', label: 'Bracelets' }
+];
+
+const defaultPromoMessages = [
+  '1000/- Advance Required on Orders Above 5000/-',
+  'Free Delivery On Orders Above 4999/-'
+];
+const defaultTrustMarqueeItems = ['Pure Stainless Steel', '20k+ Satisfied Customers', 'Cash on Delivery', 'WhatsApp Support'];
+
 const quickSearchLinks = [
   { href: '/shop?category=rings', label: 'Rings' },
-  { href: '/shop', label: 'New Arrivals' },
-  { href: '/shop', label: 'Best Sellers' }
+  { href: '/shop?category=earrings', label: 'Earrings' },
+  { href: '/shop?category=necklaces', label: 'Necklaces' },
+  { href: '/shop?category=jewellery%20set', label: 'Sets' },
+  { href: '/shop?category=bracelets', label: 'Bracelets' }
 ];
 
 function MenuIcon() {
@@ -49,7 +68,57 @@ function BagIcon() {
   );
 }
 
-export function Navbar() {
+interface NavbarProps {
+  settings: SiteContent['settings'];
+}
+
+function formatCountdownParts(totalSeconds: number) {
+  const safe = Math.max(0, Math.floor(totalSeconds));
+  const days = Math.floor(safe / 86400);
+  const hours = Math.floor((safe % 86400) / 3600);
+  const minutes = Math.floor((safe % 3600) / 60);
+  const seconds = safe % 60;
+
+  return {
+    days: String(days).padStart(2, '0'),
+    hours: String(hours).padStart(2, '0'),
+    minutes: String(minutes).padStart(2, '0'),
+    seconds: String(seconds).padStart(2, '0')
+  };
+}
+
+function getFixedCountdown(endAt: string, nowMs: number) {
+  const endMs = Date.parse(endAt);
+  if (!Number.isFinite(endMs)) {
+    return { days: '00', hours: '00', minutes: '00', seconds: '00' };
+  }
+
+  return formatCountdownParts((endMs - nowMs) / 1000);
+}
+
+function getRepeatingCountdown(
+  cycleSeconds: number,
+  anchorHour: number,
+  anchorMinute: number,
+  nowMs: number
+) {
+  const safeCycle = Math.max(1, Math.floor(cycleSeconds));
+  const now = new Date(nowMs);
+  const anchor = new Date(now);
+  anchor.setHours(anchorHour, anchorMinute, 0, 0);
+
+  if (now.getTime() < anchor.getTime()) {
+    anchor.setDate(anchor.getDate() - 1);
+  }
+
+  const elapsedSeconds = Math.floor((now.getTime() - anchor.getTime()) / 1000);
+  const offset = ((elapsedSeconds % safeCycle) + safeCycle) % safeCycle;
+  const remaining = safeCycle - offset;
+
+  return formatCountdownParts(remaining === 0 ? safeCycle : remaining);
+}
+
+export function Navbar({ settings }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,6 +126,9 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [isSaleCounterDismissed, setIsSaleCounterDismissed] = useState(false);
+  const [promoIndex, setPromoIndex] = useState(0);
+  const [nowMs, setNowMs] = useState(() => Date.now());
 
   const { getItemCount, openCart } = useCartStore((state) => ({
     getItemCount: state.getItemCount,
@@ -106,6 +178,43 @@ export function Navbar() {
     setIsMounted(true);
   }, []);
 
+  const promoMessages = settings.promo_messages.length > 0 ? settings.promo_messages : defaultPromoMessages;
+  const trustMarqueeItems = settings.trust_marquee_items.length > 0 ? settings.trust_marquee_items : defaultTrustMarqueeItems;
+  const trustUtilityItems = trustMarqueeItems.slice(0, 4);
+  const showSaleCounter = settings.sale_counter_enabled && !isSaleCounterDismissed;
+  const saleCountdown = settings.sale_counter_repeat_enabled
+    ? getRepeatingCountdown(
+        settings.sale_counter_cycle_seconds,
+        settings.sale_counter_anchor_hour,
+        settings.sale_counter_anchor_minute,
+        nowMs
+      )
+    : getFixedCountdown(settings.sale_counter_end_at, nowMs);
+
+  useEffect(() => {
+    if (promoMessages.length <= 1) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setPromoIndex((prev) => (prev + 1) % Math.max(promoMessages.length, 1));
+    }, 3600);
+
+    return () => window.clearInterval(interval);
+  }, [promoMessages.length]);
+
+  useEffect(() => {
+    if (!showSaleCounter) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setNowMs(Date.now());
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, [showSaleCounter]);
+
   const itemCount = getItemCount();
 
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
@@ -129,9 +238,55 @@ export function Navbar() {
           isScrolled ? 'border-stone-200 bg-white/96 backdrop-blur-xl' : 'border-transparent bg-white/35 backdrop-blur-md'
         } max-lg:border-stone-200 max-lg:bg-white/96 max-lg:backdrop-blur-xl`}
       >
-        <div className="bg-black">
-          <div className="flex h-7 w-full items-center justify-center px-4 text-[9px] uppercase tracking-luxury text-white/90 sm:h-8 sm:px-6 sm:text-[10px] lg:px-10">
-            Super Sale Up To 40% Off · Shop Now
+        {showSaleCounter ? (
+          <div className="relative overflow-hidden border-b border-[#d9c292] bg-[#f8f2e5]">
+            <div className="relative flex min-h-11 items-center justify-center gap-2 px-4 py-1.5 sm:min-h-12 sm:gap-3 sm:px-6 lg:px-10">
+              <p className="font-serif text-[16px] text-[#b59456] sm:text-[17px]">{settings.sale_counter_title}</p>
+              <p className="hidden text-[10px] uppercase tracking-[0.14em] text-stone-500 sm:block">
+                {settings.sale_counter_subtitle}
+              </p>
+              <div className="flex items-end gap-1 text-stone-900 [font-variant-numeric:tabular-nums]">
+                <p className="text-[19px] font-semibold leading-none sm:text-[22px]">{saleCountdown.days}</p>
+                <span className="mb-0.5 text-[9px] uppercase tracking-[0.14em] text-stone-500">D</span>
+                <span className="mb-[2px] text-stone-400">:</span>
+                <p className="text-[19px] font-semibold leading-none sm:text-[22px]">{saleCountdown.hours}</p>
+                <span className="mb-0.5 text-[9px] uppercase tracking-[0.14em] text-stone-500">H</span>
+                <span className="mb-[2px] text-stone-400">:</span>
+                <p className="text-[19px] font-semibold leading-none sm:text-[22px]">{saleCountdown.minutes}</p>
+                <span className="mb-0.5 text-[9px] uppercase tracking-[0.14em] text-stone-500">M</span>
+                <span className="mb-[2px] text-stone-400">:</span>
+                <p className="text-[19px] font-semibold leading-none sm:text-[22px]">{saleCountdown.seconds}</p>
+                <span className="mb-0.5 text-[9px] uppercase tracking-[0.14em] text-stone-500">S</span>
+              </div>
+              <span className="rounded-full bg-[#b89a61] px-3 py-1 text-[9px] uppercase tracking-[0.16em] text-white sm:px-3.5 sm:text-[10px]">
+                {settings.sale_counter_badge}
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsSaleCounterDismissed(true)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-xl leading-none text-stone-500 transition-colors hover:text-stone-900 sm:right-3"
+                aria-label="Dismiss sale counter"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        ) : null}
+
+        <div className="relative overflow-hidden border-b border-[#b69761] bg-[#b89a61]">
+          <div className="relative h-7 sm:h-8">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={`promo-message-${promoIndex}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-0 flex items-center justify-center px-4 text-[11px] uppercase tracking-[0.19em] text-[#fffaf0] sm:px-6 sm:text-[12px] lg:px-10"
+              >
+                {promoMessages[promoIndex]}
+              </motion.p>
+            </AnimatePresence>
           </div>
         </div>
 
@@ -211,6 +366,29 @@ export function Navbar() {
           </div>
         </div>
 
+        <div className="hidden h-10 items-center justify-between border-t border-stone-200/80 px-10 lg:flex">
+          <nav className="flex items-center gap-5">
+            {collectionLinks.map((item) => (
+              <Link
+                key={`collection-link-${item.href}`}
+                href={item.href}
+                className="text-[10px] uppercase tracking-luxury text-stone-600 transition-colors hover:text-stone-950"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3 text-[9px] uppercase tracking-luxury text-stone-500">
+            {trustUtilityItems.map((item, index) => (
+              <span key={item} className="inline-flex items-center gap-3">
+                <span>{item}</span>
+                {index < trustUtilityItems.length - 1 ? <span className="h-2.5 w-px bg-stone-300/80" /> : null}
+              </span>
+            ))}
+          </div>
+        </div>
+
         <AnimatePresence>
           {isSearchOpen ? (
             <motion.div
@@ -218,7 +396,7 @@ export function Navbar() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -18, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-0 top-7 z-[93] border-b border-stone-200 bg-white sm:top-8"
+              className="absolute inset-x-0 top-full z-[93] border-b border-stone-200 bg-white"
             >
               <div className="w-full px-4 py-2.5 sm:px-6 lg:px-10 lg:py-3">
                 <form className="flex items-start gap-4" onSubmit={handleSearchSubmit}>
@@ -287,42 +465,85 @@ export function Navbar() {
                     animate={{ x: 0 }}
                     exit={{ x: '-100%' }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                    className="fixed left-0 top-0 z-[210] flex h-full w-[86vw] max-w-[380px] flex-col bg-white px-6 pb-7 pt-6 shadow-[0_30px_80px_rgba(17,17,17,0.28)] lg:hidden"
+                    className="fixed left-0 top-0 z-[210] flex h-full w-[88vw] max-w-[360px] flex-col bg-white px-5 pb-6 pt-5 shadow-[0_30px_80px_rgba(17,17,17,0.28)] lg:hidden"
                   >
-                    <div className="flex items-center justify-between border-b border-stone-200 pb-4">
-                      <p className="font-serif text-[1.9rem] leading-none tracking-[0.14em] text-stone-950">ZIVAAD</p>
+                    <div className="flex items-center justify-between pb-3">
+                      <p className="font-serif text-[1.75rem] leading-none tracking-[0.14em] text-stone-950">ZIVAAD</p>
                       <button
                         type="button"
                         onClick={() => setIsMenuOpen(false)}
-                        className="inline-flex h-9 w-9 items-center justify-center border border-stone-300 text-2xl leading-none text-stone-700 transition-colors hover:border-stone-950 hover:text-stone-950"
+                        className="inline-flex h-9 w-9 items-center justify-center border border-stone-200 bg-stone-50 text-[1.65rem] leading-none text-stone-700 transition-colors hover:border-stone-300 hover:bg-stone-100 hover:text-stone-950"
                         aria-label="Close menu"
                       >
                         ×
                       </button>
                     </div>
-                    <p className="mt-4 text-[10px] uppercase tracking-luxury text-stone-400">Menu</p>
-                    <nav className="mt-3 space-y-4">
-                      {primaryLinks.map((item) => {
-                        const active = pathname === item.href;
+                    <div className="h-px bg-stone-200" />
+                    <div className="flex-1 overflow-y-auto pb-4 pt-4">
+                      <section>
+                        <p className="text-[10px] uppercase tracking-luxury text-stone-400">Menu</p>
+                        <nav className="mt-3 space-y-2">
+                          {mobilePrimaryLinks.map((item) => {
+                            const active = pathname === item.href;
 
-                        return (
-                          <Link
-                            key={`sidebar-${item.href}`}
-                            href={item.href}
-                            onClick={() => setIsMenuOpen(false)}
-                            className={`block border-b pb-3 text-[12px] uppercase tracking-[0.2em] transition-colors ${
-                              active
-                                ? 'border-stone-950 text-stone-950'
-                                : 'border-stone-300 text-stone-500 hover:border-stone-950 hover:text-stone-950'
-                            }`}
-                          >
-                            {item.label}
-                          </Link>
-                        );
-                      })}
-                    </nav>
-                    <div className="mt-auto border-t border-stone-200 pt-4">
-                      <p className="text-[10px] uppercase tracking-luxury text-stone-400">Minimal Luxury Jewelry</p>
+                            return (
+                              <Link
+                                key={`sidebar-${item.href}`}
+                                href={item.href}
+                                onClick={() => setIsMenuOpen(false)}
+                                className={`flex items-center justify-between border px-3.5 py-3 text-[11px] uppercase tracking-[0.2em] transition-colors ${
+                                  active
+                                    ? 'border-stone-900 bg-stone-950 text-white'
+                                    : 'border-stone-200 text-stone-700 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-950'
+                                }`}
+                              >
+                                <span>{item.label}</span>
+                                <span className={`text-xs ${active ? 'text-white/80' : 'text-stone-400'}`}>→</span>
+                              </Link>
+                            );
+                          })}
+                        </nav>
+                      </section>
+
+                      <section className="mt-5">
+                        <p className="text-[10px] uppercase tracking-luxury text-stone-400">Collections</p>
+                        <div className="mt-3 grid grid-cols-2 gap-2">
+                          {collectionLinks.map((item) => (
+                            <Link
+                              key={`sidebar-collection-${item.href}`}
+                              href={item.href}
+                              onClick={() => setIsMenuOpen(false)}
+                              className="border border-stone-200 px-3 py-2.5 text-center text-[10px] uppercase tracking-[0.16em] text-stone-700 transition-colors hover:border-stone-400 hover:bg-stone-50 hover:text-stone-950"
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                        <Link
+                          href="/shop"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="mt-3 block bg-stone-950 px-4 py-3 text-center text-[10px] uppercase tracking-[0.2em] text-white"
+                        >
+                          Shop All Collections
+                        </Link>
+                      </section>
+
+                      <section className="mt-5 border border-stone-200 bg-[#fcfcfb] px-3.5 py-3">
+                        <p className="text-[9px] uppercase tracking-luxury text-stone-500">Client Care</p>
+                        <p className="mt-1 text-[11px] text-stone-600">COD Available · 3-5 Day Delivery · WhatsApp Support</p>
+                      </section>
+                    </div>
+                    <div className="mt-auto border-t border-stone-200 pt-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[10px] uppercase tracking-luxury text-stone-400">Minimal Luxury Jewelry</p>
+                        <Link
+                          href="/contact"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="text-[10px] uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-950"
+                        >
+                          Support
+                        </Link>
+                      </div>
                     </div>
                   </motion.aside>
                 </>

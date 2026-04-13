@@ -89,6 +89,22 @@ function toBoolean(value: unknown, fallback = false): boolean {
   return fallback;
 }
 
+function toRating(value: unknown): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return 4.8;
+  }
+  return Number(Math.min(5, Math.max(0, parsed)).toFixed(1));
+}
+
+function toRatingCount(value: unknown): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return 0;
+  }
+  return Math.max(0, Math.floor(parsed));
+}
+
 export function sanitizeProducts(rawProducts: unknown): Product[] {
   if (!Array.isArray(rawProducts)) {
     throw new Error('Invalid products payload');
@@ -176,6 +192,8 @@ function sanitizeProduct(rawProduct: unknown, index: number): Product {
     supplier_urls: supplierUrls,
     zivaad_choice: toBoolean(product.zivaad_choice, false),
     sale_tag_enabled: toBoolean(product.sale_tag_enabled, false),
+    rating: toRating(product.rating),
+    rating_count: toRatingCount(product.rating_count),
     option_swatches: normalizedSwatches,
     product_options: variantData.options,
     product_variants: variantData.variants

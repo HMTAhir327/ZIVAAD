@@ -985,6 +985,31 @@ export function AdminProductFormPage({
             </div>
           </div>
 
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Customer Rating</label>
+              <input
+                type="number"
+                min={0}
+                max={5}
+                step="0.1"
+                value={product.rating ?? 4.8}
+                onChange={(event) => setField('rating', Number(event.target.value) || 0)}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-luxury text-stone-500">Rating Count</label>
+              <input
+                type="number"
+                min={0}
+                value={product.rating_count ?? 0}
+                onChange={(event) => setField('rating_count', Math.max(0, Number(event.target.value) || 0))}
+                className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-2">
               <label className="text-[10px] uppercase tracking-luxury text-stone-500">Category</label>

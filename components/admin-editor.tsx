@@ -206,6 +206,36 @@ function parseUrlTextareaInput(value: string): string[] {
     .filter(Boolean);
 }
 
+function parseTextLines(value: string): string[] {
+  return value
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function toPositiveInt(value: string): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return 0;
+  }
+  return Math.max(0, Math.floor(parsed));
+}
+
+function cycleSecondsToParts(totalSeconds: number) {
+  const safe = Math.max(1, Math.floor(totalSeconds));
+  const days = Math.floor(safe / 86400);
+  const hours = Math.floor((safe % 86400) / 3600);
+  const minutes = Math.floor((safe % 3600) / 60);
+  const seconds = safe % 60;
+
+  return { days, hours, minutes, seconds };
+}
+
+function cyclePartsToSeconds(parts: { days: number; hours: number; minutes: number; seconds: number }) {
+  const total = parts.days * 86400 + parts.hours * 3600 + parts.minutes * 60 + parts.seconds;
+  return Math.max(1, total);
+}
+
 function isValidHttpUrl(value: string): boolean {
   try {
     const parsed = new URL(value);
@@ -448,6 +478,11 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
       setEditingIndex(null);
     }
   }, [editingIndex, products.length]);
+
+  const saleCycleParts = useMemo(
+    () => cycleSecondsToParts(siteContent.settings?.sale_counter_cycle_seconds ?? 1),
+    [siteContent.settings?.sale_counter_cycle_seconds]
+  );
 
   const totalStock = useMemo(() => products.reduce((sum, product) => sum + product.stock, 0), [products]);
 
@@ -2352,6 +2387,170 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
                   />
                   Shuffle products on Shop and Home before users apply filters
                 </label>
+              </div>
+
+              <div className="mt-4 grid gap-3 border-t border-stone-200 pt-4">
+                <p className="text-[10px] uppercase tracking-luxury text-stone-500">Top Announcement Strips</p>
+                <label className="flex items-center gap-2 border border-stone-300 px-3 py-2 text-xs text-stone-700">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(siteContent.settings?.sale_counter_enabled)}
+                    onChange={(event) => updateSiteContent('settings', { sale_counter_enabled: event.target.checked })}
+                    className="h-4 w-4 border border-stone-300"
+                  />
+                  Enable sale counter strip
+                </label>
+                <label className="flex items-center gap-2 border border-stone-300 px-3 py-2 text-xs text-stone-700">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(siteContent.settings?.sale_counter_repeat_enabled)}
+                    onChange={(event) =>
+                      updateSiteContent('settings', { sale_counter_repeat_enabled: event.target.checked })
+                    }
+                    className="h-4 w-4 border border-stone-300"
+                  />
+                  Repeat countdown automatically after timer ends
+                </label>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <input
+                    value={siteContent.settings.sale_counter_title}
+                    onChange={(event) => updateSiteContent('settings', { sale_counter_title: event.target.value })}
+                    placeholder="Sale title (e.g. Winter Sale)"
+                    className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                  />
+                  <input
+                    value={siteContent.settings.sale_counter_badge}
+                    onChange={(event) => updateSiteContent('settings', { sale_counter_badge: event.target.value })}
+                    placeholder="Sale badge (e.g. Flat 50%)"
+                    className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <input
+                  value={siteContent.settings.sale_counter_subtitle}
+                  onChange={(event) => updateSiteContent('settings', { sale_counter_subtitle: event.target.value })}
+                  placeholder="Sale counter subtitle"
+                  className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                />
+                {siteContent.settings.sale_counter_repeat_enabled ? (
+                  <>
+                    <div className="grid gap-3 sm:grid-cols-4">
+                      <input
+                        type="number"
+                        min={0}
+                        value={saleCycleParts.days}
+                        onChange={(event) =>
+                          updateSiteContent('settings', {
+                            sale_counter_cycle_seconds: cyclePartsToSeconds({
+                              ...saleCycleParts,
+                              days: toPositiveInt(event.target.value)
+                            })
+                          })
+                        }
+                        placeholder="Days"
+                        className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="number"
+                        min={0}
+                        max={23}
+                        value={saleCycleParts.hours}
+                        onChange={(event) =>
+                          updateSiteContent('settings', {
+                            sale_counter_cycle_seconds: cyclePartsToSeconds({
+                              ...saleCycleParts,
+                              hours: Math.min(23, toPositiveInt(event.target.value))
+                            })
+                          })
+                        }
+                        placeholder="Hours"
+                        className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="number"
+                        min={0}
+                        max={59}
+                        value={saleCycleParts.minutes}
+                        onChange={(event) =>
+                          updateSiteContent('settings', {
+                            sale_counter_cycle_seconds: cyclePartsToSeconds({
+                              ...saleCycleParts,
+                              minutes: Math.min(59, toPositiveInt(event.target.value))
+                            })
+                          })
+                        }
+                        placeholder="Minutes"
+                        className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="number"
+                        min={0}
+                        max={59}
+                        value={saleCycleParts.seconds}
+                        onChange={(event) =>
+                          updateSiteContent('settings', {
+                            sale_counter_cycle_seconds: cyclePartsToSeconds({
+                              ...saleCycleParts,
+                              seconds: Math.min(59, toPositiveInt(event.target.value))
+                            })
+                          })
+                        }
+                        placeholder="Seconds"
+                        className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                      />
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <input
+                        type="number"
+                        min={0}
+                        max={23}
+                        value={siteContent.settings.sale_counter_anchor_hour}
+                        onChange={(event) =>
+                          updateSiteContent('settings', {
+                            sale_counter_anchor_hour: Math.min(23, toPositiveInt(event.target.value))
+                          })
+                        }
+                        placeholder="Reset hour (0-23)"
+                        className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="number"
+                        min={0}
+                        max={59}
+                        value={siteContent.settings.sale_counter_anchor_minute}
+                        onChange={(event) =>
+                          updateSiteContent('settings', {
+                            sale_counter_anchor_minute: Math.min(59, toPositiveInt(event.target.value))
+                          })
+                        }
+                        placeholder="Reset minute (0-59)"
+                        className="border border-stone-300 bg-white px-3 py-2 text-sm"
+                      />
+                    </div>
+                  </>
+                ) : null}
+                <input
+                  value={siteContent.settings.sale_counter_end_at}
+                  onChange={(event) => updateSiteContent('settings', { sale_counter_end_at: event.target.value })}
+                  placeholder="Sale end date (ISO), e.g. 2026-12-31T18:59:59.000Z"
+                  className="border border-stone-300 bg-white px-3 py-2 text-sm disabled:bg-stone-100"
+                  disabled={siteContent.settings.sale_counter_repeat_enabled}
+                />
+                <textarea
+                  value={(siteContent.settings.promo_messages || []).join('\n')}
+                  onChange={(event) => updateSiteContent('settings', { promo_messages: parseTextLines(event.target.value) })}
+                  rows={3}
+                  placeholder="Promo messages (one per line)"
+                  className="resize-y border border-stone-300 bg-white px-3 py-2 text-sm"
+                />
+                <textarea
+                  value={(siteContent.settings.trust_marquee_items || []).join('\n')}
+                  onChange={(event) =>
+                    updateSiteContent('settings', { trust_marquee_items: parseTextLines(event.target.value) })
+                  }
+                  rows={3}
+                  placeholder="Trust marquee items (one per line)"
+                  className="resize-y border border-stone-300 bg-white px-3 py-2 text-sm"
+                />
               </div>
             </article>
 

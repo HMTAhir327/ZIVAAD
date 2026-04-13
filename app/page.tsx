@@ -2,8 +2,9 @@ import { BestSellersCarousel } from '@/components/best-sellers-carousel';
 import { CategoryCollectionsGrid } from '@/components/category-collections-grid';
 import { CustomerLoveSection } from '@/components/customer-love-section';
 import { HomeHero } from '@/components/home-hero';
-import { HomeCtaSection } from '@/components/home-cta-section';
+import { HomeTrustStrip } from '@/components/home-trust-strip';
 import { VideoShowcaseSection } from '@/components/video-showcase-section';
+import { ZivaadChoiceSection } from '@/components/zivaad-choice-section';
 import { getProducts } from '@/lib/products';
 import { getSiteContent } from '@/lib/site-content';
 
@@ -34,22 +35,22 @@ export default async function HomePage() {
     ? shuffleWithSeed(nonChoice, `${Date.now()}:${products.length}`)
     : nonChoice;
 
-  const featuredProducts = [...zivaadChoice, ...nonChoiceOrdered].slice(0, 12);
+  const featuredProducts = (nonChoiceOrdered.length > 0 ? nonChoiceOrdered : products).slice(0, 12);
 
   return (
     <>
       <HomeHero hero={siteContent.hero} />
-      <BestSellersCarousel products={featuredProducts} title={siteContent.headings.best_sellers} />
+      <HomeTrustStrip items={siteContent.settings.trust_marquee_items} />
+      <ZivaadChoiceSection products={zivaadChoice} />
       <CategoryCollectionsGrid
         products={products}
         categories={siteContent.taxonomy.categories}
         categoryImages={siteContent.media.category_collection_images}
         title={siteContent.headings.collections || 'Collections'}
       />
-      <VideoShowcaseSection videoUrl={siteContent.media.storytelling_video_url} />
-      <HomeCtaSection title={siteContent.headings.cta} />
+      <BestSellersCarousel products={featuredProducts} title={siteContent.headings.best_sellers} />
       <CustomerLoveSection />
-    
+      <VideoShowcaseSection videoUrl={siteContent.media.storytelling_video_url} />
     </>
   );
 }

@@ -53,17 +53,36 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     badges: ['BESTSELLER', 'NEW', 'LIMITED']
   },
   settings: {
-    shuffle_shop_before_filter: true
+    shuffle_shop_before_filter: true,
+    promo_messages: ['1000/- Advance Required on Orders Above 5000/-', 'Free Delivery On Orders Above 4999/-'],
+    trust_marquee_items: ['Pure Stainless Steel', '20k+ Satisfied Customers', 'Cash on Delivery', 'WhatsApp Support'],
+    sale_counter_enabled: true,
+    sale_counter_title: 'Winter Sale',
+    sale_counter_subtitle: 'Sale ends in:',
+    sale_counter_badge: 'Flat 50%',
+    sale_counter_end_at: '2026-12-31T18:59:59.000Z',
+    sale_counter_repeat_enabled: true,
+    sale_counter_cycle_seconds: 30320,
+    sale_counter_anchor_hour: 2,
+    sale_counter_anchor_minute: 0
   }
 };
 
-function asString(value: unknown, fallback: string): string {
+function asString(value: unknown, fallback: string, options?: { allowEmpty?: boolean }): string {
   if (typeof value !== 'string') {
     return fallback;
   }
 
   const trimmed = value.trim();
-  return trimmed || fallback;
+  if (trimmed.length > 0) {
+    return trimmed;
+  }
+
+  if (options?.allowEmpty) {
+    return '';
+  }
+
+  return fallback;
 }
 
 function asBoolean(value: unknown, fallback: boolean): boolean {
@@ -73,7 +92,34 @@ function asBoolean(value: unknown, fallback: boolean): boolean {
   return fallback;
 }
 
-function asStringArray(value: unknown, fallback: string[]): string[] {
+function asNumber(
+  value: unknown,
+  fallback: number,
+  options?: { min?: number; max?: number; integer?: boolean }
+): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return fallback;
+  }
+
+  let output = parsed;
+
+  if (options?.integer) {
+    output = Math.trunc(output);
+  }
+
+  if (typeof options?.min === 'number') {
+    output = Math.max(options.min, output);
+  }
+
+  if (typeof options?.max === 'number') {
+    output = Math.min(options.max, output);
+  }
+
+  return output;
+}
+
+function asStringArray(value: unknown, fallback: string[], options?: { allowEmpty?: boolean }): string[] {
   if (!Array.isArray(value)) {
     return fallback;
   }
@@ -83,7 +129,15 @@ function asStringArray(value: unknown, fallback: string[]): string[] {
     .map((item) => item.trim())
     .filter(Boolean);
 
-  return normalized.length > 0 ? normalized : fallback;
+  if (normalized.length > 0) {
+    return normalized;
+  }
+
+  if (options?.allowEmpty) {
+    return [];
+  }
+
+  return fallback;
 }
 
 function asStringRecord(value: unknown, fallback: Record<string, string>): Record<string, string> {
@@ -176,7 +230,7 @@ export function sanitizeSiteContent(raw: unknown): SiteContent {
       overlay_gradient: asString(hero.overlay_gradient, DEFAULT_SITE_CONTENT.hero.overlay_gradient),
       eyebrow: asString(hero.eyebrow, DEFAULT_SITE_CONTENT.hero.eyebrow),
       title: asString(hero.title, DEFAULT_SITE_CONTENT.hero.title),
-      subtitle: asString(hero.subtitle, DEFAULT_SITE_CONTENT.hero.subtitle),
+      subtitle: asString(hero.subtitle, DEFAULT_SITE_CONTENT.hero.subtitle, { allowEmpty: true }),
       primary_cta_label: asString(hero.primary_cta_label, DEFAULT_SITE_CONTENT.hero.primary_cta_label),
       primary_cta_href: asString(hero.primary_cta_href, DEFAULT_SITE_CONTENT.hero.primary_cta_href),
       secondary_cta_label: asString(hero.secondary_cta_label, DEFAULT_SITE_CONTENT.hero.secondary_cta_label),
@@ -234,6 +288,38 @@ export function sanitizeSiteContent(raw: unknown): SiteContent {
       shuffle_shop_before_filter: asBoolean(
         settings.shuffle_shop_before_filter,
         DEFAULT_SITE_CONTENT.settings.shuffle_shop_before_filter
+      ),
+      promo_messages: asStringArray(settings.promo_messages, DEFAULT_SITE_CONTENT.settings.promo_messages, {
+        allowEmpty: true
+      }),
+      trust_marquee_items: asStringArray(
+        settings.trust_marquee_items,
+        DEFAULT_SITE_CONTENT.settings.trust_marquee_items,
+        { allowEmpty: true }
+      ),
+      sale_counter_enabled: asBoolean(settings.sale_counter_enabled, DEFAULT_SITE_CONTENT.settings.sale_counter_enabled),
+      sale_counter_title: asString(settings.sale_counter_title, DEFAULT_SITE_CONTENT.settings.sale_counter_title),
+      sale_counter_subtitle: asString(settings.sale_counter_subtitle, DEFAULT_SITE_CONTENT.settings.sale_counter_subtitle),
+      sale_counter_badge: asString(settings.sale_counter_badge, DEFAULT_SITE_CONTENT.settings.sale_counter_badge),
+      sale_counter_end_at: asString(settings.sale_counter_end_at, DEFAULT_SITE_CONTENT.settings.sale_counter_end_at),
+      sale_counter_repeat_enabled: asBoolean(
+        settings.sale_counter_repeat_enabled,
+        DEFAULT_SITE_CONTENT.settings.sale_counter_repeat_enabled
+      ),
+      sale_counter_cycle_seconds: asNumber(
+        settings.sale_counter_cycle_seconds,
+        DEFAULT_SITE_CONTENT.settings.sale_counter_cycle_seconds,
+        { min: 1, integer: true }
+      ),
+      sale_counter_anchor_hour: asNumber(
+        settings.sale_counter_anchor_hour,
+        DEFAULT_SITE_CONTENT.settings.sale_counter_anchor_hour,
+        { min: 0, max: 23, integer: true }
+      ),
+      sale_counter_anchor_minute: asNumber(
+        settings.sale_counter_anchor_minute,
+        DEFAULT_SITE_CONTENT.settings.sale_counter_anchor_minute,
+        { min: 0, max: 59, integer: true }
       )
     }
   };

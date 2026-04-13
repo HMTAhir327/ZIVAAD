@@ -13,6 +13,15 @@ function generateProductId() {
   return `new-piece-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+function randomRating() {
+  const value = 4.6 + Math.random() * 0.4;
+  return Number(value.toFixed(1));
+}
+
+function randomRatingCount() {
+  return Math.floor(35 + Math.random() * 560);
+}
+
 function createEmptyProduct(defaultCategory: string, defaultBadge: string): Product {
   return {
     id: generateProductId(),
@@ -31,6 +40,8 @@ function createEmptyProduct(defaultCategory: string, defaultBadge: string): Prod
     supplier_urls: [],
     zivaad_choice: false,
     sale_tag_enabled: false,
+    rating: randomRating(),
+    rating_count: randomRatingCount(),
     option_swatches: {},
     product_options: [],
     product_variants: []

@@ -4,8 +4,8 @@
     "gradient_enabled": false,
     "overlay_gradient": "linear-gradient(to top, rgba(0,0,0,0.70), rgba(0,0,0,0.25), rgba(0,0,0,0.15))",
     "eyebrow": "ZIVAAD",
-    "title": "Minimal Luxury Jewelry",
-    "subtitle": "Sculpted essentials with clean lines, subtle shine, and a timeless point of view.",
+    "title": "Minimal Luxury",
+    "subtitle": "",
     "primary_cta_label": "Shop Now",
     "primary_cta_href": "/shop",
     "secondary_cta_label": "The Collection",
@@ -64,6 +64,25 @@
     ]
   },
   "settings": {
-    "shuffle_shop_before_filter": false
+    "shuffle_shop_before_filter": false,
+    "promo_messages": [
+      "1000/- Advance Required on Orders Above 5000/-",
+      "Free Delivery On Orders Above 4999/-"
+    ],
+    "trust_marquee_items": [
+      "Pure Stainless Steel",
+      "20k+ Satisfied Customers",
+      "Cash on Delivery",
+      "WhatsApp Support"
+    ],
+    "sale_counter_enabled": true,
+    "sale_counter_title": "Winter Sale",
+    "sale_counter_subtitle": "Sale ends in:",
+    "sale_counter_badge": "Flat 50%",
+    "sale_counter_end_at": "2026-12-31T18:59:59.000Z",
+    "sale_counter_repeat_enabled": true,
+    "sale_counter_cycle_seconds": 30320,
+    "sale_counter_anchor_hour": 2,
+    "sale_counter_anchor_minute": 0
   }
 }

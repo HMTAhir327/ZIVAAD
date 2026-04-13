@@ -10,6 +10,7 @@ import { formatSelectedOptions } from '@/lib/product-variants';
 import { buildWhatsAppOrderMessage, buildWhatsAppUrl } from '@/lib/whatsapp';
 import { useCartStore } from '@/store/cart-store';
 import { useCurrencyStore } from '@/store/currency-store';
+import { CompleteYourLook } from '@/components/complete-your-look';
 
 const FREE_SHIPPING_TARGET = 5000;
 
@@ -66,7 +67,7 @@ export function CartPageView() {
     <section className="w-full px-4 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-14">
       <div className="mb-8 sm:mb-10">
         <p className="text-xs uppercase tracking-luxury text-stone-500">Checkout</p>
-        <h1 className="mt-2 font-serif text-[2rem] text-stone-950 sm:text-[2.45rem]">Your Cart</h1>
+        <h1 className="mt-2 font-serif text-[1.72rem] text-stone-950 sm:text-[2.45rem]">Your Cart</h1>
       </div>
 
       {items.length === 0 ? (
@@ -80,15 +81,15 @@ export function CartPageView() {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1.25fr_0.75fr]">
+        <div className="grid gap-5 sm:gap-8 lg:grid-cols-[1.25fr_0.75fr]">
           <div className="space-y-4">
             {items.map((item) => {
               const lineId = item.line_id || item.id;
               const variantLabel = item.variant_title || formatSelectedOptions(item.selected_options);
 
               return (
-              <article key={lineId} className="flex gap-4 border border-stone-200 bg-white p-4">
-                <div className="relative h-24 w-20 overflow-hidden bg-stone-100">
+              <article key={lineId} className="flex gap-2.5 border border-stone-200 bg-white p-3 sm:gap-4 sm:p-4">
+                <div className="relative h-[88px] w-[72px] overflow-hidden bg-stone-100 sm:h-24 sm:w-20">
                   <Image
                     src={optimizeCloudinaryImage(item.image, 300)}
                     alt={item.name}
@@ -99,24 +100,24 @@ export function CartPageView() {
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium text-stone-900">{item.name}</p>
+                  <p className="line-clamp-2 font-medium leading-tight text-stone-900">{item.name}</p>
                   <p className="mt-1 text-xs text-stone-500">{formatPrice(item.price, currency)}</p>
-                  {variantLabel ? <p className="mt-1 text-[11px] text-stone-500">{variantLabel}</p> : null}
+                  {variantLabel ? <p className="mt-1 break-words text-[11px] text-stone-500">{variantLabel}</p> : null}
                   {item.variant_sku ? <p className="text-[11px] text-stone-500">SKU: {item.variant_sku}</p> : null}
 
                   <div className="mt-3 flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => updateQuantity(lineId, item.quantity - 1)}
-                      className="h-8 w-8 border border-stone-300 text-sm"
+                      className="h-7 w-7 border border-stone-300 text-sm sm:h-8 sm:w-8"
                     >
                       -
                     </button>
-                    <span className="w-7 text-center text-sm">{item.quantity}</span>
+                    <span className="w-6 text-center text-sm sm:w-7">{item.quantity}</span>
                     <button
                       type="button"
                       onClick={() => updateQuantity(lineId, item.quantity + 1)}
-                      className="h-8 w-8 border border-stone-300 text-sm"
+                      className="h-7 w-7 border border-stone-300 text-sm sm:h-8 sm:w-8"
                     >
                       +
                     </button>
@@ -136,9 +137,28 @@ export function CartPageView() {
 
           <aside className="space-y-4 border border-stone-200 bg-white p-4 sm:p-5 lg:sticky lg:top-32 lg:h-fit">
             <p className="text-xs uppercase tracking-luxury text-stone-500">Order Summary</p>
+            <div className="border border-stone-200 bg-[#fcfcfb] p-3">
+              <p className="text-[10px] uppercase tracking-luxury text-stone-500">You&apos;re almost done</p>
+              <ul className="mt-2 space-y-1 text-xs text-stone-600">
+                <li>We&apos;ll confirm your order instantly on WhatsApp.</li>
+                <li>No online payment required.</li>
+              </ul>
+            </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-stone-600">Subtotal</span>
               <span className="font-medium text-stone-950">{formatPrice(subtotal, currency)}</span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-1.5">
+              <p className="border border-stone-200 px-2 py-1.5 text-center text-[9px] uppercase tracking-luxury text-stone-600">
+                COD
+              </p>
+              <p className="border border-stone-200 px-2 py-1.5 text-center text-[9px] uppercase tracking-luxury text-stone-600">
+                Fast Dispatch
+              </p>
+              <p className="border border-stone-200 px-2 py-1.5 text-center text-[9px] uppercase tracking-luxury text-stone-600">
+                Support
+              </p>
             </div>
             <div>
               <p className="text-[11px] text-stone-600">
@@ -187,8 +207,10 @@ export function CartPageView() {
               {isSubmitting ? 'Processing...' : 'Checkout via WhatsApp'}
             </button>
             <p className="text-center text-[10px] uppercase tracking-luxury text-stone-500">
-              No payment gateway. Order confirmation via WhatsApp.
+              No online payment required. Order confirmation via WhatsApp.
             </p>
+
+            <CompleteYourLook excludeProductIds={items.map((item) => item.id)} currency={currency} limit={2} />
           </aside>
         </div>
       )}

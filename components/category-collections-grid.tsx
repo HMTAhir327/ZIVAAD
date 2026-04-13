@@ -73,15 +73,12 @@ export function CategoryCollectionsGrid({
       <div className="mb-6 text-center sm:mb-8 lg:mb-10">
         <h2 className="text-[10px] uppercase tracking-luxury text-stone-500">Collections</h2>
         <h2 className="mt-4 font-serif text-[1.72rem] leading-none text-stone-950 sm:text-[2.15rem]">{title}</h2>
-        <p className="mx-auto mt-4 max-w-2xl text-sm text-stone-600">
-          Explore rings, earrings, necklaces, and bracelets to build your signature everyday collection.
-        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-4">
         {collectionItems.map((item) => (
           <Link key={item.key} href={item.href} className="group block">
-            <div className="relative aspect-[4/4.65] overflow-hidden bg-stone-100">
+            <div className="relative aspect-[4/4.7] overflow-hidden bg-stone-100">
               <Image
                 src={optimizeCloudinaryImage(item.image, 1200)}
                 alt={`${item.label} collection`}
@@ -89,9 +86,13 @@ export function CategoryCollectionsGrid({
                 sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className="object-cover transition-transform duration-700 ease-luxury group-hover:scale-[1.06]"
               />
+              <div className="pointer-events-none absolute inset-0 border border-white/0 transition-colors duration-500 group-hover:border-white/65" />
+              <span className="absolute left-2.5 top-2.5 border border-white/70 bg-black/20 px-2 py-1 text-[9px] uppercase tracking-luxury text-white backdrop-blur-[1px] sm:left-3 sm:top-3">
+                Shop
+              </span>
             </div>
-            <div className="mt-3 flex items-center gap-2 text-stone-900 sm:mt-4">
-              <span className="font-body text-[1.02rem] leading-none sm:text-[1.5rem]">{item.label}</span>
+            <div className="mt-2.5 flex items-center gap-2 text-stone-900 sm:mt-3">
+              <span className="font-body text-[0.96rem] leading-none sm:text-[1.2rem]">{item.label}</span>
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
