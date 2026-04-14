@@ -4,8 +4,11 @@ import { Cormorant_Garamond, Montserrat } from 'next/font/google';
 import { AddedToBoxToast } from '@/components/added-to-box-toast';
 import { CartDrawer } from '@/components/cart-drawer';
 import { Footer } from '@/components/footer';
+import { BackToTop } from '@/components/back-to-top';
 import { FloatingWhatsAppButton } from '@/components/floating-whatsapp-button';
+import { SocialProofPopup } from '@/components/social-proof-popup';
 import { Navbar } from '@/components/navbar';
+import { Analytics } from '@/components/analytics';
 import { getSiteContent } from '@/lib/site-content';
 
 import './globals.css';
@@ -69,11 +72,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${headingFont.variable} ${bodyFont.variable}`}>
       <body className="bg-white text-[#1a1a1a] antialiased">
+        <Analytics />
         <div className="relative min-h-screen overflow-x-clip">
           <Navbar settings={siteContent.settings} />
           <CartDrawer />
           <AddedToBoxToast />
           <FloatingWhatsAppButton />
+          <SocialProofPopup />
+          <BackToTop />
           <main className={mainTopPaddingClass}>{children}</main>
           <Footer />
         </div>

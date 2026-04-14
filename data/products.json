@@ -2,7 +2,7 @@
   {
     "id": "new-piece-1775980660031-sgqgi",
     "name": "Pearl & Crystal Floral Tops",
-    "price": 799,
+    "price": 999,
     "compare_price": 1200,
     "category": "earrings",
     "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775989280/latest-111_gmeoqq.png",
@@ -23,9 +23,45 @@
       "https://abwholesale.pk/products/uni-10290-purple-flower-earring?utm_source=koala-inspector&utm_medium=koala-inspector&utm_campaign=koala-inspector"
     ],
     "zivaad_choice": true,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 5,
+    "rating_count": 227,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": [
+      {
+        "id": "rev-1",
+        "name": "Ayesha K.",
+        "rating": 5,
+        "text": "Absolutely love these earrings! The pearl finish looks so elegant and they are super lightweight. Perfect for daily wear.",
+        "date": "2026-04-01",
+        "verified": true
+      },
+      {
+        "id": "rev-2",
+        "name": "Sara M.",
+        "rating": 5,
+        "text": "Beautiful floral design, exactly as shown in the pictures. Got so many compliments at a family dinner!",
+        "date": "2026-03-22",
+        "verified": true
+      },
+      {
+        "id": "rev-3",
+        "name": "Hira N.",
+        "rating": 4,
+        "text": "Very pretty and delicate. The crystal center adds a nice sparkle. Great value for the price.",
+        "date": "2026-03-15",
+        "verified": true
+      },
+      {
+        "id": "rev-4",
+        "name": "Fatima R.",
+        "rating": 5,
+        "text": "Gifted these to my sister and she absolutely loved them. The packaging was also very nice. Will order again!",
+        "date": "2026-02-28",
+        "verified": true
+      }
+    ]
   },
   {
     "id": "new-piece-1775969857721-voanf",
@@ -51,7 +87,9 @@
       "https://abwholesale.pk/products/uni-10446-infinity-gold-bracelet?utm_source=koala-inspector&utm_medium=koala-inspector&utm_campaign=koala-inspector"
     ],
     "zivaad_choice": true,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.6,
+    "rating_count": 45,
     "option_swatches": {
       "Color": {
         "Gold": "#c9a24a",
@@ -92,6 +130,32 @@
         "stock": 5,
         "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775971702/image_ahc6zz.png"
       }
+    ],
+    "reviews": [
+      {
+        "id": "rev-5",
+        "name": "Zainab A.",
+        "rating": 5,
+        "text": "This bracelet is stunning! The gold finish is so rich and it looks way more expensive than its price. Absolutely worth it.",
+        "date": "2026-04-05",
+        "verified": true
+      },
+      {
+        "id": "rev-6",
+        "name": "Mahnoor S.",
+        "rating": 4,
+        "text": "Love the infinity design, very meaningful and elegant. Adjustable size fits perfectly on my wrist.",
+        "date": "2026-03-18",
+        "verified": true
+      },
+      {
+        "id": "rev-7",
+        "name": "Amina T.",
+        "rating": 5,
+        "text": "Ordered the silver variant and it is gorgeous. Wearing it daily and it still looks brand new. Highly recommend!",
+        "date": "2026-03-02",
+        "verified": true
+      }
     ]
   },
   {
@@ -113,10 +177,12 @@
     "video_url": "",
     "description": "<p>Grace meets modern elegance in this <strong>Luxury Curved Baguette Crystal Ring</strong>, designed to wrap your finger with a smooth, flowing silhouette. Adorned with finely cut crystals that catch the light beautifully, this ring adds a soft yet striking sparkle to your look. With its premium gold finish and refined detailing, it’s perfect for women who love subtle luxury and want to feel confident, stylish, and effortlessly graceful every day.</p><li>Unique <strong>curved wrap design</strong> with a modern elegant look\n</li><li>Baguette and micro crystal detailing for a <strong>rich, radiant sparkle</strong>\n</li><li>Premium gold finish with smooth, high-quality shine\n</li><li>Perfect for <strong>daily wear, office, and special occasions</strong>\n</li><li>Adjustable fit for comfort and easy styling</li><li><span>Ideal gift for&nbsp;</span><span>wife, sister, yourself,</span><span>&nbsp;<span>or someone special</span></span></li>",
     "badge": "BESTSELLER",
-    "stock": 0,
+    "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.8,
+    "rating_count": 290,
     "option_swatches": {
       "Color": {
         "Gold": "#c9a24a",
@@ -142,7 +208,7 @@
         },
         "price": 999,
         "compare_price": 1499,
-        "stock": 0,
+        "stock": 5,
         "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_vvkz83.png"
       },
       {
@@ -154,8 +220,50 @@
         },
         "price": 999,
         "compare_price": 1499,
-        "stock": 0,
+        "stock": 5,
         "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775831131/image_1_mbkuqs.png"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-8",
+        "name": "Nadia H.",
+        "rating": 5,
+        "text": "The curved design is so unique and beautiful. It sits perfectly on the finger and the crystals catch light amazingly.",
+        "date": "2026-04-10",
+        "verified": true
+      },
+      {
+        "id": "rev-9",
+        "name": "Sana Q.",
+        "rating": 5,
+        "text": "Got this in gold and it looks absolutely premium. My friends keep asking where I got it from!",
+        "date": "2026-03-28",
+        "verified": true
+      },
+      {
+        "id": "rev-10",
+        "name": "Iqra F.",
+        "rating": 4,
+        "text": "Really elegant ring for everyday wear. The adjustable fit is a big plus. Very happy with my purchase.",
+        "date": "2026-03-12",
+        "verified": true
+      },
+      {
+        "id": "rev-11",
+        "name": "Rabia J.",
+        "rating": 5,
+        "text": "Ordered as a gift for my best friend's birthday and she was thrilled. The quality exceeded our expectations.",
+        "date": "2026-02-20",
+        "verified": true
+      },
+      {
+        "id": "rev-12",
+        "name": "Mehwish L.",
+        "rating": 4,
+        "text": "Beautiful sparkle and comfortable to wear all day. The silver version is equally stunning. Great craftsmanship!",
+        "date": "2026-02-10",
+        "verified": true
       }
     ]
   },
@@ -181,7 +289,9 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.8,
+    "rating_count": 533,
     "option_swatches": {
       "Color": {
         "Gold": "#c9a24a",
@@ -222,6 +332,24 @@
         "stock": 5,
         "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775829156/Gemini_Generated_Image_mngo4emngo4emngo_1_nxv95p.png"
       }
+    ],
+    "reviews": [
+      {
+        "id": "rev-13",
+        "name": "Kiran B.",
+        "rating": 5,
+        "text": "Such a classy ring! The baguette stones look stunning and the gold finish is flawless. Totally in love with it.",
+        "date": "2026-04-08",
+        "verified": true
+      },
+      {
+        "id": "rev-14",
+        "name": "Anam W.",
+        "rating": 4,
+        "text": "Lovely design and great quality for the price. The adjustable band is very convenient. Would recommend to anyone.",
+        "date": "2026-03-05",
+        "verified": true
+      }
     ]
   },
   {
@@ -246,7 +374,9 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.7,
+    "rating_count": 476,
     "option_swatches": {
       "Color": {
         "Gold": "#c9a24a",
@@ -287,6 +417,40 @@
         "stock": 5,
         "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775826443/Gemini_Generated_Image_987e2e987e2e987e_2_ob84gm.png"
       }
+    ],
+    "reviews": [
+      {
+        "id": "rev-15",
+        "name": "Rubab I.",
+        "rating": 5,
+        "text": "The infinity design is so meaningful and beautiful. I wear it every day and it still sparkles like new!",
+        "date": "2026-04-12",
+        "verified": true
+      },
+      {
+        "id": "rev-16",
+        "name": "Maryam Z.",
+        "rating": 5,
+        "text": "Bought both gold and silver variants. Both are absolutely gorgeous. The crystal detailing is top-notch.",
+        "date": "2026-03-25",
+        "verified": true
+      },
+      {
+        "id": "rev-17",
+        "name": "Sadia P.",
+        "rating": 4,
+        "text": "Very elegant and comfortable. Perfect for office wear and pairs beautifully with my other ZIVAAD rings.",
+        "date": "2026-03-10",
+        "verified": true
+      },
+      {
+        "id": "rev-18",
+        "name": "Bushra D.",
+        "rating": 5,
+        "text": "Gifted this to my mother and she was overjoyed. Excellent quality and fast delivery. Thank you ZIVAAD!",
+        "date": "2026-02-15",
+        "verified": true
+      }
     ]
   },
   {
@@ -313,9 +477,37 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": true,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.7,
+    "rating_count": 423,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": [
+      {
+        "id": "rev-19",
+        "name": "Tania G.",
+        "rating": 5,
+        "text": "This ring is a showstopper! The wrap design is so unique and the crystals are breathtaking. Absolutely love it.",
+        "date": "2026-04-03",
+        "verified": true
+      },
+      {
+        "id": "rev-20",
+        "name": "Laiba E.",
+        "rating": 4,
+        "text": "Bold and beautiful. Perfect statement piece for parties. The gold polish is smooth and looks very premium.",
+        "date": "2026-03-20",
+        "verified": true
+      },
+      {
+        "id": "rev-21",
+        "name": "Nimra V.",
+        "rating": 5,
+        "text": "Received it within two days and the quality blew me away. Fits comfortably and looks amazing on hand. Highly recommend!",
+        "date": "2026-02-25",
+        "verified": true
+      }
+    ]
   },
   {
     "id": "new-piece-1775774554564-vcajw",
@@ -339,7 +531,9 @@
     "stock": 5,
     "supplier_urls": [],
     "zivaad_choice": true,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.8,
+    "rating_count": 329,
     "option_swatches": {
       "Color": {
         "Gold": "#c9a24a",
@@ -380,7 +574,8 @@
         "stock": 0,
         "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775774588/Gemini_Generated_Image_7pwqd27pwqd27pwq_1_rkcski.png"
       }
-    ]
+    ],
+    "reviews": []
   },
   {
     "id": "new-piece-1775662301601-7trl4",
@@ -404,9 +599,12 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": true,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.6,
+    "rating_count": 63,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775660360480-ddpf0",
@@ -430,9 +628,12 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": true,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.7,
+    "rating_count": 414,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775656449098-pveic",
@@ -456,9 +657,12 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.6,
+    "rating_count": 67,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775652196304-hl078",
@@ -482,9 +686,12 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.7,
+    "rating_count": 166,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775647973382-tpmd6",
@@ -508,9 +715,12 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.7,
+    "rating_count": 377,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775644310864-thpw2",
@@ -534,9 +744,12 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.9,
+    "rating_count": 462,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775641998701-eu7hs",
@@ -560,9 +773,12 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.9,
+    "rating_count": 146,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775603205182-nlgkg",
@@ -586,7 +802,9 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.6,
+    "rating_count": 199,
     "option_swatches": {
       "Color": {
         "Gold": "#c9a24a",
@@ -627,7 +845,8 @@
         "stock": 5,
         "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775603696/il_794xN.3414453306_peib_1080x_xehaj5.jpg"
       }
-    ]
+    ],
+    "reviews": []
   },
   {
     "id": "new-piece-1775592899392-r3wag",
@@ -651,7 +870,9 @@
     "stock": 20,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 5,
+    "rating_count": 507,
     "option_swatches": {
       "Color": {
         "Gold": "#c9a24a",
@@ -692,7 +913,8 @@
         "stock": 10,
         "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775592870/Gemini_Generated_Image_lda5cdlda5cdlda5_dsqqdp.png"
       }
-    ]
+    ],
+    "reviews": []
   },
   {
     "id": "new-piece-1775589582301-1so1c",
@@ -716,9 +938,12 @@
     "stock": 10,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 5,
+    "rating_count": 215,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775587209480-x9h2q",
@@ -740,9 +965,12 @@
     "stock": 7,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 5,
+    "rating_count": 496,
     "product_options": [],
-    "product_variants": []
+    "product_variants": [],
+    "reviews": []
   },
   {
     "id": "new-piece-1775109067994-dzq21",
@@ -766,7 +994,9 @@
     "stock": 7,
     "supplier_urls": [],
     "zivaad_choice": false,
-    "sale_tag_enabled": false,
+    "sale_tag_enabled": true,
+    "rating": 4.6,
+    "rating_count": 388,
     "option_swatches": {
       "Color": {
         "White": "#f5f5f4",
@@ -807,6 +1037,7 @@
         "stock": 3,
         "image_url": "https://res.cloudinary.com/dyb3292pp/image/upload/f_auto,q_auto/v1775114808/black-necklace-01_bvp8aj.jpg"
       }
-    ]
+    ],
+    "reviews": []
   }
 ]

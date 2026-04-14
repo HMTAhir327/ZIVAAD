@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next';
 import { getProducts } from '@/lib/products';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://zivaad.vercel.app';
+  const baseUrl = 'https://zivaad.com';
   const products = await getProducts();
 
   return [

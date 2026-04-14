@@ -12,10 +12,10 @@ export function HomeTrustStrip({ items }: HomeTrustStripProps) {
   return (
     <section className="w-full border-b border-[#b69761] bg-[#b89a61]">
       <div className="zivaad-home-trust-marquee overflow-hidden">
-        <div className="zivaad-home-trust-track flex w-max items-center gap-8 px-4 py-2 sm:gap-10 sm:px-6 lg:px-10">
+        <div className="zivaad-home-trust-track flex w-max items-center gap-10 px-4 py-3 sm:gap-14 sm:px-6 sm:py-3.5 lg:px-10">
           {loopItems.map((item, index) => (
-            <span key={`${item}-${index}`} className="whitespace-nowrap text-[10px] uppercase tracking-[0.18em] text-[#fffaf0]">
-              ✦ {item}
+            <span key={`${item}-${index}`} className="whitespace-nowrap text-[12px] font-medium uppercase tracking-[0.2em] text-[#fffaf0] sm:text-[13px]">
+              ✦&ensp;{item}
             </span>
           ))}
         </div>

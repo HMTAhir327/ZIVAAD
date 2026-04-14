@@ -117,7 +117,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         }}
       />
 
-      <ProductDetailView product={product} pairsWellWith={pairsWellWith} />
+      <ProductDetailView product={product} pairsWellWith={pairsWellWith} pdpNotice={siteContent.settings.pdp_notice} />
 
       {relatedProducts.length > 0 ? (
         <section className="w-full px-4 pb-20 sm:px-8 sm:pb-24 lg:px-10 lg:pb-32">

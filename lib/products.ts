@@ -58,6 +58,8 @@ function normalizeProduct(product: Product): Product {
     ? Math.max(0, Math.floor(parsedRatingCount))
     : getFallbackRatingCount(product.id);
 
+  const reviews = Array.isArray(product.reviews) ? product.reviews : [];
+
   return {
     ...product,
     category: normalizedCategory,
@@ -72,7 +74,8 @@ function normalizeProduct(product: Product): Product {
     rating_count,
     stock: normalizedStock,
     product_options: variantData.options,
-    product_variants: variantData.variants
+    product_variants: variantData.variants,
+    reviews
   };
 }
 

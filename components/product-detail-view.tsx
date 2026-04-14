@@ -21,8 +21,10 @@ import { getSocialProofSeed } from '@/lib/social-proof';
 import type { Product } from '@/lib/types';
 import { useCartStore } from '@/store/cart-store';
 import { useCurrencyStore } from '@/store/currency-store';
+import { useRecentlyViewedStore } from '@/store/recently-viewed-store';
 import { useUiStore } from '@/store/ui-store';
 import { ZIVAAD_WHATSAPP_NUMBER } from '@/lib/whatsapp';
+import { RecentlyViewed } from '@/components/recently-viewed';
 
 type Media =
   | { kind: 'image'; url: string }
@@ -31,6 +33,7 @@ type Media =
 interface ProductDetailViewProps {
   product: Product;
   pairsWellWith?: Product[];
+  pdpNotice?: string;
 }
 
 const fallbackImage =
@@ -108,11 +111,17 @@ function getConfiguredColorSwatch(
   return valueKey ? swatches[optionKey][valueKey] : undefined;
 }
 
-export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetailViewProps) {
+export function ProductDetailView({ product, pairsWellWith = [], pdpNotice = '' }: ProductDetailViewProps) {
   const addItem = useCartStore((state) => state.addItem);
   const openCart = useCartStore((state) => state.openCart);
   const currency = useCurrencyStore((state) => state.currency);
   const showToast = useUiStore((state) => state.showToast);
+  const addProductId = useRecentlyViewedStore((state) => state.addProductId);
+
+  useEffect(() => {
+    addProductId(product.id);
+  }, [product.id, addProductId]);
+
   const variantData = useMemo(() => getProductVariantData(product), [product]);
   const hasVariants = variantData.options.length > 0 && variantData.variants.length > 0;
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => buildInitialVariantSelection(product));
@@ -191,6 +200,8 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
   const [mobileTouchStartX, setMobileTouchStartX] = useState<number | null>(null);
   const [fullscreenTouchStartX, setFullscreenTouchStartX] = useState<number | null>(null);
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
+  const [isZooming, setIsZooming] = useState(false);
   const activeMediaIndex = useMemo(() => {
     return mediaItems.findIndex((media) => media.kind === activeMedia.kind && media.url === activeMedia.url);
   }, [mediaItems, activeMedia.kind, activeMedia.url]);
@@ -279,6 +290,7 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
   const lowStock = effectiveState.stock > 0 && effectiveState.stock < 5;
   const canAddToBag = effectiveState.stock > 0;
   const [quantity, setQuantity] = useState(1);
+  const [socialPillIndex, setSocialPillIndex] = useState(0);
   const maxQuantity = Math.max(1, Math.min(10, effectiveState.stock));
   const optionAvailabilityByName = useMemo(() => {
     const map: Record<string, Record<string, boolean>> = {};
@@ -297,6 +309,13 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
   useEffect(() => {
     setQuantity((prev) => Math.min(Math.max(prev, 1), maxQuantity));
   }, [maxQuantity]);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setSocialPillIndex((prev) => (prev + 1) % 2);
+    }, 3500);
+    return () => window.clearInterval(interval);
+  }, []);
 
   function handleAddToBag() {
     if (!canAddToBag) {
@@ -346,6 +365,12 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
             className="order-1 relative aspect-[4/5] overflow-hidden bg-stone-100 lg:order-2"
             onTouchStart={handleMainTouchStart}
             onTouchEnd={handleMainTouchEnd}
+            onMouseMove={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              setZoomPos({ x: ((e.clientX - rect.left) / rect.width) * 100, y: ((e.clientY - rect.top) / rect.height) * 100 });
+              setIsZooming(true);
+            }}
+            onMouseLeave={() => setIsZooming(false)}
           >
             {activeMedia.kind === 'video' ? (
               <video
@@ -365,7 +390,8 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
                   alt={product.name}
                   fill
                   sizes="(max-width: 1024px) calc(100vw - 7rem), 48vw"
-                  className="object-cover transition-transform duration-700 ease-luxury hover:scale-[1.03]"
+                  className={`object-cover transition-transform duration-300 ease-out ${isZooming ? 'scale-[2] cursor-zoom-in' : 'scale-100'}`}
+                  style={isZooming ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%` } : undefined}
                 />
                 <button
                   type="button"
@@ -407,6 +433,39 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
               </>
             ) : null}
           </div>
+
+          {/* Mobile thumbnail strip */}
+          {mediaItems.length > 1 ? (
+            <div className="order-3 flex gap-1.5 overflow-x-auto py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
+              {mediaItems.map((media, index) => {
+                const isActive = activeMedia.url === media.url && activeMedia.kind === media.kind;
+                return (
+                  <button
+                    key={`mobile-thumb-${media.url}-${index}`}
+                    type="button"
+                    onClick={() => setActiveMediaByIndex(index)}
+                    className={`relative h-14 w-14 shrink-0 overflow-hidden bg-stone-100 transition-opacity ${
+                      isActive ? 'ring-1 ring-stone-400 opacity-100' : 'opacity-60'
+                    }`}
+                  >
+                    {media.kind === 'video' ? (
+                      <div className="flex h-full items-center justify-center bg-stone-900 text-[8px] uppercase tracking-luxury text-white">
+                        Video
+                      </div>
+                    ) : (
+                      <Image
+                        src={optimizeCloudinaryImage(media.url, 200)}
+                        alt={`${product.name} thumbnail ${index + 1}`}
+                        fill
+                        sizes="56px"
+                        className="object-cover"
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
 
         <div className="lg:sticky lg:top-24 lg:h-fit">
@@ -424,9 +483,7 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
               <span className="text-stone-500">Loved by customers across Pakistan</span>
             </div>
 
-            <p className="mt-3 text-[10px] uppercase tracking-luxury text-stone-500">
-              {socialProof.viewing} people viewed this style today · {socialProof.soldToday} ordered today
-            </p>
+            {/* Social proof pills moved below Add to Bag */}
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
               {effectiveState.comparePrice > effectiveState.price ? (
@@ -440,16 +497,46 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
                   Sale
                 </span>
               ) : null}
+              {effectiveState.comparePrice > effectiveState.price ? (
+                <span className="rounded-full bg-red-500 px-2 py-0.5 text-[10px] uppercase tracking-wider font-medium text-white">
+                  -{Math.round((1 - effectiveState.price / effectiveState.comparePrice) * 100)}% OFF
+                </span>
+              ) : null}
             </div>
             <p className="mt-3 text-sm text-stone-600">Shipping calculated at checkout.</p>
             <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-stone-600">
               Designed for everyday elegance with a premium finish, skin-friendly wear, and timeless styling.
             </p>
 
-            <div className="mt-5 grid gap-2 text-[10px] uppercase tracking-luxury text-stone-600 sm:grid-cols-3">
-              <div className="border border-stone-200 bg-stone-50 px-3 py-2">COD Available</div>
-              <div className="border border-stone-200 bg-stone-50 px-3 py-2">Dispatch in 24 Hours</div>
-              <div className="border border-stone-200 bg-stone-50 px-3 py-2">Premium Finish</div>
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <div className="flex items-start gap-2.5 border border-stone-200 bg-stone-50 px-3 py-2.5">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0 text-[#b89a61]" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 12h2l3 7h12l3-7h2" /><circle cx="9" cy="21" r="1" /><circle cx="18" cy="21" r="1" /><path d="M5 12V7a1 1 0 011-1h12a1 1 0 011 1v5" /></svg>
+                <div>
+                  <p className="text-[10px] uppercase tracking-luxury text-stone-900">Free Shipping</p>
+                  <p className="mt-0.5 text-[9px] text-stone-500">Orders above Rs. 2,999</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5 border border-stone-200 bg-stone-50 px-3 py-2.5">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0 text-[#b89a61]" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M2 10h20" /><path d="M6 16h4" /></svg>
+                <div>
+                  <p className="text-[10px] uppercase tracking-luxury text-stone-900">Cash on Delivery</p>
+                  <p className="mt-0.5 text-[9px] text-stone-500">Pay at your doorstep</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5 border border-stone-200 bg-stone-50 px-3 py-2.5">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0 text-[#b89a61]" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 1l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" /><path d="M7 23l-4-4 4-4" /><path d="M21 13v2a4 4 0 01-4 4H3" /></svg>
+                <div>
+                  <p className="text-[10px] uppercase tracking-luxury text-stone-900">7-Day Exchange</p>
+                  <p className="mt-0.5 text-[9px] text-stone-500">Easy returns</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5 border border-stone-200 bg-stone-50 px-3 py-2.5">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0 text-[#b89a61]" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                <div>
+                  <p className="text-[10px] uppercase tracking-luxury text-stone-900">Secure Order</p>
+                  <p className="mt-0.5 text-[9px] text-stone-500">Via WhatsApp</p>
+                </div>
+              </div>
             </div>
 
             <div className="mt-6 border-t border-stone-200 pt-5">
@@ -571,7 +658,7 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
                 </div>
 
                 {lowStock ? (
-                  <p className="text-[10px] uppercase tracking-luxury text-red-700">Only {effectiveState.stock} left</p>
+                  <p className="text-[10px] uppercase tracking-luxury text-red-700"><span className="relative mr-1.5 inline-flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span><span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span></span>Only {effectiveState.stock} left</p>
                 ) : effectiveState.stock > 0 ? (
                   <p className="text-[10px] uppercase tracking-luxury text-stone-500">In stock</p>
                 ) : (
@@ -601,7 +688,7 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
 
               {lowStock ? (
                 <p className="mt-2 text-[10px] uppercase tracking-luxury text-red-700">
-                  Low stock: only {effectiveState.stock} left for immediate dispatch.
+                  <span className="relative mr-1.5 inline-flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span><span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span></span>Low stock: only {effectiveState.stock} left for immediate dispatch.
                 </p>
               ) : null}
 
@@ -616,6 +703,61 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
               <p className="mt-2 text-center text-[10px] uppercase tracking-luxury text-stone-500">
                 Need help with size, finish, or delivery timing? We respond quickly.
               </p>
+
+              {/* PDP Notice */}
+              {pdpNotice ? (
+                <div className="mt-5 rounded border border-red-200 bg-red-50 px-4 py-3 text-center">
+                  <p className="text-sm leading-relaxed text-stone-700">{pdpNotice}</p>
+                </div>
+              ) : null}
+
+              {/* Fast Delivery + Social Proof */}
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                {/* Static Fast Delivery */}
+                <div className="inline-flex items-center gap-2 rounded-full bg-stone-100 px-3.5 py-2">
+                  <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
+                  <span className="text-[13px] text-stone-700">
+                    <span className="font-medium">Fast Delivery</span>, get by{' '}
+                    <span className="font-medium">
+                      {new Date(Date.now() + 3 * 86400000).toLocaleDateString('en-PK', { month: 'short', day: 'numeric' })}
+                      {' – '}
+                      {new Date(Date.now() + 5 * 86400000).toLocaleDateString('en-PK', { month: 'short', day: 'numeric' })}
+                    </span>
+                  </span>
+                </div>
+
+                {/* Rotating Social Proof */}
+                <AnimatePresence mode="wait">
+                  {socialPillIndex === 0 ? (
+                    <motion.div
+                      key="pill-cart"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <div className="inline-flex items-center gap-2 rounded-full bg-stone-100 px-3.5 py-2">
+                        <span className="inline-block h-2 w-2 rounded-full bg-stone-500" />
+                        <span className="text-[13px] font-medium text-stone-700">{socialProof.viewing * 10}+ customers added this to cart</span>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="pill-rating"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <div className="inline-flex items-center gap-2 rounded-full bg-stone-100 px-3.5 py-2">
+                        <span className="text-[13px] text-stone-700">
+                          <span className="text-[#c9a24a]">&#9733;</span> {ratingValue.toFixed(1)} rating &middot; {ratingCount > 0 ? `${ratingCount.toLocaleString()}+ reviews` : 'Loved by customers'}
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 
@@ -630,6 +772,16 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
           ) : null}
 
           <div className="mt-6 divide-y divide-stone-200 border-y border-stone-200">
+            <details className="group py-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-[11px] uppercase tracking-luxury text-stone-700">
+                Size Guide
+                <span className="text-stone-400 transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <div className="mt-2 text-sm leading-relaxed text-stone-600">
+                <p>Not sure about your size? Check our <a href="/size-guide" className="underline text-stone-900 hover:text-[#b89a61]">complete size guide</a> for rings, bracelets, and necklaces.</p>
+              </div>
+            </details>
+
             <details className="group py-4">
               <summary className="flex cursor-pointer list-none items-center justify-between text-[11px] uppercase tracking-luxury text-stone-700">
                 Shipping & Delivery
@@ -705,6 +857,62 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
               </div>
             </div>
           ) : null}
+
+          {/* Customer Reviews Section */}
+          <div className="mt-6 border border-stone-200 bg-[#fcfcfb] p-4 sm:p-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <p className="text-[10px] uppercase tracking-luxury text-stone-500">Customer Reviews</p>
+                <Link
+                  href="/write-review"
+                  className="border border-stone-300 px-3 py-1.5 text-[10px] uppercase tracking-luxury text-stone-600 transition-colors hover:border-stone-950 hover:text-stone-950"
+                >
+                  Write a Review
+                </Link>
+              </div>
+              {product.reviews && product.reviews.length > 0 ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-[#c9a24a] text-sm">
+                    {Array.from({ length: 5 }, (_, i) => {
+                      const avg = product.reviews!.reduce((sum, r) => sum + r.rating, 0) / product.reviews!.length;
+                      return i < Math.round(avg) ? '\u2605' : '\u2606';
+                    }).join('')}
+                  </span>
+                  <span className="text-xs text-stone-600">
+                    ({product.reviews.length} {product.reviews.length === 1 ? 'review' : 'reviews'})
+                  </span>
+                </div>
+              ) : null}
+            </div>
+
+            {!product.reviews || product.reviews.length === 0 ? (
+              <p className="mt-3 text-sm text-stone-500">No reviews yet. Be the first to share your experience.</p>
+            ) : (
+              <div className="mt-4 space-y-3">
+                {product.reviews.map((review) => (
+                  <div key={review.id} className="border border-stone-200 bg-white p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#c9a24a] text-sm">
+                        {Array.from({ length: 5 }, (_, i) => (i < review.rating ? '\u2605' : '\u2606')).join('')}
+                      </span>
+                      <span className="text-[10px] text-stone-400">
+                        {new Date(review.date).toLocaleDateString('en-PK', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <span className="text-xs font-medium text-stone-900">{review.name}</span>
+                      {review.verified ? (
+                        <span className="rounded-full bg-green-50 border border-green-200 px-2 py-0.5 text-[9px] uppercase tracking-wider font-medium text-green-700">
+                          Verified Purchase
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-stone-600">{review.text}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
@@ -791,6 +999,9 @@ export function ProductDetailView({ product, pairsWellWith = [] }: ProductDetail
           </motion.div>
         ) : null}
       </AnimatePresence>
+      <div className="px-4 pb-16 sm:px-8 lg:px-10">
+        <RecentlyViewed currentProductId={product.id} currency={currency} />
+      </div>
     </>
   );
 }

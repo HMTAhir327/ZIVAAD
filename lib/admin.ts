@@ -169,6 +169,22 @@ function sanitizeProduct(rawProduct: unknown, index: number): Product {
   const aggregatedVariantStock = variantData.variants.reduce((sum, variant) => sum + variant.stock, 0);
   const normalizedStock = variantData.variants.length > 0 ? aggregatedVariantStock : product.stock;
   const normalizedSwatches = normalizeOptionSwatches(product.option_swatches, variantData.options);
+  const reviews = Array.isArray(product.reviews)
+    ? product.reviews
+        .filter((r: unknown) => r && typeof r === 'object')
+        .map((r: unknown) => {
+          const review = r as Record<string, unknown>;
+          return {
+            id: typeof review.id === 'string' ? review.id : `rev-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            name: typeof review.name === 'string' ? review.name.trim() : '',
+            rating: Math.min(5, Math.max(1, Number(review.rating) || 5)),
+            text: typeof review.text === 'string' ? review.text.trim() : '',
+            date: typeof review.date === 'string' ? review.date : new Date().toISOString().split('T')[0],
+            verified: typeof review.verified === 'boolean' ? review.verified : true
+          };
+        })
+        .filter((r: { name: string; text: string }) => r.name && r.text)
+    : [];
   const supplierUrls = dedupeUrls(
     (Array.isArray(product.supplier_urls) ? product.supplier_urls : [])
       .map((url) => (typeof url === 'string' ? url.trim() : ''))
@@ -196,6 +212,7 @@ function sanitizeProduct(rawProduct: unknown, index: number): Product {
     rating_count: toRatingCount(product.rating_count),
     option_swatches: normalizedSwatches,
     product_options: variantData.options,
-    product_variants: variantData.variants
+    product_variants: variantData.variants,
+    reviews
   };
 }

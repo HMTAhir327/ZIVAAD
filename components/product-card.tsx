@@ -224,6 +224,11 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
               {badgeLabel}
             </span>
           ) : null}
+          {product.sale_tag_enabled && effectiveState.comparePrice > effectiveState.price ? (
+            <span className="absolute bottom-2 left-2 z-20 bg-[#b89a61] px-2 py-1 text-[9px] font-medium uppercase tracking-wider text-white sm:bottom-3 sm:left-3 sm:text-[10px]">
+              {Math.round((1 - effectiveState.price / effectiveState.comparePrice) * 100)}% Off
+            </span>
+          ) : null}
         </div>
 
         <div className="pointer-events-none absolute bottom-1.5 right-1.5 z-20 sm:bottom-2 sm:right-2">
@@ -259,11 +264,11 @@ export function ProductCard({ product, disableRevealAnimation = false }: Product
         >
           {product.name}
         </Link>
-        <div className="flex items-center justify-center gap-2 text-[10px] text-stone-600 sm:text-[12px]">
-          <span>{formatPrice(effectiveState.price, currency)}</span>
+        <div className="flex items-center justify-center gap-2">
           {effectiveState.comparePrice > effectiveState.price ? (
-            <span className="text-stone-400 line-through">{formatPrice(effectiveState.comparePrice, currency)}</span>
+            <span className="text-stone-400 line-through text-[10px]">{formatPrice(effectiveState.comparePrice, currency)}</span>
           ) : null}
+          <span className="font-semibold text-stone-950 text-[11px]">{formatPrice(effectiveState.price, currency)}</span>
         </div>
         <p className="text-[9px] uppercase tracking-luxury text-stone-500 sm:text-[10px]">{product.category}</p>
         {lowStock ? <p className="text-[9px] uppercase tracking-luxury text-red-700 sm:text-[10px]">Only {effectiveState.stock} left</p> : null}

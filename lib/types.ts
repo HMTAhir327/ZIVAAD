@@ -18,6 +18,15 @@ export interface ProductVariant {
   image_url?: string;
 }
 
+export interface ProductReview {
+  id: string;
+  name: string;
+  rating: number;
+  text: string;
+  date: string;
+  verified: boolean;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -40,6 +49,7 @@ export interface Product {
   option_swatches?: Record<string, Record<string, string>>;
   product_options?: ProductOption[];
   product_variants?: ProductVariant[];
+  reviews?: ProductReview[];
 }
 
 export interface SiteContent {
@@ -99,6 +109,7 @@ export interface SiteContent {
     sale_counter_cycle_seconds: number;
     sale_counter_anchor_hour: number;
     sale_counter_anchor_minute: number;
+    pdp_notice: string;
   };
 }
 

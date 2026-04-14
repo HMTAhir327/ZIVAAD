@@ -28,7 +28,7 @@ const collectionLinks = [
 
 const defaultPromoMessages = [
   '1000/- Advance Required on Orders Above 5000/-',
-  'Free Delivery On Orders Above 4999/-'
+  'Free Delivery On Orders Above 2999/-'
 ];
 const defaultTrustMarqueeItems = ['Pure Stainless Steel', '20k+ Satisfied Customers', 'Cash on Delivery', 'WhatsApp Support'];
 
@@ -240,54 +240,53 @@ export function Navbar({ settings }: NavbarProps) {
       >
         {showSaleCounter ? (
           <div className="relative overflow-hidden border-b border-[#d9c292] bg-[#f8f2e5]">
-            <div className="relative flex min-h-11 items-center justify-center gap-2 px-4 py-1.5 sm:min-h-12 sm:gap-3 sm:px-6 lg:px-10">
-              <p className="font-serif text-[16px] text-[#b59456] sm:text-[17px]">{settings.sale_counter_title}</p>
-              <p className="hidden text-[10px] uppercase tracking-[0.14em] text-stone-500 sm:block">
-                {settings.sale_counter_subtitle}
-              </p>
-              <div className="flex items-end gap-1 text-stone-900 [font-variant-numeric:tabular-nums]">
-                <p className="text-[19px] font-semibold leading-none sm:text-[22px]">{saleCountdown.days}</p>
-                <span className="mb-0.5 text-[9px] uppercase tracking-[0.14em] text-stone-500">D</span>
-                <span className="mb-[2px] text-stone-400">:</span>
-                <p className="text-[19px] font-semibold leading-none sm:text-[22px]">{saleCountdown.hours}</p>
-                <span className="mb-0.5 text-[9px] uppercase tracking-[0.14em] text-stone-500">H</span>
-                <span className="mb-[2px] text-stone-400">:</span>
-                <p className="text-[19px] font-semibold leading-none sm:text-[22px]">{saleCountdown.minutes}</p>
-                <span className="mb-0.5 text-[9px] uppercase tracking-[0.14em] text-stone-500">M</span>
-                <span className="mb-[2px] text-stone-400">:</span>
-                <p className="text-[19px] font-semibold leading-none sm:text-[22px]">{saleCountdown.seconds}</p>
-                <span className="mb-0.5 text-[9px] uppercase tracking-[0.14em] text-stone-500">S</span>
+            <Link href="/shop?sale=1" className="relative flex min-h-10 flex-col items-center justify-center gap-1 px-8 py-2 sm:min-h-12 sm:flex-row sm:gap-3 sm:px-6 lg:px-10">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <p className="font-serif text-[14px] text-[#b59456] sm:text-[17px]">{settings.sale_counter_title}</p>
+                <span className="rounded-full bg-[#b89a61] px-2.5 py-0.5 text-[8px] uppercase tracking-[0.16em] text-white sm:px-3.5 sm:py-1 sm:text-[10px]">
+                  {settings.sale_counter_badge}
+                </span>
               </div>
-              <span className="rounded-full bg-[#b89a61] px-3 py-1 text-[9px] uppercase tracking-[0.16em] text-white sm:px-3.5 sm:text-[10px]">
-                {settings.sale_counter_badge}
-              </span>
-              <button
-                type="button"
-                onClick={() => setIsSaleCounterDismissed(true)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-xl leading-none text-stone-500 transition-colors hover:text-stone-900 sm:right-3"
-                aria-label="Dismiss sale counter"
-              >
-                ×
-              </button>
-            </div>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <p className="text-[9px] uppercase tracking-[0.14em] text-stone-500 sm:text-[10px]">
+                  {settings.sale_counter_subtitle}
+                </p>
+                <div className="flex items-center gap-[3px] text-stone-900 [font-variant-numeric:tabular-nums]">
+                  <span className="inline-flex min-w-[26px] items-center justify-center rounded bg-stone-900 px-1 py-0.5 text-[13px] font-semibold leading-none text-white sm:min-w-[32px] sm:px-1.5 sm:py-1 sm:text-[16px]">{saleCountdown.days}</span>
+                  <span className="text-[10px] text-stone-400">:</span>
+                  <span className="inline-flex min-w-[26px] items-center justify-center rounded bg-stone-900 px-1 py-0.5 text-[13px] font-semibold leading-none text-white sm:min-w-[32px] sm:px-1.5 sm:py-1 sm:text-[16px]">{saleCountdown.hours}</span>
+                  <span className="text-[10px] text-stone-400">:</span>
+                  <span className="inline-flex min-w-[26px] items-center justify-center rounded bg-stone-900 px-1 py-0.5 text-[13px] font-semibold leading-none text-white sm:min-w-[32px] sm:px-1.5 sm:py-1 sm:text-[16px]">{saleCountdown.minutes}</span>
+                  <span className="text-[10px] text-stone-400">:</span>
+                  <span className="inline-flex min-w-[26px] items-center justify-center rounded bg-stone-900 px-1 py-0.5 text-[13px] font-semibold leading-none text-white sm:min-w-[32px] sm:px-1.5 sm:py-1 sm:text-[16px]">{saleCountdown.seconds}</span>
+                </div>
+                <span className="hidden text-[9px] font-medium uppercase tracking-[0.14em] text-[#b59456] underline underline-offset-2 sm:inline">Shop Now →</span>
+              </div>
+            </Link>
+            <button
+              type="button"
+              onClick={() => setIsSaleCounterDismissed(true)}
+              className="absolute right-2 top-1/2 z-10 -translate-y-1/2 text-lg leading-none text-stone-400 transition-colors hover:text-stone-900 sm:right-3 sm:text-xl"
+              aria-label="Dismiss sale counter"
+            >
+              ×
+            </button>
           </div>
         ) : null}
 
-        <div className="relative overflow-hidden border-b border-[#b69761] bg-[#b89a61]">
-          <div className="relative h-7 sm:h-8">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={`promo-message-${promoIndex}`}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0 flex items-center justify-center px-4 text-[11px] uppercase tracking-[0.19em] text-[#fffaf0] sm:px-6 sm:text-[12px] lg:px-10"
-              >
-                {promoMessages[promoIndex]}
-              </motion.p>
-            </AnimatePresence>
-          </div>
+        <div className="overflow-hidden border-b border-[#b69761] bg-[#b89a61]">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={`promo-message-${promoIndex}`}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+              className="px-4 py-1.5 text-center text-[10px] uppercase leading-snug tracking-[0.16em] text-[#fffaf0] sm:px-6 sm:py-2 sm:text-[11px] sm:tracking-[0.19em] lg:px-10 lg:text-[12px]"
+            >
+              {promoMessages[promoIndex]}
+            </motion.p>
+          </AnimatePresence>
         </div>
 
         <div className="grid h-14 w-full grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:h-16 sm:gap-6 sm:px-6 lg:grid-cols-[auto_1fr_auto] lg:gap-8 lg:px-10">
@@ -400,14 +399,19 @@ export function Navbar({ settings }: NavbarProps) {
             >
               <div className="w-full px-4 py-2.5 sm:px-6 lg:px-10 lg:py-3">
                 <form className="flex items-start gap-4" onSubmit={handleSearchSubmit}>
-                  <input
-                    value={searchText}
-                    onChange={(event) => setSearchText(event.target.value)}
-                    placeholder="SEARCH OUR COLLECTIONS..."
-                    className="w-full border-b border-stone-300/90 bg-transparent pb-1.5 font-serif text-[17px] font-normal tracking-[0.08em] text-stone-900 placeholder:font-serif placeholder:text-[10px] placeholder:font-normal placeholder:uppercase placeholder:tracking-[0.22em] placeholder:text-stone-300 focus:border-stone-950 focus:outline-none sm:text-[18px] sm:placeholder:text-[11px]"
-                    autoFocus
-                    aria-label="Search products"
-                  />
+                  <div className="relative w-full">
+                    <span className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 pb-1.5 text-stone-400">
+                      <SearchIcon />
+                    </span>
+                    <input
+                      value={searchText}
+                      onChange={(event) => setSearchText(event.target.value)}
+                      placeholder="SEARCH OUR COLLECTIONS..."
+                      className="w-full border-b border-stone-300/90 bg-transparent pb-1.5 pl-6 font-serif text-[17px] font-normal tracking-[0.08em] text-stone-900 placeholder:font-serif placeholder:text-[10px] placeholder:font-normal placeholder:uppercase placeholder:tracking-[0.22em] placeholder:text-stone-300 focus:border-stone-950 focus:outline-none sm:text-[18px] sm:placeholder:text-[11px]"
+                      autoFocus
+                      aria-label="Search products"
+                    />
+                  </div>
                   <button type="submit" className="sr-only" aria-label="Search">
                     Search
                   </button>
@@ -435,6 +439,25 @@ export function Navbar({ settings }: NavbarProps) {
                         className="text-[11px] uppercase tracking-luxury text-stone-700 hover:text-stone-950"
                       >
                         {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-3 border-t border-stone-100 pt-2.5">
+                  <p className="text-[10px] uppercase tracking-luxury text-stone-500">Popular Searches</p>
+                  <div className="mt-2 flex flex-wrap gap-x-3 gap-y-2 sm:gap-x-4">
+                    {['Gold Ring', 'Crystal Earrings', 'Necklace Set', 'Bracelet', 'Hair Pin'].map((term) => (
+                      <Link
+                        key={term}
+                        href={`/shop?q=${encodeURIComponent(term)}`}
+                        onClick={() => {
+                          setIsSearchOpen(false);
+                          setSearchText('');
+                        }}
+                        className="rounded-full border border-stone-200 px-3 py-1 text-[10px] uppercase tracking-luxury text-stone-600 transition-colors hover:border-stone-400 hover:bg-stone-50 hover:text-stone-950"
+                      >
+                        {term}
                       </Link>
                     ))}
                   </div>

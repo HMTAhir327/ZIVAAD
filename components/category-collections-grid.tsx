@@ -77,7 +77,7 @@ export function CategoryCollectionsGrid({
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-4">
         {collectionItems.map((item) => (
-          <Link key={item.key} href={item.href} className="group block">
+          <Link key={item.key} href={item.href} className="group block transition-shadow duration-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
             <div className="relative aspect-[4/4.7] overflow-hidden bg-stone-100">
               <Image
                 src={optimizeCloudinaryImage(item.image, 1200)}
@@ -91,12 +91,13 @@ export function CategoryCollectionsGrid({
                 Shop
               </span>
             </div>
-            <div className="mt-2.5 flex items-center gap-2 text-stone-900 sm:mt-3">
+            <div className="mt-2.5 flex items-center gap-2 text-stone-900 transition-colors duration-500 group-hover:text-stone-950 sm:mt-3">
               <span className="font-body text-[0.96rem] leading-none sm:text-[1.2rem]">{item.label}</span>
+              <span className="font-body text-[0.82rem] leading-none opacity-0 transition-opacity duration-500 group-hover:opacity-100">Shop</span>
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
-                className="h-4 w-4 transition-transform duration-500 ease-luxury group-hover:translate-x-1"
+                className="h-4 w-4 transition-all duration-500 ease-luxury group-hover:translate-x-1.5"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.45"

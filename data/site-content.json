@@ -67,7 +67,7 @@
     "shuffle_shop_before_filter": false,
     "promo_messages": [
       "1000/- Advance Required on Orders Above 5000/-",
-      "Free Delivery On Orders Above 4999/-"
+      "Free Delivery On Orders Above 2999/-"
     ],
     "trust_marquee_items": [
       "Pure Stainless Steel",
@@ -83,6 +83,7 @@
     "sale_counter_repeat_enabled": true,
     "sale_counter_cycle_seconds": 30320,
     "sale_counter_anchor_hour": 2,
-    "sale_counter_anchor_minute": 0
+    "sale_counter_anchor_minute": 0,
+    "pdp_notice": "Place your order now for fast delivery across Pakistan. Orders above Rs. 2,999 get FREE shipping!"
   }
 }

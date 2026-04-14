@@ -17,7 +17,7 @@ const DEFAULT_OPTION_NAMES = ['Color', 'Size', 'Material', 'Length', 'Finish'];
 
 type AdminCategoryFilter = ProductCategory | 'all';
 type AdminBadgeFilter = string | 'all';
-type AdminTab = 'products' | 'taxonomy' | 'site-settings';
+type AdminTab = 'products' | 'taxonomy' | 'site-settings' | 'profiles';
 
 const fallbackImage =
   'https://res.cloudinary.com/demo/image/upload/v1690000000/samples/ecommerce/accessories-bag.jpg';
@@ -424,12 +424,21 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<AdminCategoryFilter>('all');
   const [badgeFilter, setBadgeFilter] = useState<AdminBadgeFilter>('all');
+  const [stockFilter, setStockFilter] = useState<string>('all');
+  const [saleFilter, setSaleFilter] = useState<string>('all');
+  const [showSalePanel, setShowSalePanel] = useState(false);
+  const [saleSelection, setSaleSelection] = useState<Set<number>>(new Set());
+  const [saleDiscountPercent, setSaleDiscountPercent] = useState(20);
   const [newCategory, setNewCategory] = useState('');
   const [newBadge, setNewBadge] = useState('');
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
   const [editingBadge, setEditingBadge] = useState<string | null>(null);
   const [editingCategoryValue, setEditingCategoryValue] = useState('');
   const [editingBadgeValue, setEditingBadgeValue] = useState('');
+  const [profiles, setProfiles] = useState<Array<{ id: string; name: string }>>([]);
+  const [profileSearch, setProfileSearch] = useState('');
+  const [newProfileName, setNewProfileName] = useState('');
+  const [profileStatus, setProfileStatus] = useState('');
 
   const [isSavingProducts, startSavingProducts] = useTransition();
   const [isSavingContent, startSavingContent] = useTransition();
@@ -479,6 +488,52 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
     }
   }, [editingIndex, products.length]);
 
+  useEffect(() => {
+    let active = true;
+    fetch('/api/admin/profiles')
+      .then((res) => res.json())
+      .then((data) => { if (active && data.ok) setProfiles(data.profiles); })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  function addProfile() {
+    const name = newProfileName.trim();
+    if (!name) return;
+    const exists = profiles.some((p) => p.name.toLowerCase() === name.toLowerCase());
+    if (exists) { setProfileStatus(`"${name}" already exists.`); return; }
+    fetch('/api/admin/profiles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          setProfiles((prev) => [...prev, { id: data.id, name }]);
+          setNewProfileName('');
+          setProfileStatus(`"${name}" added.`);
+        }
+      })
+      .catch(() => setProfileStatus('Failed to add profile.'));
+  }
+
+  function deleteProfile(id: string) {
+    fetch('/api/admin/profiles', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          setProfiles((prev) => prev.filter((p) => p.id !== id));
+          setProfileStatus('Profile deleted.');
+        }
+      })
+      .catch(() => setProfileStatus('Failed to delete.'));
+  }
+
   const saleCycleParts = useMemo(
     () => cycleSecondsToParts(siteContent.settings?.sale_counter_cycle_seconds ?? 1),
     [siteContent.settings?.sale_counter_cycle_seconds]
@@ -493,19 +548,24 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
       .map((product, index) => ({ product, index }))
       .filter(({ product }) => {
         const categoryMatch = categoryFilter === 'all' || product.category === categoryFilter;
-        if (!categoryMatch) {
-          return false;
-        }
+        if (!categoryMatch) return false;
 
         const badgeMatch =
           badgeFilter === 'all' || product.badge.trim().toLowerCase() === badgeFilter.trim().toLowerCase();
-        if (!badgeMatch) {
-          return false;
-        }
+        if (!badgeMatch) return false;
 
-        if (!normalizedSearch) {
-          return true;
-        }
+        if (stockFilter === 'out-of-stock' && product.stock > 0) return false;
+        if (stockFilter === 'low-stock' && (product.stock === 0 || product.stock >= 5)) return false;
+        if (stockFilter === 'in-stock' && product.stock <= 0) return false;
+        if (stockFilter === 'high-stock' && product.stock < 20) return false;
+
+        if (saleFilter === 'on-sale' && !product.sale_tag_enabled) return false;
+        if (saleFilter === 'not-on-sale' && product.sale_tag_enabled) return false;
+        if (saleFilter === 'has-reviews' && (!product.reviews || product.reviews.length === 0)) return false;
+        if (saleFilter === 'no-reviews' && product.reviews && product.reviews.length > 0) return false;
+        if (saleFilter === 'zivaad-choice' && !product.zivaad_choice) return false;
+
+        if (!normalizedSearch) return true;
 
         const searchable = [product.id, product.name, product.description, product.category, product.badge]
           .join(' ')
@@ -513,7 +573,7 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
 
         return searchable.includes(normalizedSearch);
       });
-  }, [products, searchTerm, categoryFilter, badgeFilter]);
+  }, [products, searchTerm, categoryFilter, badgeFilter, stockFilter, saleFilter]);
 
   const editingProduct = editingIndex !== null ? products[editingIndex] : null;
   const editingProductOptions = useMemo(
@@ -1141,6 +1201,63 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
     setTaxonomyStatus(`Badge "${normalized}" removed.`);
   }
 
+  function toggleSaleSelection(index: number) {
+    setSaleSelection((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  }
+
+  function selectAllForSale() {
+    setSaleSelection(new Set(products.map((_, i) => i)));
+  }
+
+  function clearSaleSelection() {
+    setSaleSelection(new Set());
+  }
+
+  function applySaleToSelected() {
+    if (saleSelection.size === 0) return;
+    setProducts((prev) =>
+      prev.map((p, i) => {
+        if (!saleSelection.has(i)) return p;
+        return { ...p, sale_tag_enabled: true };
+      })
+    );
+    setStatus(`Sale enabled on ${saleSelection.size} product(s). Save to apply.`);
+  }
+
+  function removeSaleFromSelected() {
+    if (saleSelection.size === 0) return;
+    setProducts((prev) =>
+      prev.map((p, i) => {
+        if (!saleSelection.has(i)) return p;
+        return { ...p, sale_tag_enabled: false };
+      })
+    );
+    setStatus(`Sale removed from ${saleSelection.size} product(s). Save to apply.`);
+  }
+
+  function applyDiscountToSelected() {
+    if (saleSelection.size === 0 || saleDiscountPercent <= 0 || saleDiscountPercent >= 100) return;
+    setProducts((prev) =>
+      prev.map((p, i) => {
+        if (!saleSelection.has(i)) return p;
+        const basePrice = p.compare_price > 0 ? p.compare_price : p.price;
+        const discountedPrice = Math.round(basePrice * (1 - saleDiscountPercent / 100));
+        return {
+          ...p,
+          compare_price: basePrice,
+          price: discountedPrice,
+          sale_tag_enabled: true
+        };
+      })
+    );
+    setStatus(`${saleDiscountPercent}% discount applied to ${saleSelection.size} product(s). Save to apply.`);
+  }
+
   function addProduct() {
     if (typeof window !== 'undefined') {
       window.location.assign('/admin/product/new');
@@ -1326,7 +1443,9 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
           <div>
             <p className="text-[10px] uppercase tracking-luxury text-stone-500">ZIVAAD Admin</p>
             <h1 className="mt-2 font-serif text-5xl text-stone-950">Catalog & Site Settings</h1>
-            <p className="mt-3 text-sm text-stone-600">{products.length} products · {totalStock} total units in stock</p>
+            <p className="mt-3 text-sm text-stone-600">
+              {products.length} products · {totalStock} units in stock · {products.filter(p => p.stock === 0).length} out of stock · {products.filter(p => p.stock > 0 && p.stock < 5).length} low stock · {products.filter(p => p.sale_tag_enabled).length} on sale · {products.filter(p => p.reviews && p.reviews.length > 0).length} with reviews
+            </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -1357,6 +1476,15 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
             >
               Taxonomy
             </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('profiles')}
+              className={`border px-4 py-2 text-[11px] uppercase tracking-luxury ${
+                activeTab === 'profiles' ? 'border-stone-950 bg-stone-950 text-white' : 'border-stone-300 text-stone-700'
+              }`}
+            >
+              Profiles ({profiles.length})
+            </button>
           </div>
         </div>
       </div>
@@ -1372,7 +1500,7 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
       {activeTab === 'products' ? (
         <>
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <div className="grid w-full gap-3 md:grid-cols-2 lg:w-auto lg:grid-cols-[300px_190px_190px_auto]">
+            <div className="grid w-full gap-3 md:grid-cols-2 lg:w-auto lg:grid-cols-[300px_160px_160px_160px_160px_auto]">
               <input
                 type="text"
                 value={searchTerm}
@@ -1407,12 +1535,39 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
                 ))}
               </select>
 
+              <select
+                value={stockFilter}
+                onChange={(event) => setStockFilter(event.target.value)}
+                className="border border-stone-300 bg-white px-3 py-2 text-sm"
+              >
+                <option value="all">All Stock</option>
+                <option value="out-of-stock">Out of Stock (0)</option>
+                <option value="low-stock">Low Stock (1-4)</option>
+                <option value="in-stock">In Stock (1+)</option>
+                <option value="high-stock">High Stock (20+)</option>
+              </select>
+
+              <select
+                value={saleFilter}
+                onChange={(event) => setSaleFilter(event.target.value)}
+                className="border border-stone-300 bg-white px-3 py-2 text-sm"
+              >
+                <option value="all">All Status</option>
+                <option value="on-sale">On Sale</option>
+                <option value="not-on-sale">Not On Sale</option>
+                <option value="has-reviews">Has Reviews</option>
+                <option value="no-reviews">No Reviews</option>
+                <option value="zivaad-choice">Zivaad Choice</option>
+              </select>
+
               <button
                 type="button"
                 onClick={() => {
                   setSearchTerm('');
                   setCategoryFilter('all');
                   setBadgeFilter('all');
+                  setStockFilter('all');
+                  setSaleFilter('all');
                 }}
                 className="border border-stone-300 px-4 py-2 text-[10px] uppercase tracking-luxury text-stone-700"
               >
@@ -1440,6 +1595,44 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
             </div>
           </div>
 
+          <div className="mb-4 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => { setShowSalePanel(!showSalePanel); if (!showSalePanel) clearSaleSelection(); }}
+              className={`border px-4 py-2 text-[10px] uppercase tracking-luxury transition-colors ${showSalePanel ? 'border-[#b89a61] bg-[#b89a61] text-white' : 'border-stone-300 text-stone-700 hover:border-stone-950'}`}
+            >
+              {showSalePanel ? 'Close Sale Manager' : 'Sale Manager'}
+            </button>
+          </div>
+
+          {showSalePanel ? (
+            <div className="mb-6 border border-[#d9c292] bg-[#fdf8ef] p-4">
+              <p className="text-[11px] font-medium uppercase tracking-luxury text-stone-900">Bulk Sale Manager</p>
+              <p className="mt-1 text-xs text-stone-500">Select products below, then apply sale or set discount.</p>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <button type="button" onClick={selectAllForSale} className="border border-stone-300 bg-white px-3 py-1.5 text-[10px] uppercase tracking-luxury text-stone-700 hover:border-stone-950">Select All</button>
+                <button type="button" onClick={clearSaleSelection} className="border border-stone-300 bg-white px-3 py-1.5 text-[10px] uppercase tracking-luxury text-stone-700 hover:border-stone-950">Clear</button>
+                <span className="text-xs text-stone-500">{saleSelection.size} selected</span>
+                <span className="mx-1 text-stone-300">|</span>
+                <button type="button" onClick={applySaleToSelected} disabled={saleSelection.size === 0 || !adminCanWrite} className="border border-green-600 bg-green-600 px-3 py-1.5 text-[10px] uppercase tracking-luxury text-white disabled:opacity-40">Enable Sale</button>
+                <button type="button" onClick={removeSaleFromSelected} disabled={saleSelection.size === 0 || !adminCanWrite} className="border border-red-500 bg-red-500 px-3 py-1.5 text-[10px] uppercase tracking-luxury text-white disabled:opacity-40">Remove Sale</button>
+                <span className="mx-1 text-stone-300">|</span>
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="number"
+                    min={1}
+                    max={99}
+                    value={saleDiscountPercent}
+                    onChange={(e) => setSaleDiscountPercent(Math.max(1, Math.min(99, Number(e.target.value) || 0)))}
+                    className="w-16 border border-stone-300 bg-white px-2 py-1.5 text-center text-sm outline-none focus:border-stone-950"
+                  />
+                  <span className="text-xs text-stone-500">%</span>
+                  <button type="button" onClick={applyDiscountToSelected} disabled={saleSelection.size === 0 || !adminCanWrite} className="border border-[#b89a61] bg-[#b89a61] px-3 py-1.5 text-[10px] uppercase tracking-luxury text-white disabled:opacity-40">Apply Discount</button>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           {status ? <p className="mb-5 text-sm text-stone-700">{status}</p> : null}
 
           {filteredProducts.length === 0 ? (
@@ -1449,7 +1642,16 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {filteredProducts.map(({ product, index }) => (
-                <article key={`${product.id}-${index}`} className="border border-stone-200 bg-white p-4">
+                <article key={`${product.id}-${index}`} className={`border bg-white p-4 ${showSalePanel && saleSelection.has(index) ? 'border-[#b89a61] ring-1 ring-[#b89a61]' : 'border-stone-200'}`}>
+                  {showSalePanel ? (
+                    <label className="mb-2 flex cursor-pointer items-center gap-2">
+                      <input type="checkbox" checked={saleSelection.has(index)} onChange={() => toggleSaleSelection(index)} className="h-4 w-4 accent-[#b89a61]" />
+                      <span className="text-[10px] uppercase tracking-luxury text-stone-600">Select for sale</span>
+                      {product.sale_tag_enabled ? (
+                        <span className="ml-auto rounded bg-[#b89a61] px-1.5 py-0.5 text-[8px] font-medium uppercase text-white">Sale On</span>
+                      ) : null}
+                    </label>
+                  ) : null}
                   <div className="relative aspect-[4/5] overflow-hidden border border-stone-200 bg-stone-100">
                     <Image
                       src={product.primary_image_url || product.images[0] || fallbackImage}
@@ -1461,12 +1663,22 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
                     <span className="absolute left-3 top-3 bg-white/90 px-2 py-1 text-[10px] uppercase tracking-luxury text-stone-700">
                       {product.badge || 'NEW'}
                     </span>
+                    {product.sale_tag_enabled && product.compare_price > product.price ? (
+                      <span className="absolute right-3 top-3 bg-[#b89a61] px-2 py-1 text-[9px] font-medium text-white">
+                        {Math.round((1 - product.price / product.compare_price) * 100)}% Off
+                      </span>
+                    ) : null}
                   </div>
 
                   <div className="mt-3">
                     <p className="truncate font-medium text-stone-950">{product.name}</p>
                     <p className="mt-1 text-xs uppercase tracking-luxury text-stone-500">{product.id}</p>
-                    <p className="mt-2 text-sm text-stone-700">PKR {product.price.toLocaleString()}</p>
+                    <div className="mt-2 flex items-center gap-2 text-sm">
+                      <span className="font-medium text-stone-900">PKR {product.price.toLocaleString()}</span>
+                      {product.compare_price > product.price ? (
+                        <span className="text-stone-400 line-through">PKR {product.compare_price.toLocaleString()}</span>
+                      ) : null}
+                    </div>
                     <div className="mt-2 flex items-center justify-between text-[11px] uppercase tracking-luxury text-stone-500">
                       <span>{product.category}</span>
                       <span>Stock: {product.stock}</span>
@@ -2551,6 +2763,17 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
                   placeholder="Trust marquee items (one per line)"
                   className="resize-y border border-stone-300 bg-white px-3 py-2 text-sm"
                 />
+                <div>
+                  <p className="text-[10px] uppercase tracking-luxury text-stone-500">PDP Notice</p>
+                  <p className="mt-1 text-[11px] text-stone-500">Shows on all product pages. Leave empty to hide.</p>
+                  <textarea
+                    value={siteContent.settings.pdp_notice}
+                    onChange={(e) => updateSiteContent('settings', { pdp_notice: e.target.value })}
+                    rows={2}
+                    className="mt-2 w-full border border-stone-300 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-stone-950"
+                    placeholder="e.g., Place your order before Friday for Eid delivery..."
+                  />
+                </div>
               </div>
             </article>
 
@@ -2655,6 +2878,77 @@ export function AdminEditor({ initialProducts, initialSiteContent, adminCanWrite
           </fieldset>
         </section>
       )}
+
+      {activeTab === 'profiles' ? (
+        <section className="space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-stone-600">{profiles.length} profiles in database — used for reviews and social proof popups</p>
+          </div>
+
+          {profileStatus ? <p className="text-sm text-stone-700">{profileStatus}</p> : null}
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newProfileName}
+              onChange={(e) => setNewProfileName(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addProfile(); } }}
+              placeholder="Add new profile name..."
+              className="flex-1 border border-stone-300 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-stone-950"
+            />
+            <button
+              type="button"
+              onClick={addProfile}
+              disabled={!adminCanWrite || !newProfileName.trim()}
+              className="bg-stone-950 px-5 py-2 text-[11px] uppercase tracking-luxury text-white disabled:opacity-40"
+            >
+              Add
+            </button>
+          </div>
+
+          <div>
+            <input
+              type="text"
+              value={profileSearch}
+              onChange={(e) => setProfileSearch(e.target.value)}
+              placeholder="Search profiles..."
+              className="w-full border border-stone-300 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-stone-950 sm:max-w-xs"
+            />
+          </div>
+
+          <div className="max-h-[60vh] overflow-y-auto border border-stone-200">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-stone-50">
+                <tr className="border-b border-stone-200 text-left text-[10px] uppercase tracking-luxury text-stone-500">
+                  <th className="px-3 py-2">ID</th>
+                  <th className="px-3 py-2">Name</th>
+                  <th className="px-3 py-2 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-100">
+                {profiles
+                  .filter((p) => !profileSearch.trim() || p.name.toLowerCase().includes(profileSearch.trim().toLowerCase()) || p.id.toLowerCase().includes(profileSearch.trim().toLowerCase()))
+                  .map((profile) => (
+                    <tr key={profile.id} className="hover:bg-stone-50">
+                      <td className="px-3 py-2 text-xs text-stone-400">{profile.id}</td>
+                      <td className="px-3 py-2 text-stone-900">{profile.name}</td>
+                      <td className="px-3 py-2 text-right">
+                        <button
+                          type="button"
+                          onClick={() => deleteProfile(profile.id)}
+                          disabled={!adminCanWrite}
+                          className="text-[10px] uppercase tracking-luxury text-red-500 hover:text-red-700 disabled:opacity-40"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
     </section>
   );
 }

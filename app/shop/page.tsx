@@ -8,6 +8,7 @@ interface ShopPageProps {
   searchParams?: {
     category?: string | string[];
     q?: string | string[];
+    sale?: string | string[];
   };
 }
 
@@ -20,6 +21,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const initialCategory =
     normalizedCategory && normalizedCategory !== 'all' && categorySet.has(normalizedCategory) ? normalizedCategory : 'all';
   const initialQuery = (searchQuery || '').trim();
+  const saleParam = Array.isArray(searchParams?.sale) ? searchParams?.sale[0] : searchParams?.sale;
+  const initialSaleOnly = saleParam === '1' || saleParam === 'true';
 
   return (
     <section className="w-full px-4 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-16">
@@ -30,6 +33,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         products={products}
         initialCategory={initialCategory}
         initialQuery={initialQuery}
+        initialSaleOnly={initialSaleOnly}
         shuffleOnInitialLoad={siteContent.settings.shuffle_shop_before_filter}
       />
     </section>

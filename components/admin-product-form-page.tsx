@@ -9,7 +9,7 @@ import { saveProductsAction } from '@/app/admin/actions';
 import { RichTextEditor } from '@/components/rich-text-editor';
 import { normalizeProductOptionDefinitions, normalizeProductVariantDefinitions } from '@/lib/product-variants';
 import { normalizeDescriptionForEditor } from '@/lib/rich-text';
-import type { Product, ProductCategory, ProductOption, ProductVariant } from '@/lib/types';
+import type { Product, ProductCategory, ProductOption, ProductReview, ProductVariant } from '@/lib/types';
 
 const fallbackImage =
   'https://res.cloudinary.com/demo/image/upload/v1690000000/samples/ecommerce/accessories-bag.jpg';
@@ -324,7 +324,8 @@ function syncDerivedProduct(product: Product): Product {
     sale_tag_enabled: Boolean(product.sale_tag_enabled),
     option_swatches: optionSwatches,
     product_options: options,
-    product_variants: variants
+    product_variants: variants,
+    reviews: product.reviews || []
   };
 }
 
@@ -403,6 +404,16 @@ export function AdminProductFormPage({
     return (normalized.supplier_urls || []).join('\n');
   });
   const [optionValueDrafts, setOptionValueDrafts] = useState<Record<number, string>>({});
+  const [editingReviewIndex, setEditingReviewIndex] = useState<number | null>(null);
+  const [reviewDraft, setReviewDraft] = useState<{ name: string; rating: number; text: string; date: string; verified: boolean }>({
+    name: '',
+    rating: 5,
+    text: '',
+    date: new Date().toISOString().slice(0, 10),
+    verified: true
+  });
+  const [profiles, setProfiles] = useState<Array<{ id: string; name: string }>>([]);
+  const [profileSearch, setProfileSearch] = useState('');
   const [status, setStatus] = useState('');
   const [isSaving, startSaving] = useTransition();
 
@@ -462,6 +473,15 @@ export function AdminProductFormPage({
       return next;
     });
   }, [options.length]);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/admin/profiles')
+      .then((res) => res.json())
+      .then((data) => { if (active && data.ok) setProfiles(data.profiles); })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   function commitOptionValuesDraft(optionIndex: number) {
     const draft = optionValueDrafts[optionIndex];
@@ -808,6 +828,81 @@ export function AdminProductFormPage({
       ...prev,
       supplier_urls: urls
     }));
+  }
+
+  function startAddReview() {
+    setReviewDraft({
+      name: '',
+      rating: 5,
+      text: '',
+      date: new Date().toISOString().slice(0, 10),
+      verified: true
+    });
+    setEditingReviewIndex(-1);
+  }
+
+  function startEditReview(index: number) {
+    const review = (product.reviews || [])[index];
+    if (!review) return;
+    setReviewDraft({
+      name: review.name,
+      rating: review.rating,
+      text: review.text,
+      date: review.date,
+      verified: review.verified
+    });
+    setEditingReviewIndex(index);
+  }
+
+  function cancelReviewEdit() {
+    setEditingReviewIndex(null);
+  }
+
+  function saveReviewDraft() {
+    const reviews = [...(product.reviews || [])];
+    if (editingReviewIndex === -1) {
+      const newReview: ProductReview = {
+        id: `rev-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        name: reviewDraft.name,
+        rating: reviewDraft.rating,
+        text: reviewDraft.text,
+        date: reviewDraft.date,
+        verified: reviewDraft.verified
+      };
+      reviews.push(newReview);
+    } else if (editingReviewIndex !== null && editingReviewIndex >= 0) {
+      reviews[editingReviewIndex] = {
+        ...reviews[editingReviewIndex],
+        name: reviewDraft.name,
+        rating: reviewDraft.rating,
+        text: reviewDraft.text,
+        date: reviewDraft.date,
+        verified: reviewDraft.verified
+      };
+    }
+    setProduct((prev) => ({ ...prev, reviews }));
+    setEditingReviewIndex(null);
+
+    // Auto-add reviewer name to profiles if not already present
+    const reviewerName = reviewDraft.name.trim();
+    if (reviewerName && profiles.length > 0) {
+      const exists = profiles.some((p) => p.name.toLowerCase() === reviewerName.toLowerCase());
+      if (!exists) {
+        fetch('/api/admin/profiles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: reviewerName })
+        })
+          .then((res) => res.json())
+          .then((data) => { if (data.ok) setProfiles((prev) => [...prev, { id: data.id, name: reviewerName }]); })
+          .catch(() => {});
+      }
+    }
+  }
+
+  function deleteReview(index: number) {
+    const reviews = (product.reviews || []).filter((_, idx) => idx !== index);
+    setProduct((prev) => ({ ...prev, reviews }));
   }
 
   function handleSave() {
@@ -1421,6 +1516,177 @@ export function AdminProductFormPage({
                 </table>
               </div>
             )}
+          </div>
+          {/* Customer Reviews */}
+          <div className="space-y-3 border border-stone-200 p-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] uppercase tracking-luxury text-stone-500">Customer Reviews</p>
+                <span className="inline-flex h-5 min-w-[20px] items-center justify-center bg-stone-100 px-1.5 text-[10px] font-medium text-stone-700">
+                  {(product.reviews || []).length}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={startAddReview}
+                className="border border-stone-950 px-3 py-1 text-[10px] uppercase tracking-luxury text-stone-950"
+              >
+                Add Review
+              </button>
+            </div>
+
+            {editingReviewIndex !== null ? (
+              <div className="space-y-3 border border-stone-200 bg-stone-50 p-3">
+                <p className="text-[10px] uppercase tracking-luxury text-stone-500">
+                  {editingReviewIndex === -1 ? 'New Review' : 'Edit Review'}
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-luxury text-stone-500">Customer Name</p>
+                    <input
+                      type="text"
+                      value={reviewDraft.name}
+                      onChange={(e) => { setReviewDraft({ ...reviewDraft, name: e.target.value }); setProfileSearch(e.target.value); }}
+                      placeholder="Type to search profiles or enter name..."
+                      className="mt-1 w-full border border-stone-300 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-stone-950"
+                    />
+                    {profileSearch.length >= 2 && (
+                      <div className="mt-1 max-h-40 overflow-y-auto border border-stone-200 bg-white">
+                        {profiles
+                          .filter((p) => p.name.toLowerCase().includes(profileSearch.toLowerCase()))
+                          .slice(0, 10)
+                          .map((p) => (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onClick={() => { setReviewDraft({ ...reviewDraft, name: p.name }); setProfileSearch(''); }}
+                              className="block w-full px-3 py-2 text-left text-sm text-stone-700 hover:bg-stone-100"
+                            >
+                              {p.name}
+                            </button>
+                          ))}
+                        {profiles.filter((p) => p.name.toLowerCase().includes(profileSearch.toLowerCase())).length === 0 && (
+                          <p className="px-3 py-2 text-xs text-stone-400">No profiles found. Name will be used as-is.</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-luxury text-stone-500">Rating</label>
+                    <select
+                      value={reviewDraft.rating}
+                      onChange={(event) => setReviewDraft((prev) => ({ ...prev, rating: Number(event.target.value) }))}
+                      className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+                    >
+                      {[5, 4, 3, 2, 1].map((value) => (
+                        <option key={value} value={value}>
+                          {value} Star{value !== 1 ? 's' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-luxury text-stone-500">Review Text</label>
+                  <textarea
+                    rows={3}
+                    value={reviewDraft.text}
+                    onChange={(event) => setReviewDraft((prev) => ({ ...prev, text: event.target.value }))}
+                    className="w-full resize-y border border-stone-300 bg-white px-3 py-2 text-sm leading-relaxed"
+                    placeholder="Write the review text..."
+                  />
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-luxury text-stone-500">Date</label>
+                    <input
+                      type="date"
+                      value={reviewDraft.date}
+                      onChange={(event) => setReviewDraft((prev) => ({ ...prev, date: event.target.value }))}
+                      className="w-full border border-stone-300 bg-white px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <label className="space-y-2 block">
+                    <span className="text-[10px] uppercase tracking-luxury text-stone-500">Verified Purchase</span>
+                    <span className="flex h-[42px] items-center gap-2 border border-stone-300 bg-white px-3">
+                      <input
+                        type="checkbox"
+                        checked={reviewDraft.verified}
+                        onChange={(event) => setReviewDraft((prev) => ({ ...prev, verified: event.target.checked }))}
+                        className="h-4 w-4 border border-stone-300"
+                      />
+                      <span className="text-xs text-stone-700">Verified purchase</span>
+                    </span>
+                  </label>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={saveReviewDraft}
+                    className="bg-stone-950 px-4 py-1.5 text-[10px] uppercase tracking-luxury text-white"
+                  >
+                    Save Review
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelReviewEdit}
+                    className="border border-stone-300 px-4 py-1.5 text-[10px] uppercase tracking-luxury text-stone-700"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
+            {(product.reviews || []).length === 0 && editingReviewIndex === null ? (
+              <p className="text-sm text-stone-500">No reviews yet. Add customer reviews to display on the product page.</p>
+            ) : null}
+
+            {(product.reviews || []).length > 0 ? (
+              <div className="space-y-3">
+                {(product.reviews || []).map((review, reviewIndex) => (
+                  <div key={review.id} className="border border-stone-200 bg-white p-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-sm text-amber-500">
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <span key={i} style={{ color: i < review.rating ? '#c9a24a' : '#d6d3d1' }}>
+                              {'\u2605'}
+                            </span>
+                          ))}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-2">
+                          <span className="text-sm font-medium text-stone-900">{review.name}</span>
+                          <span className="text-xs text-stone-500">{review.date}</span>
+                          {review.verified ? (
+                            <span className="bg-emerald-50 px-1.5 py-0.5 text-[10px] uppercase tracking-luxury text-emerald-700">
+                              Verified
+                            </span>
+                          ) : null}
+                        </div>
+                        <p className="mt-2 text-sm leading-relaxed text-stone-700">{review.text}</p>
+                      </div>
+                      <div className="flex shrink-0 gap-1">
+                        <button
+                          type="button"
+                          onClick={() => startEditReview(reviewIndex)}
+                          className="border border-stone-300 px-2 py-1 text-[10px] uppercase tracking-luxury text-stone-700"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteReview(reviewIndex)}
+                          className="border border-stone-300 px-2 py-1 text-[10px] uppercase tracking-luxury text-red-700"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
         </article>
 

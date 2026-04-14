@@ -54,7 +54,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   },
   settings: {
     shuffle_shop_before_filter: true,
-    promo_messages: ['1000/- Advance Required on Orders Above 5000/-', 'Free Delivery On Orders Above 4999/-'],
+    promo_messages: ['1000/- Advance Required on Orders Above 5000/-', 'Free Delivery On Orders Above 2999/-'],
     trust_marquee_items: ['Pure Stainless Steel', '20k+ Satisfied Customers', 'Cash on Delivery', 'WhatsApp Support'],
     sale_counter_enabled: true,
     sale_counter_title: 'Winter Sale',
@@ -64,7 +64,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     sale_counter_repeat_enabled: true,
     sale_counter_cycle_seconds: 30320,
     sale_counter_anchor_hour: 2,
-    sale_counter_anchor_minute: 0
+    sale_counter_anchor_minute: 0,
+    pdp_notice: ''
   }
 };
 
@@ -320,7 +321,8 @@ export function sanitizeSiteContent(raw: unknown): SiteContent {
         settings.sale_counter_anchor_minute,
         DEFAULT_SITE_CONTENT.settings.sale_counter_anchor_minute,
         { min: 0, max: 59, integer: true }
-      )
+      ),
+      pdp_notice: asString(settings.pdp_notice, DEFAULT_SITE_CONTENT.settings.pdp_notice, { allowEmpty: true })
     }
   };
 }

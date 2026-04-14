@@ -16,6 +16,7 @@ interface ProductGridProps {
   products: Product[];
   initialCategory?: FilterCategory;
   initialQuery?: string;
+  initialSaleOnly?: boolean;
   shuffleOnInitialLoad?: boolean;
 }
 
@@ -53,10 +54,12 @@ export function ProductGrid({
   products,
   initialCategory = 'all',
   initialQuery = '',
+  initialSaleOnly = false,
   shuffleOnInitialLoad = true
 }: ProductGridProps) {
   const [category, setCategory] = useState<FilterCategory>(initialCategory);
   const [query, setQuery] = useState(initialQuery);
+  const [saleOnly, setSaleOnly] = useState(initialSaleOnly);
   const [availability, setAvailability] = useState<AvailabilityFilter>('all');
   const [priceQuick, setPriceQuick] = useState<PriceFilter>('all');
   const [minPriceInput, setMinPriceInput] = useState('');
@@ -192,6 +195,10 @@ export function ProductGrid({
         shuffleRank: hashString(`${shuffleSeed}:${product.id}`)
       }))
       .filter(({ product }) => {
+      if (saleOnly && !product.sale_tag_enabled) {
+        return false;
+      }
+
       const categoryMatch = category === 'all' || product.category === category;
       if (!categoryMatch) {
         return false;
@@ -308,7 +315,8 @@ export function ProductGrid({
     shuffleSeed,
     hasUserAppliedFilters,
     hasActiveFilters,
-    shuffleOnInitialLoad
+    shuffleOnInitialLoad,
+    saleOnly
   ]);
 
   const selectedCategoryLabel = categoryOptions.find((option) => option.value === category)?.label || 'All';
@@ -320,7 +328,8 @@ export function ProductGrid({
     hasActiveFilters && priceQuick !== 'all',
     hasActiveFilters && minPrice !== null,
     hasActiveFilters && maxPrice !== null,
-    hasActiveFilters && Boolean(query.trim())
+    hasActiveFilters && Boolean(query.trim()),
+    saleOnly
   ].filter(Boolean).length;
 
   function openFilterPanel(column: 'category' | 'availability' | 'price') {
@@ -340,6 +349,7 @@ export function ProductGrid({
     setMinPriceInput('');
     setMaxPriceInput('');
     setQuery('');
+    setSaleOnly(false);
     setIsFilterPanelOpen(false);
     setIsMobileFilterSidebarOpen(false);
   }
@@ -392,43 +402,73 @@ export function ProductGrid({
             ) : null}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-stone-700 sm:gap-3">
-            <label htmlFor="shop-sort" className="text-[15px] font-medium text-stone-900">
-              Sort by:
-            </label>
-            <select
-              id="shop-sort"
-              value={sortBy}
-              onChange={(event) => setSortBy(event.target.value as SortOption)}
-              className="border border-stone-300 bg-white px-3 py-2 text-[15px] text-stone-800 outline-none transition-colors focus:border-stone-950"
+          <div className="flex flex-wrap items-center gap-3 text-stone-700 sm:gap-4">
+            <button
+              type="button"
+              onClick={() => { setSaleOnly(!saleOnly); setHasUserAppliedFilters(true); }}
+              className={`flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-colors ${
+                saleOnly
+                  ? 'bg-[#b89a61] text-white'
+                  : 'border border-stone-300 bg-white text-stone-700 hover:border-[#b89a61] hover:text-[#b89a61]'
+              }`}
             >
-              {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z" />
+                <circle cx="7" cy="7" r="1" fill="currentColor" />
+              </svg>
+              Sale
+            </button>
+            <div className="flex items-center gap-2">
+              <label htmlFor="shop-sort" className="text-[15px] font-medium text-stone-900">
+                Sort by:
+              </label>
+              <select
+                id="shop-sort"
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value as SortOption)}
+                className="border border-stone-300 bg-white px-3 py-2 text-[15px] text-stone-800 outline-none transition-colors focus:border-stone-950"
+              >
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
             <span className="text-[15px] text-stone-500">{filteredProducts.length} products</span>
           </div>
         </div>
 
         <div className="space-y-3 lg:hidden">
           <div className="flex items-center justify-between gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                setIsFilterPanelOpen(false);
-                setIsMobileFilterSidebarOpen(true);
-              }}
-              className="inline-flex items-center gap-2 border border-stone-300 bg-white px-3 py-2 text-[13px] uppercase tracking-luxury text-stone-800"
-            >
-              Filters
-              {activeFilterCount > 0 ? (
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full border border-stone-300 px-1 text-[10px]">
-                  {activeFilterCount}
-                </span>
-              ) : null}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsFilterPanelOpen(false);
+                  setIsMobileFilterSidebarOpen(true);
+                }}
+                className="inline-flex items-center gap-2 border border-stone-300 bg-white px-3 py-2 text-[13px] uppercase tracking-luxury text-stone-800"
+              >
+                Filters
+                {activeFilterCount > 0 ? (
+                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full border border-stone-300 px-1 text-[10px]">
+                    {activeFilterCount}
+                  </span>
+                ) : null}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setSaleOnly(!saleOnly); setHasUserAppliedFilters(true); }}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-medium transition-colors ${
+                  saleOnly
+                    ? 'bg-[#b89a61] text-white'
+                    : 'border border-stone-300 bg-white text-stone-700'
+                }`}
+              >
+                Sale
+              </button>
+            </div>
 
             <div className="flex items-center gap-2 text-stone-700">
               <label htmlFor="shop-sort-mobile" className="text-[13px] uppercase tracking-luxury text-stone-600">
@@ -571,141 +611,187 @@ export function ProductGrid({
                 transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
               />
               <motion.aside
-                className="fixed inset-y-0 left-0 z-[230] w-[min(88vw,360px)] border-r border-stone-200 bg-[#f8f8f7] shadow-[0_30px_80px_rgba(17,17,17,0.28)] lg:hidden"
+                className="fixed inset-y-0 left-0 z-[230] w-[min(85vw,340px)] bg-white lg:hidden"
                 initial={{ x: '-100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="flex h-full flex-col">
-                  <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
-                    <p className="text-[12px] uppercase tracking-luxury text-stone-700">Filters</p>
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-5 py-4">
+                    <p className="font-serif text-lg text-stone-950">Filters</p>
                     <button
                       type="button"
                       onClick={() => setIsMobileFilterSidebarOpen(false)}
-                      className="inline-flex h-9 w-9 items-center justify-center border border-stone-300 text-stone-700"
+                      className="text-stone-400 transition-colors hover:text-stone-900"
                       aria-label="Close filters sidebar"
                     >
-                      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
                         <path d="M6 6l12 12" />
                         <path d="M18 6L6 18" />
                       </svg>
                     </button>
                   </div>
 
-                  <div className="flex-1 space-y-5 overflow-y-auto px-4 py-4">
-                    <section className="space-y-2">
-                      <p className="text-[10px] uppercase tracking-luxury text-stone-500">Category</p>
-                      <div className="space-y-1">
+                  {/* Active count */}
+                  {activeFilterCount > 0 ? (
+                    <div className="mx-5 mb-3 flex items-center justify-between rounded-full bg-stone-50 px-3.5 py-1.5">
+                      <span className="text-[11px] text-stone-500">{activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''} active</span>
+                      <button type="button" onClick={resetFilters} className="text-[11px] font-medium text-[#b89a61]">Clear all</button>
+                    </div>
+                  ) : null}
+
+                  {/* Filters */}
+                  <div className="flex-1 space-y-0 divide-y divide-stone-100 overflow-y-auto px-5">
+                    {/* Sale Toggle */}
+                    <div className="flex items-center justify-between py-4">
+                      <div className="flex items-center gap-2">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 text-[#b89a61]" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z" />
+                          <circle cx="7" cy="7" r="1" fill="currentColor" />
+                        </svg>
+                        <span className="text-[13px] font-medium text-stone-900">Sale Only</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setSaleOnly(!saleOnly); setHasUserAppliedFilters(true); }}
+                        className={`relative h-6 w-11 rounded-full transition-colors ${saleOnly ? 'bg-[#b89a61]' : 'bg-stone-200'}`}
+                      >
+                        <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${saleOnly ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
+                      </button>
+                    </div>
+
+                    {/* Category */}
+                    <div className="py-4">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-stone-400">Category</p>
+                      <div className="mt-2.5 flex flex-wrap gap-1.5">
                         {categoryOptions.map((option) => (
                           <button
                             key={option.value}
                             type="button"
-                            onClick={() => setCategory(option.value)}
-                            className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
-                              category === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
+                            onClick={() => { setCategory(option.value); setHasUserAppliedFilters(true); }}
+                            className={`rounded-full px-3 py-1.5 text-[12px] transition-colors ${
+                              category === option.value
+                                ? 'bg-stone-900 text-white'
+                                : 'border border-stone-200 text-stone-600 hover:border-stone-400'
                             }`}
                           >
-                            <span>{option.label}</span>
-                            {category === option.value ? <span>✓</span> : null}
+                            {option.label}
                           </button>
                         ))}
                       </div>
-                    </section>
+                    </div>
 
-                    <section className="space-y-2">
-                      <p className="text-[10px] uppercase tracking-luxury text-stone-500">Availability</p>
-                      <div className="space-y-1">
+                    {/* Availability */}
+                    <div className="py-4">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-stone-400">Availability</p>
+                      <div className="mt-2.5 flex flex-wrap gap-1.5">
                         {availabilityOptions.map((option) => (
                           <button
                             key={option.value}
                             type="button"
-                            onClick={() => setAvailability(option.value)}
-                            className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
-                              availability === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
+                            onClick={() => { setAvailability(option.value); setHasUserAppliedFilters(true); }}
+                            className={`rounded-full px-3 py-1.5 text-[12px] transition-colors ${
+                              availability === option.value
+                                ? 'bg-stone-900 text-white'
+                                : 'border border-stone-200 text-stone-600 hover:border-stone-400'
                             }`}
                           >
-                            <span>{option.label}</span>
-                            {availability === option.value ? <span>✓</span> : null}
+                            {option.label}
                           </button>
                         ))}
                       </div>
-                    </section>
+                    </div>
 
-                    <section className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <p className="text-[10px] uppercase tracking-luxury text-stone-500">Price</p>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setPriceQuick('all');
-                            setMinPriceInput('');
-                            setMaxPriceInput('');
-                          }}
-                          className="text-[10px] uppercase tracking-luxury text-stone-500 underline underline-offset-2"
-                        >
-                          Reset
-                        </button>
-                      </div>
-
-                      <p className="text-[13px] text-stone-600">Highest price: PKR {highestPrice.toLocaleString()}</p>
-
-                      <div className="space-y-1">
+                    {/* Price */}
+                    <div className="py-4">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-stone-400">Price</p>
+                      <div className="mt-2.5 flex flex-wrap gap-1.5">
                         {priceOptions.map((option) => (
                           <button
                             key={option.value}
                             type="button"
-                            onClick={() => setPriceQuick(option.value)}
-                            className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
-                              priceQuick === option.value ? 'bg-[#06080b] text-white' : 'bg-white text-stone-700'
+                            onClick={() => { setPriceQuick(option.value); setHasUserAppliedFilters(true); }}
+                            className={`rounded-full px-3 py-1.5 text-[12px] transition-colors ${
+                              priceQuick === option.value
+                                ? 'bg-stone-900 text-white'
+                                : 'border border-stone-200 text-stone-600 hover:border-stone-400'
                             }`}
                           >
-                            <span>{option.label}</span>
-                            {priceQuick === option.value ? <span>✓</span> : null}
+                            {option.label}
                           </button>
                         ))}
                       </div>
-
-                      <div className="grid grid-cols-2 gap-2 pt-1">
-                        <label className="flex items-center gap-2 border border-stone-300 bg-white px-2.5 py-2 text-[13px] text-stone-700">
-                          <span className="text-stone-500">Rs</span>
+                      <div className="mt-3 grid grid-cols-2 gap-2">
+                        <label className="flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-2 text-[12px] text-stone-600">
+                          <span className="text-stone-400">Rs</span>
                           <input
                             value={minPriceInput}
                             onChange={(event) => setMinPriceInput(event.target.value.replace(/[^\d]/g, ''))}
-                            placeholder="From"
+                            placeholder="Min"
                             inputMode="numeric"
                             className="w-full bg-transparent outline-none"
                           />
                         </label>
-                        <label className="flex items-center gap-2 border border-stone-300 bg-white px-2.5 py-2 text-[13px] text-stone-700">
-                          <span className="text-stone-500">Rs</span>
+                        <label className="flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-2 text-[12px] text-stone-600">
+                          <span className="text-stone-400">Rs</span>
                           <input
                             value={maxPriceInput}
                             onChange={(event) => setMaxPriceInput(event.target.value.replace(/[^\d]/g, ''))}
-                            placeholder="To"
+                            placeholder="Max"
                             inputMode="numeric"
                             className="w-full bg-transparent outline-none"
                           />
                         </label>
                       </div>
-                    </section>
+                    </div>
+
+                    {/* Sort */}
+                    <div className="py-4">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-stone-400">Sort By</p>
+                      <div className="mt-2.5 space-y-0.5">
+                        {sortOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setSortBy(option.value)}
+                            className={`flex w-full items-center justify-between rounded px-2.5 py-2 text-left text-[13px] transition-colors ${
+                              sortBy === option.value
+                                ? 'bg-stone-50 font-medium text-stone-900'
+                                : 'text-stone-600 hover:bg-stone-50'
+                            }`}
+                          >
+                            {option.label}
+                            {sortBy === option.value ? (
+                              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5 text-[#b89a61]" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M20 6L9 17l-5-5" />
+                              </svg>
+                            ) : null}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 border-t border-stone-200 px-4 py-3">
-                    <button
-                      type="button"
-                      onClick={resetFilters}
-                      className="border border-stone-300 bg-white px-3 py-2 text-[11px] uppercase tracking-luxury text-stone-700"
-                    >
-                      Reset
-                    </button>
+                  {/* Bottom Buttons */}
+                  <div className="border-t border-stone-100 px-5 py-4">
                     <button
                       type="button"
                       onClick={() => setIsMobileFilterSidebarOpen(false)}
-                      className="bg-stone-950 px-3 py-2 text-[11px] uppercase tracking-luxury text-white"
+                      className="w-full bg-stone-950 py-3 text-[11px] uppercase tracking-luxury text-white transition-opacity hover:opacity-90"
                     >
-                      Apply
+                      Show {filteredProducts.length} Product{filteredProducts.length !== 1 ? 's' : ''}
                     </button>
+                    {activeFilterCount > 0 ? (
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className="mt-2 w-full py-2 text-[11px] uppercase tracking-luxury text-stone-500 transition-colors hover:text-stone-900"
+                      >
+                        Reset All Filters
+                      </button>
+                    ) : null}
                   </div>
                 </div>
               </motion.aside>
