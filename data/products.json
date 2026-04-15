@@ -68,15 +68,17 @@
     "name": "Infinity Gold - Bracelet",
     "price": 799,
     "compare_price": 1000,
-    "category": "necklaces",
+    "category": "bracelets",
     "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775969711/Gemini_Generated_Image_hhlpcchhlpcchhlp_1_er4jlt.png",
-    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775971702/image_ahc6zz.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776275888/Untitled_design_3_iks17j.png",
     "gallery_images": [
       "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775969711/Gemini_Generated_Image_hhlpcchhlpcchhlp_1_er4jlt.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776275888/Untitled_design_3_iks17j.png",
       "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775971702/image_ahc6zz.png"
     ],
     "images": [
       "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775969711/Gemini_Generated_Image_hhlpcchhlpcchhlp_1_er4jlt.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776275888/Untitled_design_3_iks17j.png",
       "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1775971702/image_ahc6zz.png"
     ],
     "video_url": "",
@@ -84,7 +86,8 @@
     "badge": "NEW",
     "stock": 10,
     "supplier_urls": [
-      "https://abwholesale.pk/products/uni-10446-infinity-gold-bracelet?utm_source=koala-inspector&utm_medium=koala-inspector&utm_campaign=koala-inspector"
+      "https://abwholesale.pk/products/uni-10446-infinity-gold-bracelet?utm_source=koala-inspector&utm_medium=koala-inspector&utm_campaign=koala-inspector",
+      "https://blingspot.pk/products/infinity-gold-bracelet?srsltid=AfmBOor97VASJzGI3HnwstyuMRFXKcMYRvyNzMdW0asJXFV65AdETlBR"
     ],
     "zivaad_choice": true,
     "sale_tag_enabled": true,
