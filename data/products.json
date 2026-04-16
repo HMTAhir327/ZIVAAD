@@ -1,5 +1,75 @@
 [
   {
+    "id": "new-piece-1776314435549-qpib7",
+    "name": "Vintage Style Crystal Silver Stud Earrings",
+    "price": 799,
+    "compare_price": 1200,
+    "category": "earrings",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776314347/Gemini_Generated_Image_355shn355shn355s_1_dghlpl.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776314332/p18074-elegant-fashion-earrings-for-girls_1_ztjv2p.webp",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776314347/Gemini_Generated_Image_355shn355shn355s_1_dghlpl.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776314332/p18074-elegant-fashion-earrings-for-girls_1_ztjv2p.webp"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776314347/Gemini_Generated_Image_355shn355shn355s_1_dghlpl.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776314332/p18074-elegant-fashion-earrings-for-girls_1_ztjv2p.webp"
+    ],
+    "video_url": "",
+    "description": "<p>Designed to catch the light from every angle, these vintage crystal silver stud earrings bring a perfect balance of shine and elegance. The brilliant rhinestone center paired with a sleek curved silver design creates a refined, premium look that feels both timeless and modern. Whether styled for everyday wear or special occasions, these earrings add a subtle glow that instantly elevates your presence.</p><p>\n\n</p><ul>\n<li>\nSparkling rhinestone centerpiece with high clarity shine\n</li>\n<li>\nElegant curved silver design with a vintage-inspired touch\n</li>\n<li>\nPremium polished finish for a clean, luxury look\n</li>\n<li>\nLightweight and comfortable for all-day wear\n</li>\n<li>\nDurable quality with long-lasting shine\n</li>\n<li>\nMinimal yet eye-catching design\n</li>\n<li>\nEasy to style with both casual and formal outfits\n</li>\n<li>\nPerfect for gifting and everyday elegance\n</li>\n<li>\nSecure and well-crafted stud backing\n</li>\n<li>\nAffordable piece with a premium appearance</li></ul>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "supplier_urls": [],
+    "zivaad_choice": true,
+    "sale_tag_enabled": true,
+    "rating": 4.7,
+    "rating_count": 426,
+    "product_options": [],
+    "product_variants": [],
+    "reviews": [
+      {
+        "id": "rev-1776314517062-iwni4",
+        "name": "Kiran Sheikh",
+        "rating": 5,
+        "text": "Received today, quality achi hai aur design bhi unique hai.",
+        "date": "2026-03-29",
+        "verified": true
+      },
+      {
+        "id": "rev-1776314559828-u85i5",
+        "name": "Anam T.",
+        "rating": 5,
+        "text": "Bohat pyare earrings hain, shine bilkul diamond jaisi lagti hai.",
+        "date": "2026-03-31",
+        "verified": true
+      },
+      {
+        "id": "rev-1776314591829-kfk51",
+        "name": "Irum Butt",
+        "rating": 5,
+        "text": "Light weight hain aur pehen ke bohat elegant lagte hain.",
+        "date": "2026-04-02",
+        "verified": true
+      },
+      {
+        "id": "rev-1776314637029-7w71k",
+        "name": "Ahmed Khan",
+        "rating": 5,
+        "text": "Price ke hisaab se really good product, worth buying.",
+        "date": "2026-04-05",
+        "verified": true
+      },
+      {
+        "id": "rev-1776314667312-aig4t",
+        "name": "Rukhsar A.",
+        "rating": 5,
+        "text": "Same as picture, finishing clean hai aur packing bhi achi thi.",
+        "date": "2026-04-11",
+        "verified": true
+      }
+    ]
+  },
+  {
     "id": "new-piece-1776304924006-lvzuw",
     "name": "Romantic Rose Crystal Pendant Necklace",
     "price": 999,
@@ -22,7 +92,7 @@
     "supplier_urls": [
       "https://www.pakstyle.pk/products/elegant-fashion-pendant-locket-p18119"
     ],
-    "zivaad_choice": false,
+    "zivaad_choice": true,
     "sale_tag_enabled": true,
     "rating": 4.9,
     "rating_count": 58,
