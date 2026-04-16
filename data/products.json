@@ -1,5 +1,214 @@
 [
   {
+    "id": "new-piece-1776304924006-lvzuw",
+    "name": "Romantic Rose Crystal Pendant Necklace",
+    "price": 999,
+    "compare_price": 1200,
+    "category": "necklaces",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776304790/Gemini_Generated_Image_hnni4rhnni4rhnni_1_brr4b8.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776304777/p18119-elegant-fashion-pendant-locket_1_qpuewy.webp",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776304790/Gemini_Generated_Image_hnni4rhnni4rhnni_1_brr4b8.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776304777/p18119-elegant-fashion-pendant-locket_1_qpuewy.webp"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776304790/Gemini_Generated_Image_hnni4rhnni4rhnni_1_brr4b8.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776304777/p18119-elegant-fashion-pendant-locket_1_qpuewy.webp"
+    ],
+    "video_url": "",
+    "description": "<p>A delicate blend of elegance and meaning, this ZIVAAD romantic rose pendant necklace is designed to capture attention with its soft curves and brilliant crystal shine. The floral-inspired design symbolizes beauty and timeless connection, while the polished gold finish gives it a premium feel. Whether worn daily or on special occasions, it adds a graceful touch that feels both personal and luxurious.</p><p>\n\n</p><ul>\n<li>\nElegant rose-inspired pendant with sparkling crystal centerpiece\n</li>\n<li>\nPremium gold-tone finish with clean, polished detailing\n</li>\n<li>\nLightweight and comfortable for everyday wear\n</li>\n<li>\nSymbolic design representing beauty and lasting connection\n</li>\n<li>\nHigh-quality material with long-lasting shine\n</li>\n<li>\nPerfect for gifting and special occasions\n</li>\n<li>\nMinimal yet eye-catching design for versatile styling\n</li>\n<li>\nLooks premium while remaining affordable\n</li>\n<li>\nSmooth chain with secure and adjustable fit\n</li>\n<li>\nIdeal for both casual and formal outfits</li></ul>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "supplier_urls": [
+      "https://www.pakstyle.pk/products/elegant-fashion-pendant-locket-p18119"
+    ],
+    "zivaad_choice": false,
+    "sale_tag_enabled": true,
+    "rating": 4.9,
+    "rating_count": 58,
+    "product_options": [],
+    "product_variants": [],
+    "reviews": [
+      {
+        "id": "rev-1776305007004-xzbka",
+        "name": "Nargis Shah",
+        "rating": 5,
+        "text": "Design bohat unique hai, crystal shine bhi achi hai. same as shown.",
+        "date": "2026-03-04",
+        "verified": true
+      },
+      {
+        "id": "rev-1776305038155-l54xm",
+        "name": "Sara Ahmed",
+        "rating": 5,
+        "text": "Received my parcel, quality zabardast hai. honestly looks more expensive.",
+        "date": "2026-03-17",
+        "verified": true
+      },
+      {
+        "id": "rev-1776305105212-ekae6",
+        "name": "Eman Chaudhry",
+        "rating": 5,
+        "text": "Gift ke liye liya tha, really loved it. simple but classy piece.",
+        "date": "2026-03-19",
+        "verified": true
+      },
+      {
+        "id": "rev-1776305125161-7b3wq",
+        "name": "Mahnoor K.",
+        "rating": 5,
+        "text": "Daily wear ke liye perfect hai. light weight hai aur comfortable bhi.",
+        "date": "2026-03-27",
+        "verified": true
+      },
+      {
+        "id": "rev-1776305149311-zkojk",
+        "name": "Naheed Hashmi",
+        "rating": 5,
+        "text": "First order tha yahan se, thora doubt tha but product achi nikli.",
+        "date": "2026-04-01",
+        "verified": true
+      },
+      {
+        "id": "rev-1776305181544-iwm9v",
+        "name": "Zeynep K.",
+        "rating": 5,
+        "text": "Finishing bohat clean hai aur chain bhi strong hai. satisfied overall.",
+        "date": "2026-04-14",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "new-piece-1776303110987-m6d9f",
+    "name": "Zircon Ball Jewelry Set",
+    "price": 1200,
+    "compare_price": 1600,
+    "category": "jewellery set",
+    "primary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302022/Gemini_Generated_Image_53cy4453cy4453cy_1_rlfmt8.png",
+    "secondary_image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302777/ball-shaped-jewelry-set-19012_74a502ed-443c-4df5-9312-ced6de5af964_jbm2ik.webp",
+    "gallery_images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302022/Gemini_Generated_Image_53cy4453cy4453cy_1_rlfmt8.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302777/ball-shaped-jewelry-set-19012_74a502ed-443c-4df5-9312-ced6de5af964_jbm2ik.webp",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302777/ball-shaped-jewelry-set-19012_2_feb34671-d1c4-4b88-a6c0-30625abd7548_qzlxcg.webp"
+    ],
+    "images": [
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302022/Gemini_Generated_Image_53cy4453cy4453cy_1_rlfmt8.png",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302777/ball-shaped-jewelry-set-19012_74a502ed-443c-4df5-9312-ced6de5af964_jbm2ik.webp",
+      "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302777/ball-shaped-jewelry-set-19012_2_feb34671-d1c4-4b88-a6c0-30625abd7548_qzlxcg.webp"
+    ],
+    "video_url": "",
+    "description": "<p>A refined blend of simplicity and shine, this ZIVAAD minimalist zircon ball jewelry set is designed to add effortless elegance to any look. The smooth gold finish paired with sparkling zircon details creates a premium feel that stands out without being loud. Perfect for daily wear or special moments, this set brings a sense of confidence, grace, and timeless style every time it’s worn.</p><li>Complete 3-piece set: pendant necklace, earrings, and bangle\n</li><li>\nPremium gold-tone finish with sparkling zircon ball detailing\n</li><li>\nMinimalist design for everyday wear and versatile styling\n</li><li>\nLightweight and comfortable for all-day use\n</li><li>\nPerfect for gifting and special occasions\n</li><li>\nElegant look at an affordable price\n</li><li>\nDesigned to give a clean, modern, luxury feel\n</li><li>\nEasy to pair with both casual and formal outfits\n</li><li>\nDurable quality with long-lasting shine</li><li>Ideal for building a timeless jewelry collection</li>",
+    "badge": "BESTSELLER",
+    "stock": 10,
+    "supplier_urls": [
+      "https://www.pakstyle.pk/products/ball-shaped-jewelry-set-19012?variant=47486839357627"
+    ],
+    "zivaad_choice": false,
+    "sale_tag_enabled": true,
+    "rating": 4.9,
+    "rating_count": 178,
+    "option_swatches": {
+      "Color": {
+        "Gold": "#c9a24a",
+        "Silver": "#bfc3c9"
+      }
+    },
+    "product_options": [
+      {
+        "name": "Color",
+        "values": [
+          "Gold",
+          "Silver"
+        ]
+      }
+    ],
+    "product_variants": [
+      {
+        "id": "variant-1776303562901-3pmc",
+        "sku": "ZID-ST-11",
+        "title": "Gold",
+        "option_values": {
+          "Color": "Gold"
+        },
+        "price": 1200,
+        "compare_price": 1600,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302777/ball-shaped-jewelry-set-19012_74a502ed-443c-4df5-9312-ced6de5af964_jbm2ik.webp"
+      },
+      {
+        "id": "variant-1776303562901-23ae",
+        "sku": "ZID-ST-22",
+        "title": "Silver",
+        "option_values": {
+          "Color": "Silver"
+        },
+        "price": 1200,
+        "compare_price": 1600,
+        "stock": 5,
+        "image_url": "https://res.cloudinary.com/dzedz8e7p/image/upload/f_auto,q_auto/v1776302777/ball-shaped-jewelry-set-19012_2_feb34671-d1c4-4b88-a6c0-30625abd7548_qzlxcg.webp"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1776303158914-jzdnp",
+        "name": "Mahnoor K.",
+        "rating": 5,
+        "text": "Really liked this set, quality is better than expected. same as pics and finishing is neat.",
+        "date": "2025-12-17",
+        "verified": true
+      },
+      {
+        "id": "rev-1776303188847-44fln",
+        "name": "Ayesha Khan",
+        "rating": 5,
+        "text": "Ordered for daily use and its perfect. light weight and looks expensive honestly.",
+        "date": "2026-01-08",
+        "verified": true
+      },
+      {
+        "id": "rev-1776303236665-8txcg",
+        "name": "Sundas N.",
+        "rating": 5,
+        "text": "Received today, packing achi thi and product bhi zabardast. will order again.",
+        "date": "2026-01-21",
+        "verified": true
+      },
+      {
+        "id": "rev-1776303271281-23qni",
+        "name": "Naheed Butt",
+        "rating": 5,
+        "text": "Gift diya tha and they loved it. simple but very elegant design.",
+        "date": "2026-02-16",
+        "verified": true
+      },
+      {
+        "id": "rev-1776303323982-ar92u",
+        "name": "Sana R.",
+        "rating": 5,
+        "text": "Price ke hisaab se bohat acha hai. shine bhi achi hai aur comfortable hai.",
+        "date": "2026-03-04",
+        "verified": true
+      },
+      {
+        "id": "rev-1776303358682-9y0rl",
+        "name": "Minahil K.",
+        "rating": 5,
+        "text": "First time try kiya from this page, thora doubt tha but product totally worth it.",
+        "date": "2026-03-19",
+        "verified": true
+      },
+      {
+        "id": "rev-1776303387366-p8t5r",
+        "name": "Kiran Sheikh",
+        "rating": 5,
+        "text": "Using it for few days, color abhi tak bilkul same hai. overall satisfied.",
+        "date": "2026-04-04",
+        "verified": true
+      }
+    ]
+  },
+  {
     "id": "new-piece-1775980660031-sgqgi",
     "name": "Pearl & Crystal Floral Tops",
     "price": 999,
